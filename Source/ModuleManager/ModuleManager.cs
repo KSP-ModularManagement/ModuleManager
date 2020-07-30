@@ -148,18 +148,14 @@ namespace ModuleManager
                 }
             }
 
-            bool foolsDay = (DateTime.Now.Month == 4 && DateTime.Now.Day == 1);
-            bool catDay = (DateTime.Now.Month == 2 && DateTime.Now.Day == 22);
-            nyan = foolsDay
-                || Environment.GetCommandLineArgs().Contains("-nyan-nyan");
-
-            nCats = catDay
-                || Environment.GetCommandLineArgs().Contains("-ncats");
-
+            {
+                bool foolsDay = (DateTime.Now.Month == 4 && DateTime.Now.Day == 1);
+                bool catDay = (DateTime.Now.Month == 2 && DateTime.Now.Day == 22);
+                nyan = foolsDay || Environment.GetCommandLineArgs().Contains("-nyan-nyan");
+                nCats = catDay || Environment.GetCommandLineArgs().Contains("-ncats");
+            }
             dumpPostPatch = Environment.GetCommandLineArgs().Contains("-mm-dump");
-
             DontCopyLogs = Environment.GetCommandLineArgs().Contains("-mm-dont-copy-logs");
-
             IgnoreCache = Environment.GetCommandLineArgs().Contains("-ignore-cache");
 
             loadedInScene = true;
