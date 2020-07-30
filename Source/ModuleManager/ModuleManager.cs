@@ -36,6 +36,9 @@ namespace ModuleManager
         public static bool DontCopyLogs { get; private set; } = false;
 
         [Obsolete("This attribute is not Standard MM. Do not use it on things to be published on Forum")]
+        public static bool IsExperimentalActive { get; private set; } = false;
+
+        [Obsolete("This attribute is not Standard MM. Do not use it on things to be published on Forum")]
         public static bool IsLoadedFromCache { get; internal set; }
 
         internal static bool IgnoreCache { get; private set; }
@@ -157,6 +160,11 @@ namespace ModuleManager
             dumpPostPatch = Environment.GetCommandLineArgs().Contains("-mm-dump");
             DontCopyLogs = Environment.GetCommandLineArgs().Contains("-mm-dont-copy-logs");
             IgnoreCache = Environment.GetCommandLineArgs().Contains("-ignore-cache");
+
+#pragma warning disable CS0618 // Type or member is obsolete
+            // To supress features non Stock.
+            IsExperimentalActive = Environment.GetCommandLineArgs().Contains("-mm-experimental");
+#pragma warning restore CS0618 // Type or member is obsolete
 
             loadedInScene = true;
         }
