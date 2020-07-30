@@ -35,14 +35,15 @@ namespace ModuleManager
         public static bool dumpPostPatch = false;
         public static bool DontCopyLogs { get; private set; } = false;
 
-        public static bool IgnoreCache  { get { return _IgnoreCache; }}
-            //useCache = false;
-        private static bool _IgnoreCache
-#if DEBUG
+        [Obsolete("This attribute is not Standard MM. Do not use it on things to be published on Forum")]
+        public static bool IsLoadedFromCache { get; internal set; }
+
+        internal static bool IgnoreCache { get; private set; }
+        #if DEBUG
             = true;
-#else
+        #else
             = false;
-#endif
+        #endif
 
         private PopupDialog menu;
 
@@ -159,7 +160,7 @@ namespace ModuleManager
 
             DontCopyLogs = Environment.GetCommandLineArgs().Contains("-mm-dont-copy-logs");
 
-            _IgnoreCache = Environment.GetCommandLineArgs().Contains("-ignore-cache");
+            IgnoreCache = Environment.GetCommandLineArgs().Contains("-ignore-cache");
 
             loadedInScene = true;
         }

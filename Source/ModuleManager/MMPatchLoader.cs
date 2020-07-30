@@ -63,10 +63,11 @@ namespace ModuleManager
             status = "Checking Cache";
             logger.Info(status);
 
-            bool useCache = false;
-            try
+#pragma warning disable CS0618 // Type or member is obsolete
+			ModuleManager.IsLoadedFromCache = false;
+			try
             {
-                useCache = !ModuleManager.IgnoreCache && IsCacheUpToDate();
+                ModuleManager.IsLoadedFromCache = !ModuleManager.IgnoreCache && IsCacheUpToDate();
             }
             catch (Exception ex)
             {
@@ -75,7 +76,8 @@ namespace ModuleManager
 
             IEnumerable<IProtoUrlConfig> databaseConfigs = null;
 
-            if (!useCache)
+            if (!ModuleManager.IsLoadedFromCache)
+#pragma warning restore CS0618 // Type or member is obsolete
             {
                 IBasicLogger patchLogger = ModLogger.Instance;
 
