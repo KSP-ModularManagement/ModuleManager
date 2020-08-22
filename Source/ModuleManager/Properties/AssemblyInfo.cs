@@ -26,5 +26,5 @@ using System.Reflection;
 //[assembly: AssemblyDelaySign(false)]
 //[assembly: AssemblyKeyFile("")]
 
-[assembly: KSPAssemblyDependency("KSPe", 2, 1)]
+[assembly: KSPAssemblyDependency("KSPe", 2, 2)]
 

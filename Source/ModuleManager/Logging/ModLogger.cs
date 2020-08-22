@@ -7,7 +7,7 @@ namespace ModuleManager.Logging
 {
     public class ModLogger : IBasicLogger
     {
-        internal static readonly K.Logger LOG = K.Logger.CreateForType<ModuleManager>();
+        internal static readonly K.Logger LOG = K.Logger.CreateForType<ModuleManager>(false, false); // No need to use thread safe logging. Yet.
         internal static readonly ModLogger Instance = new ModLogger(); // For legacy code
 
         private delegate void LogMethod(string message, params object[] @parms);
