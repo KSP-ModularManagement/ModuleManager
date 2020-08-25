@@ -2,9 +2,10 @@
 *Lasciate ogne speranza, voi ch'intrate*
 - - -
 
-* 2020-0822: 4.1.4.2 (Lisias) for KSP >= 1.3.1
+* 2020-0825: 4.1.4.3 (Lisias) for KSP >= 1.3.1
 	+ Preventing KSPe to use Thread Safe logging.
-		- MM doesn't need it (yet), and it's somewhat verbose on the logging.  
+		- MM doesn't need it (yet), and it's somewhat verbose on the logging.
+		- KSPe thread safe logging will also mangle a bit the timestamps (as the writings are delayed until the next frame), what may be undesirable on MM.
 	+ Needs KSPe 2.2.1 or newer.
 * 2020-0711: 4.1.4.1 (Lisias) for KSP >= 1.3.1
 	+ Merging upstream updates:
