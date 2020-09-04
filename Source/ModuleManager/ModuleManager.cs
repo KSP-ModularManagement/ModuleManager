@@ -48,9 +48,9 @@ namespace ModuleManager
             = false;
         #endif
 
-        private PopupDialog menu;
+        private GUI.Menu menu;
 
-        private MMPatchRunner patchRunner;
+        internal MMPatchRunner patchRunner;
 
         private InterceptLogHandler interceptLogHandler;
 
@@ -229,46 +229,10 @@ namespace ModuleManager
                 && (HighLogic.LoadedScene == GameScenes.SPACECENTER || HighLogic.LoadedScene == GameScenes.MAINMENU)
                 && !inRnDCenter)
             {
-                if (menu == null)
-                {
-                    menu = PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f),
-                        new Vector2(0.5f, 0.5f),
-                        new MultiOptionDialog(
-                            "ModuleManagerMenu",
-                            "",
-                            "ModuleManager",
-                            HighLogic.UISkin,
-                            new Rect(0.5f, 0.5f, 150f, 60f),
-                            new DialogGUIFlexibleSpace(),
-                            new DialogGUIVerticalLayout(
-                                new DialogGUIFlexibleSpace(),
-                                new DialogGUIButton("Reload Database",
-                                    delegate
-                                    {
-                                        MMPatchLoader.keepPartDB = false;
-                                        StartCoroutine(DataBaseReloadWithMM());
-                                    }, 140.0f, 30.0f, true),
-                                new DialogGUIButton("Quick Reload Database",
-                                    delegate
-                                    {
-                                        MMPatchLoader.keepPartDB = true;
-                                        StartCoroutine(DataBaseReloadWithMM());
-                                    }, 140.0f, 30.0f, true),
-                                new DialogGUIButton("Dump Database to Files",
-                                    delegate
-                                    {
-                                        StartCoroutine(DataBaseReloadWithMM(true));
-                                    }, 140.0f, 30.0f, true),
-                                new DialogGUIButton("Close", () => { }, 140.0f, 30.0f, true)
-                                )),
-                        false,
-                        HighLogic.UISkin);
-                }
+                if (null == this.menu)
+                    this.menu = GUI.Menu.Show(this);
                 else
-                {
-                    menu.Dismiss();
-                    menu = null;
-                }
+                    this.menu = this.menu.Dismiss();
             }
 
             if (totalTime.IsRunning && HighLogic.LoadedScene == GameScenes.MAINMENU)
@@ -322,91 +286,16 @@ namespace ModuleManager
         }
         */
 
-        private IEnumerator DataBaseReloadWithMM(bool dump = false)
+        internal IEnumerator DataBaseReloadWithMM(bool dump = false)
         {
             QualitySettings.vSyncCount = 0;
             Application.targetFrameRate = -1;
 
             patchRunner = new MMPatchRunner(ModLogger.Instance);
 
-            float totalLoadWeight = GameDatabase.Instance.LoadWeight() + PartLoader.Instance.LoadWeight();
             bool startedReload = false;
 
-            UISkinDef skinDef = HighLogic.UISkin;
-            UIStyle centeredTextStyle = new UIStyle() // FIXME: There must be a smarter way to do that on Unity5, right?
-            {
-                name = skinDef.label.name,
-                normal = skinDef.label.normal,
-                highlight = skinDef.label.highlight,
-                disabled = skinDef.label.disabled,
-                font = skinDef.label.font,
-                fontSize = skinDef.label.fontSize,
-                fontStyle = skinDef.label.fontStyle,
-                wordWrap = skinDef.label.wordWrap,
-                richText = skinDef.label.richText,
-                alignment = TextAnchor.UpperCenter,
-                clipping = skinDef.label.clipping,
-                lineHeight = skinDef.label.lineHeight,
-                stretchHeight = skinDef.label.stretchHeight,
-                stretchWidth = skinDef.label.stretchWidth,
-                fixedHeight = skinDef.label.fixedHeight,
-                fixedWidth = skinDef.label.fixedWidth
-            };
-
-            PopupDialog reloadingDialog = PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f),
-                new Vector2(0.5f, 0.5f),
-                new MultiOptionDialog(
-                    "ModuleManagerReloading",
-                    "",
-                    "ModuleManager - Reloading Database",
-                    skinDef,
-                    new Rect(0.5f, 0.5f, 600f, 60f),
-                    new DialogGUIFlexibleSpace(),
-                    new DialogGUIVerticalLayout(
-                        new DialogGUIFlexibleSpace(),
-                        new DialogGUILabel(delegate ()
-                        {
-                            float progressFraction;
-                            if (!startedReload)
-                            {
-                                progressFraction = 0f;
-                            }
-                            else if (!GameDatabase.Instance.IsReady() || !PostPatchLoader.Instance.IsReady())
-                            {
-                                progressFraction = GameDatabase.Instance.ProgressFraction() * GameDatabase.Instance.LoadWeight();
-                                progressFraction /= totalLoadWeight;
-                            }
-                            else if (!PartLoader.Instance.IsReady())
-                            {
-                                progressFraction = GameDatabase.Instance.LoadWeight() + (PartLoader.Instance.ProgressFraction() * GameDatabase.Instance.LoadWeight());
-                                progressFraction /= totalLoadWeight;
-                            }
-                            else
-                            {
-                                progressFraction = 1f;
-                            }
-
-                            return $"Overall progress: {progressFraction:P0}";
-                        }, centeredTextStyle, expandW: true),
-                        new DialogGUILabel(delegate ()
-                        {
-                            if (!startedReload)
-                                return "Starting";
-                            else if (!GameDatabase.Instance.IsReady())
-                                return GameDatabase.Instance.ProgressTitle();
-                            else if (!PostPatchLoader.Instance.IsReady())
-                                return PostPatchLoader.Instance.ProgressTitle();
-                            else if (!PartLoader.Instance.IsReady())
-                                return PartLoader.Instance.ProgressTitle();
-                            else
-                                return "";
-                        }),
-                        new DialogGUISpace(5f),
-                        new DialogGUILabel(() => patchRunner.Status)
-                    )
-                ),
-                false,
-                skinDef);
+            GUI.ReloadingDatabaseDialog reloadingDialog = GUI.ReloadingDatabaseDialog.Show(this, startedReload);
 
             yield return null;
 
@@ -561,13 +450,10 @@ namespace ModuleManager
                 string status =
                     "You have old versions of Module Manager (older than 1.5) or MMSarbianExt.\nYou will need to remove them for Module Manager and the mods using it to work\nExit KSP and delete those files :\n" +
                     String.Join("\n", badPaths.ToArray());
-                PopupDialog.SpawnPopupDialog(new Vector2(0f, 1f), new Vector2(0f, 1f), "ModuleManagerOldVersions", "Old versions of Module Manager", status, "OK", false, UISkinManager.defaultSkin);
-                Log("Old version of Module Manager present. Stopping");
+                GUI.ShowStopperAlertBox.Show(status);
                 return false;
             }
 
-
-            //PopupDialog.SpawnPopupDialog(new Vector2(0.1f, 1f), new Vector2(0.2f, 1f), "Test of the dialog", "Stuff", "OK", false, UISkinManager.defaultSkin);
 
             Assembly currentAssembly = Assembly.GetExecutingAssembly();
             IEnumerable<AssemblyLoader.LoadedAssembly> eligible = from a in AssemblyLoader.loadedAssemblies

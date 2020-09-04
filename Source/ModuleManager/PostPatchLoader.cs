@@ -48,7 +48,9 @@ namespace ModuleManager
 
         public override bool IsReady() => ready;
 
+    #if !KSP12
         public override float LoadWeight() => 0;
+    #endif
 
         public override float ProgressFraction() => 1;
 

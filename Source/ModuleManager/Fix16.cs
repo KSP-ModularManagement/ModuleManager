@@ -75,9 +75,11 @@ namespace ModuleManager
             yield return null;
         }
 
+    #if !KSP12
         public override float LoadWeight()
         {
             return 0.1f;
         }
+    #endif
     }
 }

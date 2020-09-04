@@ -23,10 +23,30 @@
     <ConsolePause>False</ConsolePause>
     <LangVersion>default</LangVersion>
   </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == '122.Debug|AnyCPU' ">
+    <DebugSymbols>True</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>False</Optimize>
+    <OutputPath>..\..\bin\Debug122</OutputPath>
+    <DefineConstants>KSP12;DEBUG;</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>False</ConsolePause>
+    <LangVersion>default</LangVersion>
+  </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>none</DebugType>
     <Optimize>True</Optimize>
     <OutputPath>..\..\bin\Release\</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>False</ConsolePause>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == '122.Release|AnyCPU' ">
+    <DebugType>none</DebugType>
+    <Optimize>True</Optimize>
+    <OutputPath>..\..\bin\Release122</OutputPath>
+    <DefineConstants>KSP12</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <ConsolePause>False</ConsolePause>
@@ -109,6 +129,11 @@
     <Compile Include="Startup.cs" />
     <Compile Include="ExceptionIntercept\InterceptLogHandler.cs" />
     <Compile Include="GUI\ShowStopperAlertBox.cs" />
+    <Compile Include="GUI\UnsupportedKSPAlertBox.cs" />
+    <Compile Include="GUI\Menu.cs" />
+    <Compile Include="GUI\ReloadingDatabase.cs" />
+    <Compile Include="GUI\Menu.12.cs" />
+    <Compile Include="GUI\ReloadingDatabase.12.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />

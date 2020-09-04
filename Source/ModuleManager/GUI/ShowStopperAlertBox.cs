@@ -10,22 +10,22 @@ using UnityEngine;
 
 namespace ModuleManager.GUI
 {
-    internal static class ShowStopperAlertBox
-    {
-        private static readonly string MSG = @"*THIS IS NOT* the Forum's Module Manager from Sarbian & Blowfish - don't bother them about this.
+	internal static class ShowStopperAlertBox
+	{
+		private static readonly string MSG = @"*THIS IS NOT* the Forum's Module Manager from Sarbian & Blowfish - don't bother them about this.
 
 {0}";
 
-        private static readonly string AMSG = @"call for help on the Module Manager /L GitHub page (KSP will close). We will help you on diagnosing the Add'On that is troubling you. ";
+		private static readonly string AMSG = @"call for help on the Module Manager /L GitHub page (KSP will close). We will help you on diagnosing the Add'On that is troubling you. ";
 
-        internal static void Show(string message)
-        {
-            KSPe.Common.Dialogs.ShowStopperAlertBox.Show(
-                string.Format(MSG, message),
-                AMSG,
-                () => { Application.OpenURL("https://github.com/net-lisias-ksp/ModuleManager/issues/2"); Application.Quit(); }
-            );
-            Logging.ModLogger.LOG.info("\"Houston, we have a Problem!\" was displayed");
-        }
-    }
+		internal static void Show(string message)
+		{
+			KSPe.Common.Dialogs.ShowStopperAlertBox.Show(
+				string.Format(MSG, message),
+				AMSG,
+				() => { Application.OpenURL("https://github.com/net-lisias-ksp/ModuleManager/issues/2"); Application.Quit(); }
+			);
+			Logging.ModLogger.LOG.info("\"Houston, we have a Problem!\" was displayed with message {0}", message);
+		}
+	}
 }
