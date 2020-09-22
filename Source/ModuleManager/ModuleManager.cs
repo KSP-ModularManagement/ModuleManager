@@ -92,8 +92,6 @@ namespace ModuleManager
 
             // Allow loading the background in the loading screen
             Application.runInBackground = true;
-            QualitySettings.vSyncCount = 0;
-            Application.targetFrameRate = -1;
 
             // More cool loading screen. Less 4 stoke logo.
             for (int i = 0; i < LoadingScreen.Instance.Screens.Count; i++)
@@ -239,9 +237,6 @@ namespace ModuleManager
                 PerformanceMetrics.Instance.Stop();
                 Log("Total loading Time = " + PerformanceMetrics.Instance.ElapsedTimeInSecs.ToString("F3") + "s");
                 PerformanceMetrics.Instance.Destroy();
-                Application.runInBackground = GameSettings.SIMULATE_IN_BACKGROUND;
-                QualitySettings.vSyncCount = GameSettings.SYNC_VBL;
-                Application.targetFrameRate = GameSettings.FRAMERATE_LIMIT;
             }
 
             float offsetY = textPos;
