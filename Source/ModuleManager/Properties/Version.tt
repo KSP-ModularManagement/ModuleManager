@@ -90,7 +90,7 @@ namespace <#= PROJECT_NAME #>
 		public const int build = <#= build #>;
 		public const string Number = "<#= major #>.<#= minor #>.<#= patch #>.<#= build #>";
 	#if KSP12
-		public const string Text = Number + " /L Experimental for KSP 1.2.2";
+		public const string Text = Number + " /L Experimental for KSP 1.2.2 Beta";
 	#else
 		public const string Text = Number + " /L Experimental";
 	#endif
