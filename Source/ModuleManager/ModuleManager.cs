@@ -238,7 +238,7 @@ namespace ModuleManager
             {
                 PerformanceMetrics.Instance.Stop();
                 Log("Total loading Time = " + PerformanceMetrics.Instance.ElapsedTimeInSecs.ToString("F3") + "s");
-
+                PerformanceMetrics.Instance.Destroy();
                 Application.runInBackground = GameSettings.SIMULATE_IN_BACKGROUND;
                 QualitySettings.vSyncCount = GameSettings.SYNC_VBL;
                 Application.targetFrameRate = GameSettings.FRAMERATE_LIMIT;

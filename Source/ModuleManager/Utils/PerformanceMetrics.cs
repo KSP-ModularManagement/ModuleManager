@@ -24,6 +24,8 @@ namespace ModuleManager.Utils
 
 		internal void Start()
 		{
+			if (this.IsRunning) return; // Playing safe
+
 			Application.targetFrameRate = 99999; // What the heck, why not? :D
 			QualitySettings.vSyncCount = 0;
 			this.totalTime.Start();
@@ -36,5 +38,10 @@ namespace ModuleManager.Utils
 			QualitySettings.vSyncCount = this.vSyncCount;
 		}
 
+		internal void Destroy()
+		{
+			if (this.IsRunning) this.Stop();  // Playing safe
+			INSTANCE = null;
+		}
 	}
 }
