@@ -2,6 +2,11 @@
 *Lasciate ogne speranza, voi ch'intrate*
 - - -
 
+* 2020-0921: 4.1.4.4 (Lisias) for KSP >= 1.2
+	+ Squeezing the last possible second from the Loading Scene by pumping up Unity's FPS settings (and restoring user's settings on finish)
+		- Your mileage will vary, but I got about 10% faster loading times on my rig when using the MM cache, and even a bit more while rebuilding it on heavily modded instalments. 
+	+ Beta support for KSP 1.2 is on the wild!
+		- Some less used features are still Work In Progress. 
 * 2020-0825: 4.1.4.3 (Lisias) for KSP >= 1.3.1
 	+ Preventing KSPe to use Thread Safe logging.
 		- MM doesn't need it (yet), and it's somewhat verbose on the logging.
