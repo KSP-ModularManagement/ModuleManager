@@ -280,63 +280,67 @@ namespace ModuleManager
         }
         */
 
-        internal IEnumerator DataBaseReloadWithMM(bool dump = false)
-        {
-            QualitySettings.vSyncCount = 0;
-            Application.targetFrameRate = -1;
+		internal IEnumerator DataBaseReloadWithMM(bool dump = false)
+		{
+			PerformanceMetrics.Instance.Start();
+			try
+			{
+				patchRunner = new MMPatchRunner(ModLogger.Instance);
 
-            patchRunner = new MMPatchRunner(ModLogger.Instance);
+				bool startedReload = false;
 
-            bool startedReload = false;
+				GUI.ReloadingDatabaseDialog reloadingDialog = GUI.ReloadingDatabaseDialog.Show(this, startedReload);
 
-            GUI.ReloadingDatabaseDialog reloadingDialog = GUI.ReloadingDatabaseDialog.Show(this, startedReload);
+				yield return null;
 
-            yield return null;
+				GameDatabase.Instance.Recompile = true;
+				GameDatabase.Instance.StartLoad();
 
-            GameDatabase.Instance.Recompile = true;
-            GameDatabase.Instance.StartLoad();
+				startedReload = true;
 
-            startedReload = true;
+				yield return null;
+				StartCoroutine(patchRunner.Run());
 
-            yield return null;
-            StartCoroutine(patchRunner.Run());
+				// wait for it to finish
+				while (!GameDatabase.Instance.IsReady())
+					yield return null;
 
-            // wait for it to finish
-            while (!GameDatabase.Instance.IsReady())
-                yield return null;
+				PostPatchLoader.Instance.StartLoad();
 
-            PostPatchLoader.Instance.StartLoad();
+				while (!PostPatchLoader.Instance.IsReady())
+					yield return null;
 
-            while (!PostPatchLoader.Instance.IsReady())
-                yield return null;
+				if (dump)
+					OutputAllConfigs();
 
-            if (dump)
-                OutputAllConfigs();
+				PartLoader.Instance.StartLoad();
 
-            PartLoader.Instance.StartLoad();
+				while (!PartLoader.Instance.IsReady())
+					yield return null;
 
-            while (!PartLoader.Instance.IsReady())
-                yield return null;
+				// Needs more work.
+				//ConfigNode game = HighLogic.CurrentGame.config.GetNode("GAME");
 
-            // Needs more work.
-            //ConfigNode game = HighLogic.CurrentGame.config.GetNode("GAME");
+				//if (game != null && ResearchAndDevelopment.Instance != null)
+				//{
+				//	ScreenMessages.PostScreenMessage("GAME found");
+				//	ConfigNode scenario = game.GetNodes("SCENARIO").FirstOrDefault((ConfigNode n) => n.name == "ResearchAndDevelopment");
+				//	if (scenario != null)
+				//	{
+				//		ScreenMessages.PostScreenMessage("SCENARIO found");
+				//		ResearchAndDevelopment.Instance.OnLoad(scenario);
+				//	}
+				//}
 
-            //if (game != null && ResearchAndDevelopment.Instance != null)
-            //{
-            //    ScreenMessages.PostScreenMessage("GAME found");
-            //    ConfigNode scenario = game.GetNodes("SCENARIO").FirstOrDefault((ConfigNode n) => n.name == "ResearchAndDevelopment");
-            //    if (scenario != null)
-            //    {
-            //        ScreenMessages.PostScreenMessage("SCENARIO found");
-            //        ResearchAndDevelopment.Instance.OnLoad(scenario);
-            //    }
-            //}
-
-            QualitySettings.vSyncCount = GameSettings.SYNC_VBL;
-            Application.targetFrameRate = GameSettings.FRAMERATE_LIMIT;
-
-            reloadingDialog.Dismiss();
-        }
+				reloadingDialog.Dismiss();
+			}
+			finally
+			{
+				PerformanceMetrics.Instance.Stop();
+				Log("Total reloading Time = " + PerformanceMetrics.Instance.ElapsedTimeInSecs.ToString("F3") + "s");
+				PerformanceMetrics.Instance.Destroy();
+			}
+		}
 
         public static void OutputAllConfigs()
         {
