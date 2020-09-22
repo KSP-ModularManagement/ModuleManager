@@ -14,6 +14,7 @@ using ModuleManager.Cats;
 using ModuleManager.Extensions;
 using ModuleManager.Logging;
 using ModuleManager.UnityLogHandle;
+using ModuleManager.Utils;
 
 namespace ModuleManager
 {
@@ -68,8 +69,6 @@ namespace ModuleManager
             inRnDCenter = false;
         }
 
-        private readonly Stopwatch totalTime = new Stopwatch();
-
         internal void Awake()
         {
             if (LoadingScreen.Instance == null)
@@ -87,8 +86,8 @@ namespace ModuleManager
                 return;
             }
 
-            totalTime.Start();
-            
+            PerformanceMetrics.Instance.Start();
+
             interceptLogHandler = new InterceptLogHandler();
 
             // Allow loading the background in the loading screen
@@ -235,10 +234,10 @@ namespace ModuleManager
                     this.menu = this.menu.Dismiss();
             }
 
-            if (totalTime.IsRunning && HighLogic.LoadedScene == GameScenes.MAINMENU)
+            if (PerformanceMetrics.Instance.IsRunning && HighLogic.LoadedScene == GameScenes.MAINMENU)
             {
-                totalTime.Stop();
-                Log("Total loading Time = " + ((float)totalTime.ElapsedMilliseconds / 1000).ToString("F3") + "s");
+                PerformanceMetrics.Instance.Stop();
+                Log("Total loading Time = " + PerformanceMetrics.Instance.ElapsedTimeInSecs.ToString("F3") + "s");
 
                 Application.runInBackground = GameSettings.SIMULATE_IN_BACKGROUND;
                 QualitySettings.vSyncCount = GameSettings.SYNC_VBL;

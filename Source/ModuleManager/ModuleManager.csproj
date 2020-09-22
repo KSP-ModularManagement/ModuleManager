@@ -134,6 +134,7 @@
     <Compile Include="GUI\ReloadingDatabase.cs" />
     <Compile Include="GUI\Menu.12.cs" />
     <Compile Include="GUI\ReloadingDatabase.12.cs" />
+    <Compile Include="Utils\PerformanceMetrics.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />
