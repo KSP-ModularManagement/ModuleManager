@@ -2,6 +2,12 @@
 *Lasciate ogne speranza, voi ch'intrate*
 - - -
 
+* 2020-0922: 4.1.4.5 (Lisias) for KSP >= 1.2
+	+ Making sure that eventual Database reloading borks don't screw up the KSP Performance Settings.
+	+ The performance gain claimed by 4.1.4.4 may be inaccurate - the measures on my rig enhanced a bit, but a closer inspection of the original code revealed that (obviously) it was already doing (almost) the same.
+		- Until I have more (and better) information about what exactly is happening, I suggest to take any measurement improvement with a huge grain of salt.
+	+ The support for KSP 1.2 is still beta!
+		- Some less used features are still Work In Progress. 
 * 2020-0921: 4.1.4.4 (Lisias) for KSP >= 1.2
 	+ Squeezing the last possible second from the Loading Scene by pumping up Unity's FPS settings (and restoring user's settings on finish)
 		- Your mileage will vary, but I got about 10% faster loading times on my rig when using the MM cache, and even a bit more while rebuilding it on heavily modded instalments. 
