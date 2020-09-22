@@ -9,3 +9,4 @@ GameData/**/*.dll
 GameData/**/*.CHANGE_LOG.md
 Source/**/Properties/Version.cs
 packages
+Archive
