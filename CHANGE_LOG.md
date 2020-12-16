@@ -2,6 +2,9 @@
 *Lasciate ogne speranza, voi ch'intrate*
 - - -
 
+* 2020-1216: 4.1.4.6 (Lisias) for KSP >= 1.2
+	+ Fixing a regression I introduced on 4.1.4.3 when I refactored MM to allow suporting KSP 1.2.2 again.
+		- Yep... Pretty stupid... #facePalm 
 * 2020-0922: 4.1.4.5 (Lisias) for KSP >= 1.2
 	+ Making sure that eventual Database reloading borks don't screw up the KSP Performance Settings.
 	+ The performance gain claimed by 4.1.4.4 may be inaccurate - the measures on my rig enhanced a bit, but a closer inspection of the original code revealed that (obviously) it was already doing (almost) the same.
