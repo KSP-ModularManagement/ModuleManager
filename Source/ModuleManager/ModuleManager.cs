@@ -277,20 +277,15 @@ namespace ModuleManager
 		internal IEnumerator DataBaseReloadWithMM(bool dump = false)
 		{
 			PerformanceMetrics.Instance.Start();
+			GUI.ReloadingDatabaseDialog reloadingDialog = GUI.ReloadingDatabaseDialog.Show(this);
 			try
 			{
 				patchRunner = new MMPatchRunner(ModLogger.Instance);
-
-				bool startedReload = false;
-
-				GUI.ReloadingDatabaseDialog reloadingDialog = GUI.ReloadingDatabaseDialog.Show(this, startedReload);
 
 				yield return null;
 
 				GameDatabase.Instance.Recompile = true;
 				GameDatabase.Instance.StartLoad();
-
-				startedReload = true;
 
 				yield return null;
 				StartCoroutine(patchRunner.Run());
@@ -325,12 +320,11 @@ namespace ModuleManager
 				//		ResearchAndDevelopment.Instance.OnLoad(scenario);
 				//	}
 				//}
-
-				reloadingDialog.Dismiss();
 			}
 			finally
 			{
 				PerformanceMetrics.Instance.Stop();
+				reloadingDialog.Dismiss();
 				Log("Total reloading Time = " + PerformanceMetrics.Instance.ElapsedTimeInSecs.ToString("F3") + "s");
 				PerformanceMetrics.Instance.Destroy();
 			}

@@ -14,9 +14,9 @@ namespace ModuleManager.GUI
 #if KSP12
 	public class ReloadingDatabaseDialog
 	{
-		internal static ReloadingDatabaseDialog Show(ModuleManager parent, bool startedReload)
+		internal static ReloadingDatabaseDialog Show(ModuleManager parent)
 		{
-			return new ReloadingDatabaseDialog(parent, startedReload);
+			return new ReloadingDatabaseDialog(parent);
 		}
 
 		internal Menu Dismiss()
@@ -28,7 +28,7 @@ namespace ModuleManager.GUI
 
 		private ModuleManager parent;
 		private PopupDialog instance;
-		private ReloadingDatabaseDialog(ModuleManager parent, bool startedReload)
+		private ReloadingDatabaseDialog(ModuleManager parent)
 		{
 			this.parent = parent;
 		}
