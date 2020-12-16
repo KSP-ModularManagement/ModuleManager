@@ -13,23 +13,35 @@ namespace ModuleManager.GUI
 #if !KSP12
 	internal class Menu
 	{
-		internal static Menu Show(ModuleManager parent)
+		private readonly ModuleManager parent;
+		private PopupDialog instance;
+
+		internal Menu(ModuleManager parent)
 		{
-			return new Menu(parent);
+			this.parent = parent;
 		}
 
-		internal Menu Dismiss()
+		internal void Dismiss()
 		{
 			this.instance.Dismiss();
 			this.instance = null;
-			return null;
 		}
 
-		private ModuleManager parent;
-		private PopupDialog instance;
-		private Menu(ModuleManager parent)
+		internal void OnUpdate(bool inRnDCenter)
 		{
-			this.parent = parent;
+			if (GameSettings.MODIFIER_KEY.GetKey() && Input.GetKeyDown(KeyCode.F11)
+				&& (HighLogic.LoadedScene == GameScenes.SPACECENTER || HighLogic.LoadedScene == GameScenes.MAINMENU)
+				&& !inRnDCenter)
+			{
+				if (null == this.instance)
+					this.Show();
+				else
+					this.Dismiss();
+			}
+		}
+
+		private void Show ()
+		{
 			this.instance = PopupDialog.SpawnPopupDialog(
 				new Vector2(0.5f, 0.5f),
 				new Vector2(0.5f, 0.5f),
@@ -47,19 +59,22 @@ namespace ModuleManager.GUI
 							{
 								MMPatchLoader.keepPartDB = false;
 								this.parent.StartCoroutine(this.parent.DataBaseReloadWithMM());
-							}, 140.0f, 30.0f, true),
+								this.Dismiss();
+							}, 140.0f, 30.0f, false),
 						new DialogGUIButton("Quick Reload Database",
 							delegate
 							{
 								MMPatchLoader.keepPartDB = true;
 								this.parent.StartCoroutine(this.parent.DataBaseReloadWithMM());
-							}, 140.0f, 30.0f, true),
+								this.Dismiss();
+							}, 140.0f, 30.0f, false),
 						new DialogGUIButton("Dump Database to Files",
 							delegate
 							{
 								this.parent.StartCoroutine(this.parent.DataBaseReloadWithMM(true));
-							}, 140.0f, 30.0f, true),
-						new DialogGUIButton("Close", () => { }, 140.0f, 30.0f, true)
+								this.Dismiss();
+							}, 140.0f, 30.0f, false),
+						new DialogGUIButton("Close", () => { this.Dismiss(); } , 140.0f, 30.0f, false)
 						)),
 				false,
 				HighLogic.UISkin);

@@ -14,22 +14,23 @@ namespace ModuleManager.GUI
 #if KSP12
 internal class Menu
 	{
-		internal static Menu Show(ModuleManager parent)
-		{
-			return new Menu(parent);
-		}
-
-		internal Menu Dismiss()
-		{
-			this.instance = null;
-			return null;
-		}
-
-		private ModuleManager parent;
+		private readonly ModuleManager parent;
 		private PopupDialog instance;
-		private Menu(ModuleManager parent)
+
+		internal Menu(ModuleManager parent)
 		{
 			this.parent = parent;
+		}
+
+		internal void Dismiss()
+		{
+			this.instance.Dismiss();
+			this.instance = null;
+		}
+
+		internal void OnUpdate(bool inRnDCenter)
+		{
+			// TODO Make this work on KSP 1.2!
 		}
 	}
 #endif

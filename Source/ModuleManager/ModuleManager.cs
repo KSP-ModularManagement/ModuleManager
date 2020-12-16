@@ -71,6 +71,8 @@ namespace ModuleManager
 
         internal void Awake()
         {
+            this.menu = new GUI.Menu(this);
+
             if (LoadingScreen.Instance == null)
             {
                 Destroy(gameObject);
@@ -222,15 +224,7 @@ namespace ModuleManager
 
         internal void Update()
         {
-            if (GameSettings.MODIFIER_KEY.GetKey() && Input.GetKeyDown(KeyCode.F11)
-                && (HighLogic.LoadedScene == GameScenes.SPACECENTER || HighLogic.LoadedScene == GameScenes.MAINMENU)
-                && !inRnDCenter)
-            {
-                if (null == this.menu)
-                    this.menu = GUI.Menu.Show(this);
-                else
-                    this.menu = this.menu.Dismiss();
-            }
+            this.menu.OnUpdate(this.inRnDCenter);
 
             if (PerformanceMetrics.Instance.IsRunning && HighLogic.LoadedScene == GameScenes.MAINMENU)
             {
