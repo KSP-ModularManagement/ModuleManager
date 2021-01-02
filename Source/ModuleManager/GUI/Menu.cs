@@ -40,7 +40,7 @@ namespace ModuleManager.GUI
 			}
 		}
 
-		private void Show ()
+		private void Show()
 		{
 			this.instance = PopupDialog.SpawnPopupDialog(
 				new Vector2(0.5f, 0.5f),

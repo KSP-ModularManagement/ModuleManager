@@ -324,7 +324,7 @@ namespace ModuleManager
 			finally
 			{
 				PerformanceMetrics.Instance.Stop();
-				reloadingDialog.Dismiss();
+				reloadingDialog = reloadingDialog.Dismiss();
 				Log("Total reloading Time = " + PerformanceMetrics.Instance.ElapsedTimeInSecs.ToString("F3") + "s");
 				PerformanceMetrics.Instance.Destroy();
 			}
