@@ -196,18 +196,27 @@ namespace ModuleManager
                 databaseConfigs = LoadCache();
             }
 
-#if false
             // Using an dedicated external log is nice. Dumping it into KSP.log breaking the known formats is not.
+            // But...
+            // Now I see the reason this was done this way. Asking the user to send KSP.log is tricky by itself, and
+            // sending more than one log is yet more troublesome.
+            // What I can do is to only dump this on KSP.log when the KSPe.Util.Log.Level is bigger than Info.
+            // (the default KSPe's Global for Module Manager as from KSPe 2.2.3)
+            string patchLogPath = KSPe.IO.File<Startup>.Data.Solve(FilePathRepository.PATCH_LOG_FILENAME + ".log");
             if (File.Exists(patchLogPath))
             {
-                logger.Info("Dumping patch log");
-                logger.Info("\n#### BEGIN PATCH LOG ####\n\n\n" + File.ReadAllText(patchLogPath) + "\n\n\n#### END PATCH LOG ####");
+                if (ModLogger.LOG.level > KSPe.Util.Log.Level.INFO)
+                {
+                    logger.Info("Dumping patch log");
+                    logger.Info("\n#### BEGIN PATCH LOG ####\n\n\n" + File.ReadAllText(patchLogPath) + "\n\n\n#### END PATCH LOG ####");
+                }
+                else
+                    logger.Info("The Patch log can be found on " + patchLogPath);
             }
             else
             {
                 logger.Error("Patch log does not exist: " + patchLogPath);
             }
-#endif
 
             logger.Info(status);
 
