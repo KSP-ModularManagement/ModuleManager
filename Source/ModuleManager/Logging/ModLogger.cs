@@ -36,5 +36,7 @@ namespace ModuleManager.Logging
         {
             LOG.error(exception, message);
         }
+
+        public void Finish() { }
     }
 }

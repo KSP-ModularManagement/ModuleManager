@@ -135,6 +135,7 @@
     <Compile Include="GUI\Menu.12.cs" />
     <Compile Include="GUI\ReloadingDatabase.12.cs" />
     <Compile Include="Utils\PerformanceMetrics.cs" />
+    <Compile Include="Logging\PatchLogger.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />

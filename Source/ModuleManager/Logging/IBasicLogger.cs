@@ -8,5 +8,6 @@ namespace ModuleManager.Logging
     {
         void Log(LogType logType, string message);
         void Exception(string message, Exception exception);
+        void Finish();
     }
 }

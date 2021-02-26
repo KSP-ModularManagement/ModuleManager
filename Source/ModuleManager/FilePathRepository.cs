@@ -13,5 +13,6 @@ namespace ModuleManager
         internal static readonly KspConfig PART_DATABASE = new KspConfig("PartDatabase");
 
         internal static readonly string MMCfgOutputPath = KSPe.IO.File<ModuleManager>.Data.Solve("_MMCfgOutput");
+        internal static readonly string PATCH_LOG_FILENAME = "MMPatch";
     }
 }

@@ -79,7 +79,7 @@ namespace ModuleManager
             if (!ModuleManager.IsLoadedFromCache)
 #pragma warning restore CS0618 // Type or member is obsolete
             {
-                IBasicLogger patchLogger = ModLogger.Instance;
+                IBasicLogger patchLogger = new PatchLogger(FilePathRepository.PATCH_LOG_FILENAME);
 
                 IPatchProgress progress = new PatchProgress(patchLogger);
                 status = "Pre patch init";
@@ -181,6 +181,7 @@ namespace ModuleManager
                     CreateCache(databaseConfigs, progress.Counter.patchedNodes);
                 }
 
+                patchLogger.Finish();
                 StatusUpdate(progress);
 
                 #endregion Saving Cache
