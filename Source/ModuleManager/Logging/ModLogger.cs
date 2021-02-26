@@ -22,7 +22,6 @@ namespace ModuleManager.Logging
             this.methods[i++] = new LogMethod(LOG.info);
             this.methods[i++] = new LogMethod(LOG.detail);
             this.methods[i++] = new LogMethod(LOG.error);
-            LOG.level = K.Level.TRACE;
         }
 
         // Gambiarra porque eu não previ essa possibilidade no KSPe.Util.Log!
