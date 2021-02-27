@@ -2,6 +2,8 @@
 *Lasciate ogne speranza, voi ch'intrate*
 - - -
 
+* 2021-0227: 4.1.4.7 (Lisias) for KSP >= 1.2
+	+ Resurrects the Patch Logger on file
 * 2020-1216: 4.1.4.6 (Lisias) for KSP >= 1.2
 	+ Fixing a regression I introduced on 4.1.4.3 when I refactored MM to allow suporting KSP 1.2.2 again.
 		- Yep... Pretty stupid... #facePalm 
