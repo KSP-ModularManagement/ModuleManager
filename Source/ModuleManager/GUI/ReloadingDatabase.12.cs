@@ -19,7 +19,7 @@ namespace ModuleManager.GUI
 			return new ReloadingDatabaseDialog(parent);
 		}
 
-		internal Menu Dismiss()
+		internal ReloadingDatabaseDialog Dismiss()
 		{
 			this.instance.Dismiss();
 			this.instance = null;
