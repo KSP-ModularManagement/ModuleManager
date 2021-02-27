@@ -3,13 +3,13 @@ using System.Reflection;
 // Information about this assembly is defined by the following attributes. 
 // Change them to the values specific to your project.
 
-[assembly: AssemblyTitle("ModuleManager")]
-[assembly: AssemblyDescription("Module Manager /L Experimental")]
+[assembly: AssemblyTitle("Module Manager /L Experimental")]
+[assembly: AssemblyDescription("ModuleManager is mod that let you write patch file that edit other part at load time.")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("")]
-[assembly: AssemblyCopyright("")]
-[assembly: AssemblyTrademark("")]
+[assembly: AssemblyCompany(ModuleManager.LegalMamboJambo.Company)]
+[assembly: AssemblyProduct(ModuleManager.LegalMamboJambo.Product)]
+[assembly: AssemblyCopyright(ModuleManager.LegalMamboJambo.Copyright)]
+[assembly: AssemblyTrademark(ModuleManager.LegalMamboJambo.Trademark)]
 [assembly: AssemblyCulture("")]
 
 // The assembly version has the format "{Major}.{Minor}.{Build}.{Revision}".
