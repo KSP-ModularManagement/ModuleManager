@@ -558,7 +558,7 @@ namespace ModuleManager
             #region Values
 
             #if LOGSPAM
-            string vals = "[ModuleManager] modding values";
+            string vals = "modding values";
             #endif
             foreach (ConfigNode.Value modVal in mod.values)
             {
@@ -840,7 +840,7 @@ namespace ModuleManager
                 }
             }
             #if LOGSPAM
-            log(vals);
+            context.logger.Info(vals);
             #endif
 
             #endregion Values
