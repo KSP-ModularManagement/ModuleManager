@@ -1067,7 +1067,7 @@ namespace ModuleManager
                         }
                     }
                     #if LOGSPAM
-                    print(msg);
+                    context.logger.Info(msg);
                     #endif
                 }
             }
@@ -1132,7 +1132,9 @@ namespace ModuleManager
                 return RecurseNodeSearch(path.Substring(3), nodeStack.Pop(), context);
             }
 
-            //log("nextSep : \"" + nextSep + " \" root : \"" + root + " \" nodeType : \"" + nodeType + "\" nodeName : \"" + nodeName + "\"");
+            #if LOGSPAM
+            context.logger.Info(string.Format("nextSep : \"{0}\" root : \"{1}\" nodeType : \"{2}\" nodeName : \"{3}\"", nextSep, root, nodeType, nodeName));
+            #endif
 
             // @XXXXX
             if (root)
@@ -1386,7 +1388,7 @@ namespace ModuleManager
                     builder.Append(split[i + 1]);
                 }
                 value = builder.ToString();
-                //log("variable search output : =\"" + value + "\"");
+                context.logger.Info(string.Format("variable search output : =\"{0}\"", value));
             }
             return value;
         }
@@ -1563,10 +1565,14 @@ namespace ModuleManager
                         }
                         if (last != null)
                         {
-                            //print("CheckConstraints: " + constraints + " " + (not ^ any));
+                            #if LOGSPAM
+                            print(string.Format("CheckConstraints: {0} {1}", constraints, (not ^ any)));
+                            #endif
                             return not ^ any;
                         }
-                        //print("CheckConstraints: " + constraints + " " + (not ^ false));
+                        #if LOGSPAM
+                        print(string.Format("CheckConstraints: {0} {1}", constraints, (not ^ false)));
+                        #endif
                         return not ^ false;
 
                     case '#':
@@ -1575,10 +1581,14 @@ namespace ModuleManager
                         if (node.HasValue(type) && WildcardMatchValues(node, type, name))
                         {
                             bool ret2 = CheckConstraints(node, remainingConstraints);
-                            //print("CheckConstraints: " + constraints + " " + ret2);
+                            #if LOGSPAM
+                            print(string.Format("CheckConstraints: {0} {1}", constraints, ret2));
+                            #endif
                             return ret2;
                         }
-                        //print("CheckConstraints: " + constraints + " false");
+                        #if LOGSPAM
+                        print(string.Format("CheckConstraints: {0} false", constraints));
+                        #endif
                         return false;
 
                     case '~':
@@ -1587,20 +1597,28 @@ namespace ModuleManager
                         // or: ~breakingForce[100]  will be true if it's present but not 100, too.
                         if (name == "" && node.HasValue(type))
                         {
-                            //print("CheckConstraints: " + constraints + " false");
+                            #if LOGSPAM
+                            print(string.Format("CheckConstraints: {0} false", constraints));
+                            #endif
                             return false;
                         }
                         if (name != "" && WildcardMatchValues(node, type, name))
                         {
-                            //print("CheckConstraints: " + constraints + " false");
+                            #if LOGSPAM
+                            print(string.Format("CheckConstraints: {0} false", constraints));
+                            #endif
                             return false;
                         }
                         bool ret = CheckConstraints(node, remainingConstraints);
-                        //print("CheckConstraints: " + constraints + " " + ret);
+                        #if LOGSPAM
+                        print(string.Format("CheckConstraints: {0} {1}", constraints, ret));
+                        #endif
                         return ret;
 
                     default:
-                        //print("CheckConstraints: " + constraints + " false");
+                        #if LOGSPAM
+                        print(string.Format("CheckConstraints: {0} false", constraints));
+                        #endif
                         return false;
                 }
             }
@@ -1610,7 +1628,9 @@ namespace ModuleManager
             {
                 ret3 = ret3 && CheckConstraints(node, constraint);
             }
-            //print("CheckConstraints: " + constraints + " " + ret3);
+            #if LOGSPAM
+            print(string.Format("CheckConstraints: {0} {1}", constraints, ret3));
+            #endif
             return ret3;
         }
 
