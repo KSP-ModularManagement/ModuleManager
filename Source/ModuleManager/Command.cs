@@ -6,20 +6,20 @@ namespace ModuleManager
     {
         Insert,
 
-        Delete,
+        Delete,         // - or !
 
-        Edit,
+        Edit,           // @
 
-        Replace,
+        Replace,        // %
 
-        Copy,
+        Copy,           // + or $
 
-        Rename,
+        Rename,         // |
 
-        Paste,
+        Paste,          // #
 
-        Special,
+        Special,        // *
 
-        Create
+        Create          // &
     }
 }
