@@ -34,9 +34,11 @@ namespace ModuleManager.Utils
 
 		private PerformanceMetrics()
 		{
-			this.vSyncCount = QualitySettings.vSyncCount;
-			this.targetFrameRate = Application.targetFrameRate;
-			this.runInBackground = Application.runInBackground;
+			this.vSyncCount = GameSettings.SYNC_VBL;
+			this.targetFrameRate = GameSettings.FRAMERATE_LIMIT;
+			this.runInBackground = GameSettings.SIMULATE_IN_BACKGROUND;
+			Logging.ModLogger.Instance.Log(LogType.Exception, string.Format("PerformanceMetrics: Unity Settings On Constructor: {0} {1} {2}", QualitySettings.vSyncCount, Application.targetFrameRate, Application.runInBackground));
+			Logging.ModLogger.Instance.Log(LogType.Exception, string.Format("PerformanceMetrics: GameSettings On Constructor: {0} {1} {2}", this.vSyncCount, this.targetFrameRate, this.runInBackground));
 		}
 
 		internal void Start()
@@ -46,6 +48,7 @@ namespace ModuleManager.Utils
 			Application.targetFrameRate = 99999; // What the heck, why not? :D
 			QualitySettings.vSyncCount = 0;
 			this.totalTime.Start();
+			Logging.ModLogger.Instance.Log(LogType.Exception, string.Format("PerformanceMetrics: Unity Settings On Start: {0} {1} {2}", QualitySettings.vSyncCount, Application.targetFrameRate, Application.runInBackground));
 		}
 
 		internal void Stop()
@@ -54,12 +57,14 @@ namespace ModuleManager.Utils
 			Application.targetFrameRate = this.targetFrameRate;		// GameSettings.FRAMERATE_LIMIT ?
 			QualitySettings.vSyncCount = this.vSyncCount;			// GameSettings.SYNC_VBL ?
 			Application.runInBackground = this.runInBackground;		// GameSettings.SIMULATE_IN_BACKGROUND ?
+			Logging.ModLogger.Instance.Log(LogType.Exception, string.Format("PerformanceMetrics: Unity Settings after Stop: {0} {1} {2}", QualitySettings.vSyncCount, Application.targetFrameRate, Application.runInBackground));
 		}
 
 		internal void Destroy()
 		{
 			if (this.IsRunning) this.Stop();  // Playing safe
 			INSTANCE = null;
+			Logging.ModLogger.Instance.Log(LogType.Exception, string.Format("PerformanceMetrics: Unity Settings On Destroy: {0} {1} {2}", QualitySettings.vSyncCount, Application.targetFrameRate, Application.runInBackground));
 		}
 	}
 }

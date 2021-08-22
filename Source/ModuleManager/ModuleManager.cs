@@ -71,8 +71,7 @@ namespace ModuleManager
 
         internal void Awake()
         {
-            this.menu = new GUI.Menu(this);
-
+            Detail("Awake");
             if (LoadingScreen.Instance == null)
             {
                 Destroy(gameObject);
@@ -88,6 +87,8 @@ namespace ModuleManager
                 return;
             }
 
+            DontDestroyOnLoad(gameObject);
+            this.menu = new GUI.Menu(this);
             PerformanceMetrics.Instance.Start();
 
             interceptLogHandler = new InterceptLogHandler();
@@ -109,7 +110,6 @@ namespace ModuleManager
             {
                 textPos = Mathf.Min(textPos, text.rectTransform.localPosition.y);
             }
-            DontDestroyOnLoad(gameObject);
 
             // Subscribe to the RnD center spawn/deSpawn events
             GameEvents.onGUIRnDComplexSpawn.Add(OnRnDCenterSpawn);
@@ -175,6 +175,7 @@ namespace ModuleManager
         [SuppressMessage("Code Quality", "IDE0051", Justification = "Called by Unity")]
         private void Start()
         {
+            Detail("Start");
 #if CATS
             if (nCats)
                 CatManager.LaunchCats();
@@ -218,6 +219,7 @@ namespace ModuleManager
         // Unsubscribe from events when the behavior dies
         internal void OnDestroy()
         {
+            Detail("OnDestroy");
             GameEvents.onGUIRnDComplexSpawn.Remove(OnRnDCenterSpawn);
             GameEvents.onGUIRnDComplexDespawn.Remove(OnRnDCenterDeSpawn);
         }
@@ -478,6 +480,11 @@ namespace ModuleManager
         private static void Log(String format, params object[] p)
         {
             ModLogger.LOG.info(format, p);
+        }
+
+        private static void Detail(string s)
+        {
+            ModLogger.LOG.detail(s);
         }
     }
 }
