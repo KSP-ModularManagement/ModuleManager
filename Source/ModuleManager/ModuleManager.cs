@@ -276,7 +276,6 @@ namespace ModuleManager
 
 		internal IEnumerator DataBaseReloadWithMM(bool dump = false)
 		{
-			PerformanceMetrics.Instance.Start();
 			GUI.ReloadingDatabaseDialog reloadingDialog = GUI.ReloadingDatabaseDialog.Show(this);
 			try
 			{
@@ -323,10 +322,7 @@ namespace ModuleManager
 			}
 			finally
 			{
-				PerformanceMetrics.Instance.Stop();
 				reloadingDialog = reloadingDialog.Dismiss();
-				Log("Total reloading Time = " + PerformanceMetrics.Instance.ElapsedTimeInSecs.ToString("F3") + "s");
-				PerformanceMetrics.Instance.Destroy();
 			}
 		}
 
