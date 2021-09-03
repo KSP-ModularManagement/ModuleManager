@@ -2,6 +2,12 @@
 *Lasciate ogne speranza, voi ch'intrate*
 - - -
 
+* 2021-0801: 4.2.1 (Sarbian) for KSP 1.8.0
+	+ Fix off-by-one string indexing in constraint checking Also change string
+	+ comparison type to `StringComparison.Ordinal`, which should be the
+	+ correct type according to
+	+ https://docs.microsoft.com/en-us/dotnet/standard/base-types/best-practices-strings.
+	+ Undo string comparison change.
 * 2021-0801: 4.2.0 (Sarbian) for KSP 1.8.0
 	+ Normalize KSP root path
 	+ KSP makes it weird
