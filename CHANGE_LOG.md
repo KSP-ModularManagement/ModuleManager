@@ -2,6 +2,25 @@
 *Lasciate ogne speranza, voi ch'intrate*
 - - -
 
+* 2021-0801: 4.2.0 (Sarbian) for KSP 1.8.0
+	+ Normalize KSP root path
+	+ KSP makes it weird
+	+ Addresses confusion in #164
+	+ Set modded physics and reload earlier
+	+ Do it in post patch, this allows the part loader to pick up changes
+	+ (e.g. rigidbody min mass)
+	+ mark dependencies as copy local false
+	+ prevents them from showing up in the target directory
+	+ fix remaining .NET 3.5 nuget packages
+	+ upgrade visual studio runner
+	+ Update remaining NuGet packages
+	+ Add specific language markers to all project files
+	+ seems to get confused otherwise
+	+ Ensure string comparison is culture invariant
+	+ And get rid of message suppresions related to it
+	+ Always replace physics
+	+ On a database reload this will already be true but we still want physics
+	+ reloading to happen
 * 2021-0227: 4.1.4.7 (Lisias) for KSP >= 1.2
 	+ Resurrects the Patch Logger on file
 * 2020-1216: 4.1.4.6 (Lisias) for KSP >= 1.2
