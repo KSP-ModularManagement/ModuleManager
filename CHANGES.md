@@ -2,7 +2,7 @@
 *Lasciate ogne speranza, voi ch'intrate*
 - - -
 
-* 2021-0227: 4.1.4.8 (Lisias) for KSP >= 1.2
+* 2021-0822: 4.1.4.8 (Lisias) for KSP >= 1.2
 	+ Fix a performance issue on KSP >= 1.8, due a change on when the GameSettings were being applied (that ended you screwing my fork's restoring point) 
 * 2021-0227: 4.1.4.7 (Lisias) for KSP >= 1.2
 	+ Resurrects the Patch Logger on file
