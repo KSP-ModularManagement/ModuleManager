@@ -3,7 +3,32 @@
 - - -
 
 * 2021-0822: 4.1.4.8 (Lisias) for KSP >= 1.2
-	+ Fix a performance issue on KSP >= 1.8, due a change on when the GameSettings were being applied (that ended you screwing my fork's restoring point) 
+	+ Fix a performance issue on KSP >= 1.8, due a change on when the GameSettings were being applied (that ended you screwing my fork's restoring point)
+* 2021-0801: 4.2.1 (Sarbian) for KSP 1.8.0
+	+ Fix off-by-one string indexing in constraint checking Also change string
+	+ comparison type to `StringComparison.Ordinal`, which should be the
+	+ correct type according to
+	+ https://docs.microsoft.com/en-us/dotnet/standard/base-types/best-practices-strings.
+	+ Undo string comparison change.
+* 2021-0801: 4.2.0 (Sarbian) for KSP 1.8.0
+	+ Normalize KSP root path
+	+ KSP makes it weird
+	+ Addresses confusion in #164
+	+ Set modded physics and reload earlier
+	+ Do it in post patch, this allows the part loader to pick up changes
+	+ (e.g. rigidbody min mass)
+	+ mark dependencies as copy local false
+	+ prevents them from showing up in the target directory
+	+ fix remaining .NET 3.5 nuget packages
+	+ upgrade visual studio runner
+	+ Update remaining NuGet packages
+	+ Add specific language markers to all project files
+	+ seems to get confused otherwise
+	+ Ensure string comparison is culture invariant
+	+ And get rid of message suppresions related to it
+	+ Always replace physics
+	+ On a database reload this will already be true but we still want physics
+	+ reloading to happen
 * 2021-0227: 4.1.4.7 (Lisias) for KSP >= 1.2
 	+ Resurrects the Patch Logger on file
 * 2020-1216: 4.1.4.6 (Lisias) for KSP >= 1.2
