@@ -127,6 +127,8 @@ namespace ModuleManager
             logger.Info("Reloading Part Upgrades");
             PartUpgradeManager.Handler.FillUpgrades();
 
+            LoadModdedPhysics();
+
             yield return null;
 
             progressTitle = "ModuleManager: Running post patch callbacks";
@@ -205,6 +207,19 @@ namespace ModuleManager
             logger.Info("Post patch ran in " + ((float)postPatchTimer.ElapsedMilliseconds / 1000).ToString("F3") + "s");
 
             ready = true;
+        }
+
+        private void LoadModdedPhysics()
+        {
+            if (PHYSICS_CONFIG.IsLoadable)
+            {
+                logger.Info("Setting modded physics as the active one");
+                PhysicsGlobals.PhysicsDatabaseFilename = PHYSICS_CONFIG.Path;
+                if (!PhysicsGlobals.Instance.LoadDatabase())
+                    logger.Info("Something went wrong while setting the active physics config.");
+            }
+            else
+                logger.Error("Physics file not found");
         }
     }
 }
