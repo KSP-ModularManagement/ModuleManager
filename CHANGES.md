@@ -2,6 +2,16 @@
 *Lasciate ogne speranza, voi ch'intrate*
 - - -
 
+* 2021-0907: 4.2.1.1 (Lisias) for KSP >= 1.2
+	+ Catch up with upstream:
+		- 4.2.1
+			- Fix off-by-one string indexing in constraint checking Also change string
+			- comparison type to `StringComparison.Ordinal`, which should be the correct type according to [best-practices-strings](https://docs.microsoft.com/en-us/dotnet/standard/base-types/best-practices-strings).
+			- Undo string comparison change.
+		- 4.2.0
+			- Set modded physics and reload earlier
+			- Ensure string comparison is culture invariant
+			- Always replace physics
 * 2021-0822: 4.1.4.8 (Lisias) for KSP >= 1.2
 	+ Fix a performance issue on KSP >= 1.8, due a change on when the GameSettings were being applied (that ended you screwing my fork's restoring point) 
 * 2021-0227: 4.1.4.7 (Lisias) for KSP >= 1.2
