@@ -2,6 +2,10 @@
 *Lasciate ogne speranza, voi ch'intrate*
 - - -
 
+* 2021-0927: 4.2.1.2 (Lisias) for KSP >= 1.2
+	+ Code base updated to the newest KSPe 2.4 series
+	+ **ATTENTION**
+		- This release will only work on the new KSPe 2.4 series!
 * 2021-0907: 4.2.1.1 (Lisias) for KSP >= 1.2
 	+ Catch up with upstream:
 		- 4.2.1
