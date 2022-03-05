@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.IO;
 using ModuleManager.Extensions;
 using ModuleManager.Logging;
 using ModuleManager.Threading;
@@ -13,13 +12,19 @@ namespace ModuleManager
     public class MMPatchRunner
     {
         private readonly IBasicLogger kspLogger;
+        private readonly Progress.ProgressCounter counter;
+        private readonly Progress.Timings timings;
 
         public string Status { get; private set; } = "";
         public string Errors { get; private set; } = "";
 
-        public MMPatchRunner(IBasicLogger kspLogger)
+        internal MMPatchLoader patchLoader;
+
+        public MMPatchRunner(IBasicLogger kspLogger, Progress.ProgressCounter counter, Progress.Timings timings)
         {
             this.kspLogger = kspLogger ?? throw new ArgumentNullException(nameof(kspLogger));
+            this.counter = counter;
+            this.timings = timings;
         }
 
         public IEnumerator Run()
@@ -33,7 +38,7 @@ namespace ModuleManager
             IEnumerable<ModListGenerator.ModAddedByAssembly> modsAddedByAssemblies = ModListGenerator.GetAdditionalModsFromStaticMethods(ModLogger.Instance);
 
             IEnumerable<IProtoUrlConfig> databaseConfigs = null;
-            MMPatchLoader patchLoader = new MMPatchLoader(modsAddedByAssemblies, ModLogger.Instance);
+            this.patchLoader = new MMPatchLoader(modsAddedByAssemblies, ModLogger.Instance, this.counter, this.timings);
 
             ITaskStatus patchingThreadStatus = BackgroundTask.Start(delegate
             {

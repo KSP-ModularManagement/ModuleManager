@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
@@ -15,7 +14,6 @@ using ModuleManager.Extensions;
 using ModuleManager.Threading;
 using ModuleManager.Tags;
 using ModuleManager.Patches;
-using ModuleManager.Progress;
 using NodeStack = ModuleManager.Collections.ImmutableStack<ConfigNode>;
 
 using static ModuleManager.FilePathRepository;
@@ -41,22 +39,25 @@ namespace ModuleManager
 
         private readonly IEnumerable<ModListGenerator.ModAddedByAssembly> modsAddedByAssemblies;
         private readonly IBasicLogger logger;
+        private readonly Progress.ProgressCounter counter;
+        private readonly Progress.Timings timings;
 
         public static void AddPostPatchCallback(ModuleManagerPostPatchCallback callback)
         {
             PostPatchLoader.AddPostPatchCallback(callback);
         }
 
-        public MMPatchLoader(IEnumerable<ModListGenerator.ModAddedByAssembly> modsAddedByAssemblies, IBasicLogger logger)
+        public MMPatchLoader(IEnumerable<ModListGenerator.ModAddedByAssembly> modsAddedByAssemblies, IBasicLogger logger, Progress.ProgressCounter counter, Progress.Timings timings)
         {
             this.modsAddedByAssemblies = modsAddedByAssemblies ?? throw new ArgumentNullException(nameof(modsAddedByAssemblies));
             this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            this.counter = counter;
+            this.timings = timings;
         }
 
         public IEnumerable<IProtoUrlConfig> Run()
         {
-            Stopwatch patchSw = new Stopwatch();
-            patchSw.Start();
+            this.timings.Patching.Start();
 
             status = "Checking Cache";
             logger.Info(status);
@@ -79,7 +80,7 @@ namespace ModuleManager
             {
                 IBasicLogger patchLogger = new PatchLogger(FilePathRepository.PATCH_LOG_FILENAME);
 
-                IPatchProgress progress = new PatchProgress(patchLogger);
+                Progress.IPatchProgress progress = new Progress.PatchProgress(patchLogger, this.counter);
                 status = "Pre patch init";
                 patchLogger.Info(status);
                 IEnumerable<string> mods = ModListGenerator.GenerateModList(modsAddedByAssemblies, progress, patchLogger);
@@ -148,14 +149,14 @@ namespace ModuleManager
 
                 #region Saving Cache
 
-                foreach (KeyValuePair<string, int> item in progress.Counter.warningFiles)
+                foreach (KeyValuePair<string, int> item in this.counter.warningFiles)
                 {
                     patchLogger.Warning(item.Value + " warning" + (item.Value > 1 ? "s" : "") + " related to GameData/" + item.Key);
                 }
 
-                if (progress.Counter.errors > 0 || progress.Counter.exceptions > 0)
+                if (this.counter.errors > 0 || this.counter.exceptions > 0)
                 {
-                    foreach (KeyValuePair<string, int> item in progress.Counter.errorFiles)
+                    foreach (KeyValuePair<string, int> item in this.counter.errorFiles)
                     {
                         errors += item.Value + " error" + (item.Value > 1 ? "s" : "") + " related to GameData/" + item.Key
                                   + "\n";
@@ -175,8 +176,8 @@ namespace ModuleManager
                 else
                 {
                     status = "Saving Cache";
-                    patchLogger.Info(status);
-                    CreateCache(databaseConfigs, progress.Counter.patchedNodes);
+                    CreateCache(databaseConfigs, this.counter.patchedNodes);
+                    patchLogger.Info("Cache saved.");
                 }
 
                 patchLogger.Finish();
@@ -220,8 +221,8 @@ namespace ModuleManager
 
             logger.Info(status);
 
-            patchSw.Stop();
-            logger.Info("Ran in " + ((float)patchSw.ElapsedMilliseconds / 1000).ToString("F3") + "s");
+            this.timings.Patching.Stop();
+            logger.Info("Ran in " + this.timings.Patching);
 
             return databaseConfigs;
         }
@@ -262,8 +263,7 @@ namespace ModuleManager
 
         private bool IsCacheUpToDate()
         {
-            Stopwatch sw = new Stopwatch();
-            sw.Start();
+            this.timings.ShaCalc.Start();
 
             System.Security.Cryptography.SHA256 sha = System.Security.Cryptography.SHA256.Create();
             System.Security.Cryptography.SHA256 filesha = System.Security.Cryptography.SHA256.Create();
@@ -314,9 +314,9 @@ namespace ModuleManager
             sha.Clear();
             filesha.Clear();
 
-            sw.Stop();
+            this.timings.ShaCalc.Stop();
 
-            logger.Info("SHA generated in " + ((float)sw.ElapsedMilliseconds / 1000).ToString("F3") + "s");
+            logger.Info("SHA generated in " + this.timings.ShaCalc);
             logger.Info("      SHA = " + configSha);
 
             bool useCache = false;
@@ -494,7 +494,10 @@ namespace ModuleManager
             ConfigNode cache = CACHE_CONFIG.Load().Node;
 
             if (cache.HasValue("patchedNodeCount") && int.TryParse(cache.GetValue("patchedNodeCount"), out int patchedNodeCount))
+            { 
                 status = "ModuleManager: " + patchedNodeCount + " patch" + (patchedNodeCount != 1 ? "es" : "") +  " loaded from cache";
+                this.counter.patchedNodes.Set(patchedNodeCount);
+            }
 
             // Create the fake file where we load the physic config cache
             UrlDir gameDataDir = GameDatabase.Instance.root.AllDirectories.First(d => d.path.EndsWith("GameData") && d.name == "" && d.url == "");
@@ -524,23 +527,23 @@ namespace ModuleManager
             return databaseConfigs;
         }
 
-        private void StatusUpdate(IPatchProgress progress, string activity = null)
+        private void StatusUpdate(Progress.IPatchProgress progress, string activity = null)
         {
-            status = "ModuleManager: " + progress.Counter.patchedNodes + " patch" + (progress.Counter.patchedNodes != 1 ? "es" : "") + " applied";
+            status = "ModuleManager: " + this.counter.patchedNodes + " patch" + (this.counter.patchedNodes != 1 ? "es" : "") + " applied";
             if (progress.ProgressFraction < 1f - float.Epsilon)
                 status += " (" + progress.ProgressFraction.ToString("P0") + ")";
 
             if (activity != null)
                 status += "\n" + activity;
 
-            if (progress.Counter.warnings > 0)
-                status += ", found <color=yellow>" + progress.Counter.warnings + " warning" + (progress.Counter.warnings != 1 ? "s" : "") + "</color>";
+            if (this.counter.warnings > 0)
+                status += ", found <color=yellow>" + this.counter.warnings + " warning" + (this.counter.warnings != 1 ? "s" : "") + "</color>";
 
-            if (progress.Counter.errors > 0)
-                status += ", found <color=orange>" + progress.Counter.errors + " error" + (progress.Counter.errors != 1 ? "s" : "") + "</color>";
+            if (this.counter.errors > 0)
+                status += ", found <color=orange>" + this.counter.errors + " error" + (this.counter.errors != 1 ? "s" : "") + "</color>";
 
-            if (progress.Counter.exceptions > 0)
-                status += ", encountered <color=red>" + progress.Counter.exceptions + " exception" + (progress.Counter.exceptions != 1 ? "s" : "") + "</color>";
+            if (this.counter.exceptions > 0)
+                status += ", encountered <color=red>" + this.counter.exceptions + " exception" + (this.counter.exceptions != 1 ? "s" : "") + "</color>";
         }
 
         #region Applying Patches

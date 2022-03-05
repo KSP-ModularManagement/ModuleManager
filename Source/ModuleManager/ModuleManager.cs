@@ -52,12 +52,20 @@ namespace ModuleManager
         private GUI.Menu menu;
 
         internal MMPatchRunner patchRunner;
+        private readonly Progress.ProgressCounter counter;
+        private readonly Progress.Timings timings;
 
         private InterceptLogHandler interceptLogHandler;
 
         #endregion state
 
         private static bool loadedInScene;
+
+        private ModuleManager()
+        {
+            this.counter = new Progress.ProgressCounter();
+            this.timings = new Progress.Timings();
+        }
 
         internal void OnRnDCenterSpawn()
         {
@@ -138,8 +146,9 @@ namespace ModuleManager
 
                 Log("Adding post patch to the loading screen {0}", list.Count);
                 list.Insert(gameDatabaseIndex + 1, aGameObject.AddComponent<PostPatchLoader>());
+                PostPatchLoader.Instance.Set(this.timings);
 
-                patchRunner = new MMPatchRunner(ModLogger.Instance);
+                this.patchRunner = new MMPatchRunner(ModLogger.Instance, this.counter, this.timings);
                 StartCoroutine(patchRunner.Run());
 
                 // Workaround for 1.6.0 Editor bug after a PartDatabase rebuild.
@@ -231,7 +240,30 @@ namespace ModuleManager
             if (PerformanceMetrics.Instance.IsRunning && HighLogic.LoadedScene == GameScenes.MAINMENU)
             {
                 PerformanceMetrics.Instance.Stop();
-                Log("Total loading Time = " + PerformanceMetrics.Instance.ElapsedTimeInSecs.ToString("F3") + "s");
+                if (0 == this.counter.totalPatches.Value)
+                {
+                    Log("Loaded {0} patch(es) from cache."
+                            , this.counter.patchedNodes.Value
+                        );
+                    Log("Total loading Time = {0:0.000}s."
+                            , PerformanceMetrics.Instance.ElapsedTimeInSecs
+                        );
+                }
+                else
+                {
+                    Log("Found {0} and applied {1} patch(es), with {2} warning(s) and {3} error(s). {4} node(s) patched."
+                            , this.counter.totalPatches.Value
+                            , this.counter.appliedPatches.Value
+                            , this.counter.warnings.Value
+                            , this.counter.errors.Value
+                            , this.counter.patchedNodes.Value
+                        );
+                    Log("Total loading Time = {0:0.000}s, with {1} on patching and {2} on post patching (both parallel to loading)."
+                            , PerformanceMetrics.Instance.ElapsedTimeInSecs
+                            , (string)this.timings.Patching
+                            , (string)this.timings.PostPatching
+                        );
+                }
                 PerformanceMetrics.Instance.Destroy();
             }
 
@@ -281,7 +313,7 @@ namespace ModuleManager
 			GUI.ReloadingDatabaseDialog reloadingDialog = GUI.ReloadingDatabaseDialog.Show(this);
 			try
 			{
-				patchRunner = new MMPatchRunner(ModLogger.Instance);
+				patchRunner = new MMPatchRunner(ModLogger.Instance, this.counter, this.timings);
 
 				yield return null;
 
@@ -295,7 +327,7 @@ namespace ModuleManager
 				while (!GameDatabase.Instance.IsReady())
 					yield return null;
 
-				PostPatchLoader.Instance.StartLoad();
+				PostPatchLoader.Instance.Set(this.timings);
 
 				while (!PostPatchLoader.Instance.IsReady())
 					yield return null;

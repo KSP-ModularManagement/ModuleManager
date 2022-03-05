@@ -1,8 +1,6 @@
 ﻿using System;
-using System.IO;
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Reflection;
 using UnityEngine;
 using ModuleManager.Extensions;
@@ -24,6 +22,7 @@ namespace ModuleManager
         private static readonly List<ModuleManagerPostPatchCallback> postPatchCallbacks = new List<ModuleManagerPostPatchCallback>();
 
         private readonly IBasicLogger logger = ModLogger.Instance;
+        private Progress.Timings timings;
 
         private bool ready = false;
 
@@ -62,20 +61,25 @@ namespace ModuleManager
             StartCoroutine(Run());
         }
 
+        internal void Set(Progress.Timings timings)
+        {
+            this.timings = timings;
+        }
+
         private IEnumerator Run()
         {
-            Stopwatch waitTimer = new Stopwatch();
-            waitTimer.Start();
+            while (null == this.timings) yield return null;
+
+            this.timings.Wait.Start();
 
             progressTitle = "ModuleManager: Waiting for patching to finish";
 
             while (databaseConfigs == null) yield return null;
 
-            waitTimer.Stop();
-            logger.Info("Waited " + ((float)waitTimer.ElapsedMilliseconds / 1000).ToString("F3") + "s for patching to finish");
+            this.timings.Wait.Stop();
+            logger.Info("Waited " + this.timings.Wait + " for patching to finish");
 
-            Stopwatch postPatchTimer = new Stopwatch();
-            postPatchTimer.Start();
+            this.timings.PostPatching.Start();
 
             progressTitle = "ModuleManager: Applying patched game database";
             logger.Info("Applying patched game database");
@@ -203,8 +207,8 @@ namespace ModuleManager
             if (ModuleManager.dumpPostPatch)
                 ModuleManager.OutputAllConfigs();
 
-            postPatchTimer.Stop();
-            logger.Info("Post patch ran in " + ((float)postPatchTimer.ElapsedMilliseconds / 1000).ToString("F3") + "s");
+            this.timings.PostPatching.Stop();
+            logger.Info("Post patch ran in " + this.timings.PostPatching);
 
             ready = true;
         }

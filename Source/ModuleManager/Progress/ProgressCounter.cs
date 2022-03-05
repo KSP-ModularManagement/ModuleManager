@@ -8,7 +8,7 @@ namespace ModuleManager.Progress
     {
         public readonly Counter totalPatches = new Counter();
         public readonly Counter appliedPatches = new Counter();
-        public readonly Counter patchedNodes = new Counter();
+        public readonly SetableCounter patchedNodes = new SetableCounter();
         public readonly Counter warnings = new Counter();
         public readonly Counter errors = new Counter();
         public readonly Counter exceptions = new Counter();

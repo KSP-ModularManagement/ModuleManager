@@ -4,8 +4,6 @@ namespace ModuleManager.Progress
 {
     public interface IPatchProgress
     {
-        ProgressCounter Counter { get; }
-
         float ProgressFraction { get; }
 
         EventVoid OnPatchApplied { get; }

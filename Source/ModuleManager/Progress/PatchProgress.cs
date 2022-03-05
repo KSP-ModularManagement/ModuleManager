@@ -23,16 +23,10 @@ namespace ModuleManager.Progress
         public EventVoid OnPatchApplied { get; } = new EventVoid("OnPatchApplied");
         public EventData<IPass> OnPassStarted { get; } = new EventData<IPass>("OnPassStarted");
 
-        public PatchProgress(IBasicLogger logger)
+        public PatchProgress(IBasicLogger logger, ProgressCounter counter)
         {
             this.logger = logger;
-            Counter = new ProgressCounter();
-        }
-
-        public PatchProgress(IPatchProgress progress, IBasicLogger logger)
-        {
-            this.logger = logger;
-            Counter = progress.Counter;
+            this.Counter = counter;
         }
 
         public void PatchAdded()

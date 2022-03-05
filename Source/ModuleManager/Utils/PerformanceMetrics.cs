@@ -30,7 +30,7 @@ namespace ModuleManager.Utils
 		private readonly bool runInBackground;
 
 		internal bool IsRunning => this.totalTime.IsRunning;
-		internal float ElapsedTimeInSecs => ((float)this.totalTime.ElapsedMilliseconds / 1000);
+		internal float ElapsedTimeInSecs => this.totalTime.Value;
 
 		private PerformanceMetrics()
 		{
