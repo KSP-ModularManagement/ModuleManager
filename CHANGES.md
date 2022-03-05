@@ -2,6 +2,8 @@
 *Lasciate ogne speranza, voi ch'intrate*
 - - -
 
+* 2022-0306: 4.2.1.3 (Lisias) for KSP >= 1.2
+	+ More sensible performance logging.
 * 2021-0927: 4.2.1.2 (Lisias) for KSP >= 1.2
 	+ Code base updated to the newest KSPe 2.4 series
 	+ **ATTENTION**
