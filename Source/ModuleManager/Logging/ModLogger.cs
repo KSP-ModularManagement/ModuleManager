@@ -9,6 +9,7 @@ namespace ModuleManager.Logging
     {
         internal static readonly K.Logger LOG = K.Logger.CreateThreadUnsafeForType<ModuleManager>(); // No need to use thread safe logging. Yet.
         internal static readonly ModLogger Instance = new ModLogger(); // For legacy code
+        internal static bool DebugMode => KSPe.Globals<ModuleManager>.DebugMode;
 
         private delegate void LogMethod(string message, params object[] @parms);
         private readonly LogMethod[] methods;

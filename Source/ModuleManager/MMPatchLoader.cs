@@ -198,12 +198,14 @@ namespace ModuleManager
             // But...
             // Now I see the reason this was done this way. Asking the user to send KSP.log is tricky by itself, and
             // sending more than one log is yet more troublesome.
-            // What I can do is to only dump this on KSP.log when the KSPe.Util.Log.Level is bigger than Info.
+            // What I can do is to only dump this on KSP.log when the the KSPe Globals for ModuleManager has Debug set to true.
             // (the default KSPe's Global for Module Manager as from KSPe 2.2.3)
             string patchLogPath = KSPe.IO.File<Startup>.Data.Solve(FilePathRepository.PATCH_LOG_FILENAME + ".log");
             if (File.Exists(patchLogPath))
             {
-                if (ModLogger.LOG.level > KSPe.Util.Log.Level.INFO)
+#pragma warning disable CS0618 // Type or member is obsolete
+                if (ModuleManager.IsLoadedFromCache && ModLogger.DebugMode)
+#pragma warning restore CS0618 // Type or member is obsolete
                 {
                     logger.Info("Dumping patch log");
                     logger.Info("\n#### BEGIN PATCH LOG ####\n\n\n" + File.ReadAllText(patchLogPath) + "\n\n\n#### END PATCH LOG ####");
