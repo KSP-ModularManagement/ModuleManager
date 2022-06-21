@@ -239,6 +239,7 @@ namespace ModuleManager
             // Since it loaded the default config badly (sub node only) we clear it first
             physicsUrlFile.configs.Clear();
             // And reload it properly
+            ConfigNode physicsContent = ConfigNode.Load(PHYSICS_DEFAULT.Path); 
             physicsContent.name = PHYSICS_NODE_NAME;
             physicsUrlFile.AddConfig(physicsContent);
             gameDataDir.files.Add(physicsUrlFile);
