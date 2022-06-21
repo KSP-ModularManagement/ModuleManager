@@ -4,8 +4,9 @@
 set -euo pipefail
 IFS=$'\n\t'
 
-pwd=$(pwd)
-./pack-full.sh
-cd $pwd
-./pack-curse.sh
-cd $pwd
+. ./CONFIG.inc
+. ./deploy.sh
+
+echo "Running ${KSP_DEV}"
+open ${KSP_DEV}/KSP.app
+

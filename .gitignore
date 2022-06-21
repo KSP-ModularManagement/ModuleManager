@@ -1,12 +1,12 @@
 .vs
 bin
 obj
-GameData/**/*.LICENSE
-GameData/**/*.NOTICE
-GameData/**/*.README.md
+GameData/**/LICENSE*
+GameData/**/NOTICE*
+GameData/**/README.md
 GameData/**/*.version
 GameData/**/*.dll
-GameData/**/*.CHANGE_LOG.md
+GameData/**/CHANGE_LOG.md
 Source/**/Properties/Version.cs
 packages
 Archive
