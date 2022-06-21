@@ -2,6 +2,10 @@
 *Lasciate ogne speranza, voi ch'intrate*
 - - -
 
+* 2022-0618: 4.2.2 (Sarbian) for KSP >= 1.8
+	+ Support wildcards in nodetype matching so you can do `@*,* {}`
+	+ Support # in value names since loc names start with #
+	+ Tell Localizer to reload the language after MM finishes 
 * 2022-0306: 4.2.1.3 (Lisias) for KSP >= 1.2
 	+ More sensible performance logging.
 * 2021-0927: 4.2.1.2 (Lisias) for KSP >= 1.2
