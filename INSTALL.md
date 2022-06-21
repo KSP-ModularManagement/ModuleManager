@@ -33,7 +33,7 @@ The following file layout must be present after installation:
 		[ModuleManager]
 			...
 	KSP.log
-	PastDatabase.cfg
+	PartDatabase.cfg
 	...
 ```
 
