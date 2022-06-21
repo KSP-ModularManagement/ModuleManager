@@ -2,6 +2,14 @@
 *Lasciate ogne speranza, voi ch'intrate*
 - - -
 
+* 2022-0620: 4.2.2.1 (Lisias) for KSP >= 1.2
+	+ Catch up with upstream:
+		- v4.2.2 
+			- Support wildcards in nodetype matching so you can do `@*,* {}`
+			- Support # in value names since loc names start with #
+			- Tell Localizer to reload the language after MM finishes
+	+ More orthodoxous deploy model
+		- **COMPLETELY REMOVE ALL OLDER FILES FROM `GameData`** before updating !!
 * 2022-0618: 4.2.2 (Sarbian) for KSP >= 1.8
 	+ Support wildcards in nodetype matching so you can do `@*,* {}`
 	+ Support # in value names since loc names start with #
