@@ -219,7 +219,10 @@ namespace ModuleManager
                 logger.Error("Patch log does not exist: " + patchLogPath);
             }
 
-            logger.Info(status);
+            if (KSP.Localization.Localizer.Instance != null)
+                KSP.Localization.Localizer.SwitchToLanguage(KSP.Localization.Localizer.CurrentLanguage);
+
+            logger.Info(status + "\n" + errors);
 
             this.timings.Patching.Stop();
             logger.Info("Ran in " + this.timings.Patching);
@@ -236,7 +239,6 @@ namespace ModuleManager
             // Since it loaded the default config badly (sub node only) we clear it first
             physicsUrlFile.configs.Clear();
             // And reload it properly
-            ConfigNode physicsContent = ConfigNode.Load(PHYSICS_DEFAULT.Path); 
             physicsContent.name = PHYSICS_NODE_NAME;
             physicsUrlFile.AddConfig(physicsContent);
             gameDataDir.files.Add(physicsUrlFile);
@@ -549,7 +551,7 @@ namespace ModuleManager
         #region Applying Patches
 
         // Name is group 1, index is group 2, vector related filed is group 3, vector separator is group 4, operator is group 5
-        private static readonly Regex parseValue = new Regex(@"([\w\&\-\.\?\*+/^!\(\) ]+(?:,[^*\d][\w\&\-\.\?\*\(\) ]*)*)(?:,(-?[0-9\*]+))?(?:\[((?:[0-9\*]+)+)(?:,(.))?\])?");
+        private static readonly Regex parseValue = new Regex(@"([\w\&\-\.\?\*\#+/^!\(\) ]+(?:,[^*\d][\w\&\-\.\?\*\(\) ]*)*)(?:,(-?[0-9\*]+))?(?:\[((?:[0-9\*]+)+)(?:,(.))?\])?");
 
         // ModifyNode applies the ConfigNode mod as a 'patch' to ConfigNode original, then returns the patched ConfigNode.
         // it uses FindConfigNodeIn(src, nodeType, nodeName, nodeTag) to recurse.
@@ -1717,19 +1719,26 @@ namespace ModuleManager
             string nodeName = null,
             int index = 0)
         {
-            ConfigNode[] nodes = src.GetNodes(nodeType);
-            if (nodes.Length == 0)
+            List<ConfigNode> nodes = new List<ConfigNode>();
+            int c = src.nodes.Count;
+            for(int i = 0; i < c; ++i)
+            {
+                if (WildcardMatch(src.nodes[i].name, nodeType))
+                    nodes.Add(src.nodes[i]);
+            }
+            int nodeCount = nodes.Count;
+            if (nodeCount == 0)
                 return null;
             if (nodeName == null)
             {
                 if (index >= 0)
-                    return nodes[Math.Min(index, nodes.Length - 1)];
-                return nodes[Math.Max(0, nodes.Length + index)];
+                    return nodes[Math.Min(index, nodeCount - 1)];
+                return nodes[Math.Max(0, nodeCount + index)];
             }
             ConfigNode last = null;
             if (index >= 0)
             {
-                for (int i = 0; i < nodes.Length; ++i)
+                for (int i = 0; i < nodeCount; ++i)
                 {
                     if (nodes[i].HasValue("name") && WildcardMatch(nodes[i].GetValue("name"), nodeName))
                     {
@@ -1740,7 +1749,7 @@ namespace ModuleManager
                 }
                 return last;
             }
-            for (int i = nodes.Length - 1; i >= 0; --i)
+            for (int i = nodeCount - 1; i >= 0; --i)
             {
                 if (nodes[i].HasValue("name") && WildcardMatch(nodes[i].GetValue("name"), nodeName))
                 {
