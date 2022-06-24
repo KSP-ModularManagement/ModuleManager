@@ -304,10 +304,17 @@ namespace ModuleManager
                 sha.TransformBlock(pathBytes, 0, pathBytes.Length, pathBytes, 0);
             }
 
-            foreach (ModListGenerator.ModAddedByAssembly mod in modsAddedByAssemblies)
+            // Hash the symbols added by Assemblies, as they impact the patching process.
             {
-                byte[] modBytes = Encoding.UTF8.GetBytes(mod.modName);
-                sha.TransformBlock(modBytes, 0, modBytes.Length, modBytes, 0);
+                IEnumerable<string> symbols = from s in this.modsAddedByAssemblies
+                                orderby s.modName
+                                select s.modName
+                            ;
+                foreach (string symbol in symbols)
+                {
+                    byte[] bytes = Encoding.UTF8.GetBytes(symbol);
+                    sha.TransformBlock(bytes, 0, bytes.Length, bytes, 0);
+                }
             }
 
             byte[] godsFinalMessageToHisCreation = Encoding.UTF8.GetBytes("Fork by Lisias.");
