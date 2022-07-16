@@ -345,13 +345,14 @@ namespace ModuleManager
 
             logger.Info("SHA generated in " + this.timings.ShaCalc);
             logger.Info("      SHA = " + configSha);
+            logger.Info("     SIZE = " + this.totalConfigFilesSize);
 
             bool useCache = false;
             if (SHA_CONFIG.IsLoadable)
             {
                 SHA_CONFIG.Load();
                 logger.Info("ConfigSHA loaded");
-                if (SHA_CONFIG.Node != null && SHA_CONFIG.Node.HasValue("SHA") && SHA_CONFIG.Node.HasValue("version") && SHA_CONFIG.Node.HasValue("KSPVersion"))
+                if (null != SHA_CONFIG.Node)
                 {
                     KSPe.ConfigNodeWithSteroids cs = KSPe.ConfigNodeWithSteroids.from(SHA_CONFIG.Node);
                     string storedSHA = cs.GetValue("SHA","");
@@ -359,15 +360,15 @@ namespace ModuleManager
                     string version = cs.GetValue("version","");
                     string kspVersion = cs.GetValue("KSPVersion","");
                     ConfigNode filesShaNode = cs.GetNode("FilesSHA");
-                    useCache = CheckFilesChange(files, filesShaNode);
+                    useCache = version.Equals(Assembly.GetExecutingAssembly().GetName().Version.ToString());
+                    useCache = useCache && kspVersion.Equals(Versioning.version_major + "." + Versioning.version_minor + "." + Versioning.Revision + "." + Versioning.BuildID);
                     useCache = useCache && storedSHA.Equals(configSha);
                     useCache = useCache && storedTotalSize == this.totalConfigFilesSize;
-                    useCache = useCache && version.Equals(Assembly.GetExecutingAssembly().GetName().Version.ToString());
-                    useCache = useCache && kspVersion.Equals(Versioning.version_major + "." + Versioning.version_minor + "." + Versioning.Revision + "." + Versioning.BuildID);
                     useCache = useCache && CACHE_CONFIG.IsLoadable;
                     useCache = useCache && PHYSICS_CONFIG.IsLoadable;
                     useCache = useCache && TECHTREE_CONFIG.IsLoadable;
-                    logger.Info("Cache SHA = " + storedSHA);
+                    useCache = useCache && CheckFilesChange(files, filesShaNode);
+                    logger.Info("Cache SHA, SIZE = " + storedSHA + ", " + storedTotalSize);
                     logger.Info("useCache = " + useCache);
                 }
             }
