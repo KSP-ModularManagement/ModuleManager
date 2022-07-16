@@ -33,7 +33,9 @@ namespace ModuleManager
         private static readonly KeyValueCache<string, Regex> regexCache = new KeyValueCache<string, Regex>();
 
         private string configSha;
-        private readonly Dictionary<string, string> filesSha = new Dictionary<string, string>();
+        private int totalConfigFilesSize;
+        private readonly Dictionary<string, string> filesShaMap = new Dictionary<string, string>();
+        private readonly Dictionary<string, int> filesSizeMap = new Dictionary<string, int>();
 
         private const int STATUS_UPDATE_INVERVAL_MS = 33;
 
@@ -271,8 +273,10 @@ namespace ModuleManager
             System.Security.Cryptography.SHA256 sha = System.Security.Cryptography.SHA256.Create();
             System.Security.Cryptography.SHA256 filesha = System.Security.Cryptography.SHA256.Create();
             UrlDir.UrlFile[] files = GameDatabase.Instance.root.AllConfigFiles.ToArray();
+            this.totalConfigFilesSize = 0;
 
-            filesSha.Clear();
+            this.filesShaMap.Clear();
+            this.filesSizeMap.Clear();
 
             for (int i = 0; i < files.Length; i++)
             {
@@ -280,19 +284,21 @@ namespace ModuleManager
                 // Hash the file path so the checksum change if files are moved
                 byte[] pathBytes = Encoding.UTF8.GetBytes(url);
                 sha.TransformBlock(pathBytes, 0, pathBytes.Length, pathBytes, 0);
+                this.totalConfigFilesSize += pathBytes.Length;
 
                 // hash the file content
                 byte[] contentBytes = File.ReadAllBytes(files[i].fullPath);
                 sha.TransformBlock(contentBytes, 0, contentBytes.Length, contentBytes, 0);
 
                 filesha.ComputeHash(contentBytes);
-                if (!filesSha.ContainsKey(url))
+                if (!(this.filesShaMap.ContainsKey(url) || this.filesSizeMap.ContainsKey(url)))
                 {
-                    filesSha.Add(url, BitConverter.ToString(filesha.Hash));
+                    this.filesShaMap.Add(url, BitConverter.ToString(filesha.Hash));
+                    this.filesSizeMap.Add(url, contentBytes.Length);
                 }
                 else
                 {
-                    logger.Warning("Duplicate fileSha key. This should not append. The key is " + url);
+                    logger.Warning("Duplicate filesShaMap/filesSizeMap key. This should not append. The key is {0}" + url);
                 }
             }
 
@@ -336,12 +342,15 @@ namespace ModuleManager
                 logger.Info("ConfigSHA loaded");
                 if (SHA_CONFIG.Node != null && SHA_CONFIG.Node.HasValue("SHA") && SHA_CONFIG.Node.HasValue("version") && SHA_CONFIG.Node.HasValue("KSPVersion"))
                 {
-                    string storedSHA = SHA_CONFIG.Node.GetValue("SHA");
-                    string version = SHA_CONFIG.Node.GetValue("version");
-                    string kspVersion = SHA_CONFIG.Node.GetValue("KSPVersion");
-                    ConfigNode filesShaNode = SHA_CONFIG.Node.GetNode("FilesSHA");
+                    KSPe.ConfigNodeWithSteroids cs = KSPe.ConfigNodeWithSteroids.from(SHA_CONFIG.Node);
+                    string storedSHA = cs.GetValue("SHA","");
+                    int storedTotalSize = cs.GetValue<int>("SIZE", -1);
+                    string version = cs.GetValue("version","");
+                    string kspVersion = cs.GetValue("KSPVersion","");
+                    ConfigNode filesShaNode = cs.GetNode("FilesSHA");
                     useCache = CheckFilesChange(files, filesShaNode);
                     useCache = useCache && storedSHA.Equals(configSha);
+                    useCache = useCache && storedTotalSize == this.totalConfigFilesSize;
                     useCache = useCache && version.Equals(Assembly.GetExecutingAssembly().GetName().Version.ToString());
                     useCache = useCache && kspVersion.Equals(Versioning.version_major + "." + Versioning.version_minor + "." + Versioning.Revision + "." + Versioning.BuildID);
                     useCache = useCache && CACHE_CONFIG.IsLoadable;
@@ -362,12 +371,13 @@ namespace ModuleManager
             {
                 string url = files[i].GetUrlWithExtension();
                 ConfigNode fileNode = GetFileNode(shaConfigNode, url);
-                string fileSha = fileNode?.GetValue("SHA");
+                if (fileNode == null) continue;
 
-                if (fileNode == null)
-                    continue;
+                KSPe.ConfigNodeWithSteroids cs = KSPe.ConfigNodeWithSteroids.from(fileNode);
+                string fileSha = cs.GetValue("SHA", "");
+                int fileSize = cs.GetValue<int>("SIZE", -1);
 
-                if (fileSha == null || filesSha[url] != fileSha)
+                if (-1 == fileSize || String.IsNullOrEmpty(fileSha) || filesShaMap[url] != fileSha)
                 {
                     logger.Info("Changed : " + fileNode.GetValue("filename") + ".cfg");
                     noChange = false;
@@ -411,6 +421,7 @@ namespace ModuleManager
         {
             SHA_CONFIG.Clear();
             SHA_CONFIG.Node.AddValue("SHA", configSha);
+            SHA_CONFIG.Node.AddValue("SIZE", this.totalConfigFilesSize);
             SHA_CONFIG.Node.AddValue("version", Assembly.GetExecutingAssembly().GetName().Version.ToString());
             SHA_CONFIG.Node.AddValue("KSPVersion", Versioning.version_major + "." + Versioning.version_minor + "." + Versioning.Revision + "." + Versioning.BuildID);
             ConfigNode filesSHANode = SHA_CONFIG.Node.AddNode("FilesSHA");
@@ -433,12 +444,13 @@ namespace ModuleManager
             {
                 string url = file.GetUrlWithExtension();
                 // "/Physics" is the node we created manually to loads the PHYSIC config
-                if (file.url != "/Physics" && filesSha.ContainsKey(url))
+                if (file.url != "/Physics" && filesShaMap.ContainsKey(url))
                 {
                     ConfigNode shaNode = filesSHANode.AddNode("FILE");
                     shaNode.AddValue("filename", url);
-                    shaNode.AddValue("SHA", filesSha[url]);
-                    filesSha.Remove(url);
+                    shaNode.AddValue("SHA", filesShaMap[url]);
+                    shaNode.AddValue("SIZE", this.filesSizeMap[url]);
+                    filesShaMap.Remove(url);
                 }
             }
 
