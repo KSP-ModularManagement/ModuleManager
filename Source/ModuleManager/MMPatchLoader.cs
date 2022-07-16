@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -8,15 +7,14 @@ using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 
-using ModuleManager.Collections;
 using ModuleManager.Logging;
 using ModuleManager.Extensions;
-using ModuleManager.Threading;
 using ModuleManager.Tags;
 using ModuleManager.Patches;
 using NodeStack = ModuleManager.Collections.ImmutableStack<ConfigNode>;
 
 using static ModuleManager.FilePathRepository;
+using ModuleManager.Utils;
 
 namespace ModuleManager
 {
@@ -29,8 +27,6 @@ namespace ModuleManager
         public string errors = "";
 
         public static bool keepPartDB = false;
-
-        private static readonly KeyValueCache<string, Regex> regexCache = new KeyValueCache<string, Regex>();
 
         private string configSha;
         private int totalConfigFilesSize;
@@ -55,6 +51,12 @@ namespace ModuleManager
             this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
             this.counter = counter;
             this.timings = timings;
+        }
+
+        ~MMPatchLoader()
+        {   // Being paranoid on memory cleaning...
+            this.CleanUpCaches();
+            ConfigNodeEditUtils.Instance.Destroy();
         }
 
         public IEnumerable<IProtoUrlConfig> Run()
@@ -226,6 +228,10 @@ namespace ModuleManager
 
             logger.Info(status + "\n" + errors);
 
+            // Cleaning some memory
+            ConfigNodeEditUtils.Instance.Destroy();
+            this.CleanUpCaches();
+
             this.timings.Patching.Stop();
             logger.Info("Ran in " + this.timings.Patching);
 
@@ -266,6 +272,12 @@ namespace ModuleManager
             PHYSICS_CONFIG.Save(configs.First().Node);
         }
 
+        private void CleanUpCaches()
+        {
+            this.filesShaMap.Clear();
+            this.filesSizeMap.Clear();
+        }
+
         private bool IsCacheUpToDate()
         {
             this.timings.ShaCalc.Start();
@@ -275,8 +287,7 @@ namespace ModuleManager
             UrlDir.UrlFile[] files = GameDatabase.Instance.root.AllConfigFiles.ToArray();
             this.totalConfigFilesSize = 0;
 
-            this.filesShaMap.Clear();
-            this.filesSizeMap.Clear();
+            this.CleanUpCaches();
 
             for (int i = 0; i < files.Length; i++)
             {
@@ -451,6 +462,7 @@ namespace ModuleManager
                     shaNode.AddValue("SHA", filesShaMap[url]);
                     shaNode.AddValue("SIZE", this.filesSizeMap[url]);
                     filesShaMap.Remove(url);
+                    filesSizeMap.Remove(url);
                 }
             }
 
@@ -753,7 +765,7 @@ namespace ModuleManager
 
                             if (varValue != null)
                             {
-                                string value = FindAndReplaceValue(
+                                string value = ConfigNodeEditUtils.Instance.FindAndReplaceValue(
                                     mod,
                                     ref valName,
                                     varValue, newNode,
@@ -800,7 +812,7 @@ namespace ModuleManager
                             while (index < valCount)
                             {
                                 // If there is an index, use it.
-                                ConfigNode.Value v = FindValueIn(newNode, valName, index);
+                                ConfigNode.Value v = ConfigNodeEditUtils.Instance.FindValueIn(newNode, valName, index);
                                 if (v != null)
                                     newNode.values.Remove(v);
                                 if (isStar) index++;
@@ -813,7 +825,7 @@ namespace ModuleManager
                             ConfigNode.Value last = null;
                             while (true)
                             {
-                                ConfigNode.Value v = FindValueIn(newNode, valName, index++);
+                                ConfigNode.Value v = ConfigNodeEditUtils.Instance.FindValueIn(newNode, valName, index++);
                                 if (v == last)
                                     break;
                                 last = v;
@@ -1171,7 +1183,7 @@ namespace ModuleManager
 
                     foundNodeType = true;
 
-                    if (nodeName == null || (node.GetValue("name") is string testNodeName && WildcardMatch(testNodeName, nodeName)))
+                    if (nodeName == null || (node.GetValue("name") is string testNodeName && ConfigNodeEditUtils.Instance.WildcardMatch(testNodeName, nodeName)))
                     {
                         nodeStack = new NodeStack(node);
                         break;
@@ -1267,7 +1279,7 @@ namespace ModuleManager
 
                     foundNodeType = true;
 
-                    if (nodeName == null || (node.GetValue("name") is string testNodeName && WildcardMatch(testNodeName, nodeName)))
+                    if (nodeName == null || (node.GetValue("name") is string testNodeName && ConfigNodeEditUtils.Instance.WildcardMatch(testNodeName, nodeName)))
                     {
                         return RecurseVariableSearch(path.Substring(nextSep + 1), new NodeStack(node), context);
                     }
@@ -1361,7 +1373,7 @@ namespace ModuleManager
             if (match.Groups[2].Success)
                 int.TryParse(match.Groups[2].Value, out idx);
 
-            ConfigNode.Value cVal = FindValueIn(nodeStack.value, valName, idx);
+            ConfigNode.Value cVal = ConfigNodeEditUtils.Instance.FindValueIn(nodeStack.value, valName, idx);
             if (cVal == null)
             {
                 context.logger.Warning("Cannot find key " + valName + " in " + nodeStack.value.name);
@@ -1412,104 +1424,6 @@ namespace ModuleManager
                 value = builder.ToString();
                 context.logger.Info(string.Format("variable search output : =\"{0}\"", value));
             }
-            return value;
-        }
-
-        private static string FindAndReplaceValue(
-            ConfigNode mod,
-            ref string valName,
-            string value,
-            ConfigNode newNode,
-            Operator op,
-            int index,
-            out ConfigNode.Value origVal,
-            PatchContext context,
-            bool hasPosIndex = false,
-            int posIndex = 0,
-            bool hasPosStar = false,
-            char seperator = ',')
-        {
-            origVal = FindValueIn(newNode, valName, index);
-            if (origVal == null)
-                return null;
-            string oValue = origVal.value;
-
-            string[] strArray = new string[] { oValue };
-            if (hasPosIndex)
-            {
-                strArray = oValue.Split(new char[] { seperator }, StringSplitOptions.RemoveEmptyEntries);
-                if (posIndex >= strArray.Length)
-                {
-                    context.progress.Error(context.patchUrl, "Invalid Vector Index!");
-                    return null;
-                }
-            }
-            string backupValue = value;
-            while (posIndex < strArray.Length)
-            {
-                value = backupValue;
-                oValue = strArray[posIndex];
-                if (op != Operator.Assign)
-                {
-                    if (op == Operator.RegexReplace)
-                    {
-                        try
-                        {
-                            string[] split = value.Split(value[0]);
-
-                            Regex replace = regexCache.Fetch(split[1], delegate
-                            {
-                                return new Regex(split[1]);
-                            });
-
-                            value = replace.Replace(oValue, split[2]);
-                        }
-                        catch (Exception ex)
-                        {
-                            context.progress.Exception(context.patchUrl, "Error - Failed to do a regexp replacement: " + mod.name + " : original value=\"" + oValue +
-                                "\" regexp=\"" + value +
-                                "\" \nNote - to use regexp, the first char is used to subdivide the string (much like sed)", ex);
-                            return null;
-                        }
-                    }
-                    else if (double.TryParse(value, NumberStyles.Float, CultureInfo.InvariantCulture.NumberFormat, out double s)
-                             && double.TryParse(oValue, NumberStyles.Float, CultureInfo.InvariantCulture.NumberFormat, out double os))
-                    {
-                        switch (op)
-                        {
-                            case Operator.Multiply:
-                                value = (os * s).ToString(CultureInfo.InvariantCulture);
-                                break;
-
-                            case Operator.Divide:
-                                value = (os / s).ToString(CultureInfo.InvariantCulture);
-                                break;
-
-                            case Operator.Add:
-                                value = (os + s).ToString(CultureInfo.InvariantCulture);
-                                break;
-
-                            case Operator.Subtract:
-                                value = (os - s).ToString(CultureInfo.InvariantCulture);
-                                break;
-
-                            case Operator.Exponentiate:
-                                value = Math.Pow(os, s).ToString(CultureInfo.InvariantCulture);
-                                break;
-                        }
-                    }
-                    else
-                    {
-                        context.progress.Error(context.patchUrl, "Error - Failed to do a maths replacement: " + mod.name + " : original value=\"" + oValue +
-                            "\" operator=" + op + " mod value=\"" + value + "\"");
-                        return null;
-                    }
-                }
-                strArray[posIndex] = value;
-                if (hasPosStar) posIndex++;
-                else break;
-            }
-            value = String.Join(new string(seperator, 1), strArray);
             return value;
         }
 
@@ -1665,7 +1579,7 @@ namespace ModuleManager
             string[] values = node.GetValues(type);
             for (int i = 0; i < values.Length; i++)
             {
-                if (!compare && WildcardMatch(values[i], value))
+                if (!compare && ConfigNodeEditUtils.Instance.WildcardMatch(values[i], value))
                     return true;
 
                 if (compare && double.TryParse(values[i], NumberStyles.Float, CultureInfo.InvariantCulture.NumberFormat, out double val2)
@@ -1675,19 +1589,6 @@ namespace ModuleManager
                 }
             }
             return false;
-        }
-
-        public static bool WildcardMatch(string s, string wildcard)
-        {
-            if (wildcard == null)
-                return true;
-            string pattern = "^" + Regex.Escape(wildcard).Replace(@"\*", ".*").Replace(@"\?", ".") + "$";
-
-            Regex regex = regexCache.Fetch(pattern, delegate
-            {
-                return new Regex(pattern);
-            });
-            return regex.IsMatch(s);
         }
 
         #endregion Condition checking
@@ -1743,7 +1644,7 @@ namespace ModuleManager
             int c = src.nodes.Count;
             for(int i = 0; i < c; ++i)
             {
-                if (WildcardMatch(src.nodes[i].name, nodeType))
+                if (ConfigNodeEditUtils.Instance.WildcardMatch(src.nodes[i].name, nodeType))
                     nodes.Add(src.nodes[i]);
             }
             int nodeCount = nodes.Count;
@@ -1760,7 +1661,7 @@ namespace ModuleManager
             {
                 for (int i = 0; i < nodeCount; ++i)
                 {
-                    if (nodes[i].HasValue("name") && WildcardMatch(nodes[i].GetValue("name"), nodeName))
+                    if (nodes[i].HasValue("name") && ConfigNodeEditUtils.Instance.WildcardMatch(nodes[i].GetValue("name"), nodeName))
                     {
                         last = nodes[i];
                         if (--index < 0)
@@ -1771,7 +1672,7 @@ namespace ModuleManager
             }
             for (int i = nodeCount - 1; i >= 0; --i)
             {
-                if (nodes[i].HasValue("name") && WildcardMatch(nodes[i].GetValue("name"), nodeName))
+                if (nodes[i].HasValue("name") && ConfigNodeEditUtils.Instance.WildcardMatch(nodes[i].GetValue("name"), nodeName))
                 {
                     last = nodes[i];
                     if (++index >= 0)
@@ -1779,21 +1680,6 @@ namespace ModuleManager
                 }
             }
             return last;
-        }
-
-        private static ConfigNode.Value FindValueIn(ConfigNode newNode, string valName, int index)
-        {
-            ConfigNode.Value v = null;
-            for (int i = 0; i < newNode.values.Count; ++i)
-            {
-                if (WildcardMatch(newNode.values[i].name, valName))
-                {
-                    v = newNode.values[i];
-                    if (--index < 0)
-                        return v;
-                }
-            }
-            return v;
         }
 
         #endregion Config Node Utilities

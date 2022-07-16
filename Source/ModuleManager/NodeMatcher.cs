@@ -1,5 +1,6 @@
 ﻿using System;
 using ModuleManager.Extensions;
+using ModuleManager.Utils;
 
 namespace ModuleManager
 {
@@ -42,7 +43,7 @@ namespace ModuleManager
                 bool match = false;
                 foreach (string pattern in namePatterns)
                 {
-                    if (MMPatchLoader.WildcardMatch(name, pattern))
+                    if (ConfigNodeEditUtils.Instance.WildcardMatch(name, pattern))
                     {
                         match = true;
                         break;
