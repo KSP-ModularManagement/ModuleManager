@@ -2,18 +2,19 @@
 *Lasciate ogne speranza, voi ch'intrate*
 - - -
 
+* 2022-0716: 4.2.2.2 (Lisias) for KSP >= 1.2
+	+ Removes a memory leak, and promotes some key functions reusability. 
+	+ Mitigates false positives while checking the ConfigCache, aiming to avoid the need of "deleting the cache when something weird happens" after load.
+		- It's pretty rare, but not that much, that a change on a file ends up getting the same SHA256.
+		- Checking also the file size now, as it's **way more** improbable that we would had a hash collision on a file with the same size. 
 * 2022-0620: 4.2.2.1 (Lisias) for KSP >= 1.2
 	+ Catch up with upstream:
 		- v4.2.2 
-			- Support wildcards in nodetype matching so you can do `@*,* {}`
+			- Support wildcards in nodetype matching so you can do @*,* {}
 			- Support # in value names since loc names start with #
 			- Tell Localizer to reload the language after MM finishes
 	+ More orthodoxous deploy model
 		- **COMPLETELY REMOVE ALL OLDER FILES FROM `GameData`** before updating !!
-* 2022-0618: 4.2.2 (Sarbian) for KSP >= 1.8
-	+ Support wildcards in nodetype matching so you can do `@*,* {}`
-	+ Support # in value names since loc names start with #
-	+ Tell Localizer to reload the language after MM finishes 
 * 2022-0306: 4.2.1.3 (Lisias) for KSP >= 1.2
 	+ More sensible performance logging.
 * 2021-0927: 4.2.1.2 (Lisias) for KSP >= 1.2
