@@ -2,6 +2,8 @@
 *Lasciate ogne speranza, voi ch'intrate*
 - - -
 
+* 2022-0719: 4.2.2.3 (Lisias) for KSP >= 1.2
+	+ More resilient handling of a potentially corrupted (or old) cache.
 * 2022-0716: 4.2.2.2 (Lisias) for KSP >= 1.2
 	+ Removes a memory leak, and promotes some key functions reusability. 
 	+ Mitigates false positives while checking the ConfigCache, aiming to avoid the need of "deleting the cache when something weird happens" after load.
