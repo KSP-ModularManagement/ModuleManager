@@ -352,7 +352,7 @@ namespace ModuleManager
             {
                 SHA_CONFIG.Load();
                 logger.Info("ConfigSHA loaded");
-                if (null != SHA_CONFIG.Node)
+                if (null != SHA_CONFIG.Node) try
                 {
                     KSPe.ConfigNodeWithSteroids cs = KSPe.ConfigNodeWithSteroids.from(SHA_CONFIG.Node);
                     string storedSHA = cs.GetValue("SHA","");
@@ -370,6 +370,11 @@ namespace ModuleManager
                     useCache = useCache && CheckFilesChange(files, filesShaNode);
                     logger.Info("Cache SHA, SIZE = " + storedSHA + ", " + storedTotalSize);
                     logger.Info("useCache = " + useCache);
+                }
+                catch (Exception e)
+                {
+                    logger.Error("Error while reading SHA values from cache: " + e.ToString());
+                    useCache = false;
                 }
             }
             return useCache;
