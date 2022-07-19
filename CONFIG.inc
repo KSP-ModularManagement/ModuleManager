@@ -8,7 +8,7 @@ VERSIONFILE="$PACKAGE.version"
 
 DLLS="$PACKAGE"
 # PluginData DLLs
-PD_DLLS=""
+PD_DLLS="$PACKAGE"
 # Rule oriented deployoment for PluginData
 #declare -A PD_SUB_RULES=( ["KSPe.UI.12"]="./12x/KSPe.UI" ["KSPe.UI.14"]="./14x/KSPe.UI" ["KSPe.UI.18"]="./18x/KSPe.UI" )
 declare -A PD_SUB_RULES=( )

@@ -5,9 +5,6 @@ set -euo pipefail
 IFS=$'\n\t'
 source ./CONFIG.inc
 
-echo Not yet!
-exit -1
-
 clean() {
 	rm -fR $FILE
 	if [ ! -d Archive ] ; then
