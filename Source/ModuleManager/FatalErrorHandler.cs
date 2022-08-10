@@ -13,7 +13,9 @@ namespace ModuleManager
                 PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f),
                     new Vector2(0.5f, 0.5f),
                     new MultiOptionDialog(
+#if !KSP12
                         "ModuleManagerFatalError",
+#endif
                         $"ModuleManager has encountered a fatal error and KSP needs to close.\n\n{message}\n\nPlease see KSP's log for addtional details",
                         "ModuleManager - Fatal Error",
                         HighLogic.UISkin,

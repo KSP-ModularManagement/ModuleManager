@@ -223,8 +223,10 @@ namespace ModuleManager
                 logger.Error("Patch log does not exist: " + patchLogPath);
             }
 
+#if !KSP12
             if (KSP.Localization.Localizer.Instance != null)
                 KSP.Localization.Localizer.SwitchToLanguage(KSP.Localization.Localizer.CurrentLanguage);
+#endif
 
             logger.Info(status + "\n" + errors);
 
