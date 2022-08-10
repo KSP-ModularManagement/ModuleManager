@@ -2,6 +2,9 @@
 *Lasciate ogne speranza, voi ch'intrate*
 - - -
 
+* 2022-0809: 4.2.2.4 (Lisias) for KSP >= 1.2
+	+ Fixed a pretty lame mistake on the 1.2.2 port.
+		- And, yeah. I should had tested this thing on KSP 1.2.2 recently... #facePalm 	
 * 2022-0719: 4.2.2.3 (Lisias) for KSP >= 1.2
 	+ More resilient handling of a potentially corrupted (or old) cache.
 * 2022-0716: 4.2.2.2 (Lisias) for KSP >= 1.2
