@@ -10,7 +10,7 @@ Backwards compatibility is guaranteed - including functional bugs on `Module Man
 
 Development for this fork is ongoing and, as such, subject to some screw ups now and then. **AVOID** Pre Releases unless you are willing to help me debug this thing (check for `Pre Release` markings before downloading).
 
-Please, **DO NOT** submit bug reports/issues to the UPSTREAM (see the bottom of this document). as this is an EXPERIMENTAL/WIP version of `ModuleManger - Forum` being developed in parallel and separately from the Forum version.
+Please, **DO NOT** submit bug reports/issues to the UPSTREAM (see the bottom of this document), as this is an EXPERIMENTAL/WIP version of `ModuleManger - Forum` being developed in parallel and separately from the Forum version.
 
 Necessarily, `MM/L` will receive **no support** from the maintainers of `ModuleManger - Forum`, as well from some 3rd parties that may choose to support `ModuleManger - Forum` only. Some others (and myself), on the other hand, **will** actively support `MM/L`. Check your add'ons documentation (or politely ask us directly) for more information.
 
