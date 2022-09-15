@@ -2,9 +2,19 @@
 *Lasciate ogne speranza, voi ch'intrate*
 - - -
 
-ModuleManager is mod that let you write patch file that edit other part at load time.
+ModuleManager is a mod that let you write patches that edit other parts at load time.
 
-This is Lisias' Experimental fork for Module Mamager.
+This is Lisias' Experimental fork for Module Manager, and it's intended to bring functionality and performant improvements to ModuleManager - with great to moderate success being achieved toward these goals (most of the time!), as well others not mentioned here.
+
+Backwards compatibility is guaranteed - including functional bugs on `Module Manager - Forum`. `MM/L`'s patching output will be always the same as `Module Manager - Forum`, salvo new (and optional) features when not present on `Module Manager - Forum`.
+
+Development for this fork is ongoing and, as such, subject to some screw ups now and then. **AVOID** Pre Releases unless you are willing to help me debug this thing (check for `Pre Release` markings before downloading).
+
+Please, **DO NOT** submit bug reports/issues to the UPSTREAM (see the bottom of this document). as this is an EXPERIMENTAL/WIP version of `ModuleManger - Forum` being developed in parallel and separately from the Forum version.
+
+Necessarily, `MM/L` will receive **no support** from the maintainers of `ModuleManger - Forum`, as well from some 3rd parties that may choose to support `ModuleManger - Forum` only. Some others (and myself), on the other hand, **will** actively support `MM/L`. Check your add'ons documentation (or politely ask us directly) for more information.
+
+Please, **DO** submit bug reports/issues to the links depicted on the next section of this document.
 
 
 ## In a Hurry
