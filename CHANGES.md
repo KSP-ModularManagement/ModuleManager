@@ -2,6 +2,10 @@
 *Lasciate ogne speranza, voi ch'intrate*
 - - -
 
+* 2022-0918: 4.2.2.4b (Lisias) for KSP >= 1.2
+	+ Updates the [`INSTALL.md`](https://github.com/net-lisias-ksp/ModuleManager/blob/master/INSTALL.md) file to reflect the new deployment model.
+		- A new `MM/L` release wasn't really **needed**, but since I failed to update the install instructions and there're people using this, I choose to be conservative on the matter.
+		- There're no changes on the DLL, so I choose to shove a "b" on the same release number.
 * 2022-0809: 4.2.2.4 (Lisias) for KSP >= 1.2
 	+ Fixed a pretty lame mistake on the 1.2.2 port.
 		- And, yeah. I should had tested this thing on KSP 1.2.2 recently... #facePalm 	
