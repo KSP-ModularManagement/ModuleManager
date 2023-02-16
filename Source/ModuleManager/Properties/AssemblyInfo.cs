@@ -3,7 +3,7 @@ using System.Reflection;
 // Information about this assembly is defined by the following attributes. 
 // Change them to the values specific to your project.
 
-[assembly: AssemblyTitle("Module Manager /L Experimental")]
+[assembly: AssemblyTitle("Module Manager /L")]
 [assembly: AssemblyDescription("ModuleManager is mod that let you write patch file that edit other part at load time.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany(ModuleManager.LegalMamboJambo.Company)]

@@ -1,4 +1,4 @@
-# Module Manager /L Experimental :: Changes
+# Module Manager /L :: Changes
 *Lasciate ogne speranza, voi ch'intrate*
 - - -
 

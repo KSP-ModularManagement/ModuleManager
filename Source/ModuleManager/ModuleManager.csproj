@@ -118,7 +118,6 @@
     <Compile Include="Logging\PatchLogger.cs" />
     <Compile Include="Properties\LegalMamboJambo.cs" />
     <Compile Include="Progress\Timings.cs" />
-    <Compile Include="Utils\Stopwatch.cs" />
     <Compile Include="Utils\ConfigNodeEditUtils.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -1,16 +1,16 @@
-# Module Manager /L Experimental
+# Module Manager /L
 *Lasciate ogne speranza, voi ch'intrate*
 - - -
 
 ModuleManager is a mod that let you write patches that edit other parts at load time.
 
-This is Lisias' Experimental fork for Module Manager, and it's intended to bring functionality and performant improvements to ModuleManager - with great to moderate success being achieved toward these goals (most of the time!), as well others not mentioned here.
+This is Lisias' fork for Module Manager, and it's intended to bring functionality and performant improvements to ModuleManager - with great to moderate success being achieved toward these goals (most of the time!), as well others not mentioned here.
 
 Backwards compatibility is guaranteed - including functional bugs on `Module Manager - Forum`. `MM/L`'s patching output will be always the same as `Module Manager - Forum`, salvo new (and optional) features when not present on `Module Manager - Forum`.
 
 Development for this fork is ongoing and, as such, subject to some screw ups now and then. **AVOID** Pre Releases unless you are willing to help me debug this thing (check for `Pre Release` markings before downloading).
 
-Please, **DO NOT** submit bug reports/issues to the UPSTREAM (see the bottom of this document), as this is an EXPERIMENTAL/WIP version of `ModuleManger - Forum` being developed in parallel and separately from the Forum version.
+Please, **DO NOT** submit bug reports/issues to the [References](#references) (see the bottom of this document), as this is an EXPERIMENTAL/WIP version of `ModuleManger - Forum` being developed in parallel and separately from the Forum version.
 
 Necessarily, `MM/L` will receive **no support** from the maintainers of `ModuleManger - Forum`, as well from some 3rd parties that may choose to support `ModuleManger - Forum` only. Some others (and myself), on the other hand, **will** actively support `MM/L`. Check your add'ons documentation (or politely ask us directly) for more information.
 
@@ -51,25 +51,28 @@ To install, place the GameData folder inside your Kerbal Space Program folder. I
 
 ### Licensing
 
-[CC-BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/):
+This work is licensed as follows:
 
-* You are free to:
-	+ Share - copy and redistribute the material in any medium or format
-	+ Adapt - remix, transform, and build upon the material for any purpose, even commercially. This license is acceptable for Free
-Cultural Works.
-	+ The licensor cannot revoke these freedoms as long as you follow the license terms.
-* Under the following terms:
-	+ Attribution - You must give appropriate credit, provide a link to the license, and indicate if changes were made. You may do
-so in any reasonable manner, but not in any way that suggests the licensor endorses you or your use.
-	+ No additional restrictions - You may not apply legal terms or technological measures that legally restrict others from doing
-anything the license permits.
+* [GPL 3.0](https://www.gnu.org/licenses/gpl-3.0.en.html). See [here](./LICENSE.GPL-3_0)
+	+ You are free to:
+		- Use : unpack and use the material in any computer or device
+		- Redistribute : redistribute the original package in any medium
+		- Adapt : Reuse, modify or incorporate source code into your works (and redistribute it!) 
+	+ Under the following terms:
+		- You retain any copyright notices
+		- You recognise and respect any trademarks
+		- You don't impersonate the authors, neither redistribute a derivative that could be misrepresented as theirs.
+		- You credit the author and republish the copyright notices on your works where the code is used.
+		- You relicense (and fully comply) your works using GPL 3.0
+			- Please note that upgrading the license to any posterior GPL **IS NOT ALLOWED** for this work, as the author **DID NOT** added the "or (at your option) any later version" on the license. 	
+		- You don't mix your work with GPL incompatible works.
 
-The above is a human-readable summary of (and not a substitute for) the [license](./ModuleManager.LICENSE). Visit the link for the legal code.
+[Previous releases](https://github.com/sarbian/ModuleManager) remains licensed under the [CC-BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/). Additionally, [check this statement](https://creativecommons.org/2015/10/08/cc-by-sa-4-0-now-one-way-compatible-with-gplv3/) from CC.
 
 Please note the copyrights and trademarks in [NOTICE](./NOTICE)
 
 
-## UPSTREAM
+## References
 
 * [Sarbian](https://forum.kerbalspaceprogram.com/index.php?/profile/57146-sarbian/) UPSTREAM / Current Maintainer
 	+ [Forum](https://forum.kerbalspaceprogram.com/index.php?/topic/50533-141-module-manager-307-may-5th-2018-its-dangerous-to-go-alone-take-those-cats-with-you)
