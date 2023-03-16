@@ -1,7 +1,12 @@
-# Module Manager /L Experimental :: Change Log
+# Module Manager /L :: Change Log
 *Lasciate ogne speranza, voi ch'intrate*
 - - -
 
+* 2023-0316: 4.2.2.5 (Lisias) for KSP >= 1.2
+	+ Drops the Experimental status
+	+ Relicense the whole shebang to GPL-3.0
+	+ Make the thing properly distributable.
+	+ **Needs** KSPe 2.5 or higher.
 * 2022-0918: 4.2.2.4b (Lisias) for KSP >= 1.2
 	+ Updates the [`INSTALL.md`](https://github.com/net-lisias-ksp/ModuleManager/blob/master/INSTALL.md) file to reflect the new deployment model.
 		- A new `MM/L` release wasn't really **needed**, but since I failed to update the install instructions and there're people using this, I choose to be conservative on the matter.
