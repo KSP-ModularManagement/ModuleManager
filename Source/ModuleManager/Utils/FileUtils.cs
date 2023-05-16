@@ -59,7 +59,7 @@ namespace ModuleManager.Utils
 				while (i-- > 0) try
 				{
 					using (SHA256 sha = SHA256.Create())
-						using (FileStream fs = File.Open(filename, FileMode.Open, FileAccess.Read, FileShare.Read))
+						using (FileStream fs = File.Open(filename, FileMode.Open, FileAccess.Read))
 							data = sha.ComputeHash(fs);
 					break;
 				}
