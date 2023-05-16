@@ -27,7 +27,7 @@ namespace ModuleManager.Logging
         private readonly LogMethod[] methods;
         internal PatchLogger(string filename)
         {
-            this.log = new K.FileChainUnityLogger<Startup>(filename);
+            this.log = new K.FileChainUnityLogger<Startup>(filename, 0);
 
             this.methods = new LogMethod[6];
             int i = 0;
