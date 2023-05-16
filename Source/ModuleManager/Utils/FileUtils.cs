@@ -17,7 +17,10 @@
 using System;
 using System.IO;
 using System.Security.Cryptography;
+using System.Threading;
+
 using ModuleManager.Extensions;
+using Log = ModuleManager.Logging.ModLogger;
 
 namespace ModuleManager.Utils
 {
@@ -29,12 +32,47 @@ namespace ModuleManager.Utils
 
             byte[] data = null;
 
-            using (SHA256 sha = SHA256.Create())
             {
-                using (FileStream fs = File.Open(filename, FileMode.Open, FileAccess.Read))
-                {
-                    data = sha.ComputeHash(fs);
-                }
+				/*
+				 * This one is hairy. Absolutely hairy.
+				 *
+				 * By some reason, pretty powerful rigs are getting screwed by what I think is a race condition (perhaps induced by MM being
+				 * instantiated twice somehow), with the file failing being opened due it being already opened by someone else.
+				 *
+				 * It was postulated that KSP would be the one keeping these files opened. I think it's not because by the time
+				 * Module Manager is started up, KSP had already loaded and resolved every single DLL (and its dependencies) and, so,
+				 * there will be just not a single logic reason to keep them opened in memory - unless KSP is not calling the Dispose
+				 * or not using the `using` construction and, so, we have a file handlers leaking on this damned thing.
+				 *
+				 * In a way or another, the proposed solution on pull/request 180 to the upstream is, IMHO, completely out of the line.
+				 * **WE JUST DON'T** open executable files with Writing privileges, **POINT**. At very least, this will prevent anti-virus
+				 * software from being triggered on us, avoiding slowing down KSP's file accesses.
+				 *
+				 * So I will not use `FileShare.ReadWrite` no matter what. I terminantly refuse to do so.
+				 *
+				 * See:
+				 *	+ https://github.com/sarbian/ModuleManager/pull/180
+				 *	+ https://forum.kerbalspaceprogram.com/index.php?/topic/50533-18x-112x-module-manager-422-june-18th-2022-the-heatwave-edition/page/302/#comment-4283448
+				 */
+				Exception ex = null;
+				int i = 8;	// Max wait: 1 second
+				while (i-- > 0) try
+				{
+					using (SHA256 sha = SHA256.Create())
+						using (FileStream fs = File.Open(filename, FileMode.Open, FileAccess.Read, FileShare.Read))
+							data = sha.ComputeHash(fs);
+					break;
+				}
+				catch (Exception e)
+				{
+					ex = e;
+					Log.LOG.detail("Error {0} on reading {1} on regressive count {2}!", e.Message, filename, i);
+					GC.Collect();		// For the hypothesis KSP is leaking file handlers
+					Thread.Sleep(125);	// In milliseconds
+				}
+				if (0 == i && null != ex) throw ex;
+				if (null != ex)
+					Log.LOG.warn("File {0} suffered at least one Exception with message \"{1}\" while being processed. The problem was recovered, but this log was issued to mark the event.", filename, ex.Message);
             }
 
             return data.ToHex();
