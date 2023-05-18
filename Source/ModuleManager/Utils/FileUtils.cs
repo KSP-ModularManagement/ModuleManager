@@ -44,22 +44,27 @@ namespace ModuleManager.Utils
 				 * there will be just not a single logic reason to keep them opened in memory - unless KSP is not calling the Dispose
 				 * or not using the `using` construction and, so, we have a file handlers leaking on this damned thing.
 				 *
-				 * In a way or another, the proposed solution on pull/request 180 to the upstream is, IMHO, completely out of the line.
+				 * In a way or another, the proposed solution on pull/request 180 to the upstream is, IMHO, less than ideal.
 				 * **WE JUST DON'T** open executable files with Writing privileges, **POINT**. At very least, this will prevent anti-virus
 				 * software from being triggered on us, avoiding slowing down KSP's file accesses.
 				 *
 				 * So I will not use `FileShare.ReadWrite` no matter what. I terminantly refuse to do so.
+				 * 
+				 * But I had to reconsider and use `FileShare.Read` after doing some benchmarks, as by some reason it's the fastest 
+				 * way to open a file under C#, even on a UNIX.
 				 *
 				 * See:
 				 *	+ https://github.com/sarbian/ModuleManager/pull/180
 				 *	+ https://forum.kerbalspaceprogram.com/index.php?/topic/50533-18x-112x-module-manager-422-june-18th-2022-the-heatwave-edition/page/302/#comment-4283448
+				 *	+ https://forum.kerbalspaceprogram.com/index.php?/topic/50533-18x-112x-module-manager-422-june-18th-2022-the-heatwave-edition/page/303/#comment-4284427
+				 *	+ https://github.com/net-lisias-ksp/KSPe/commit/4fcced165ce72edcf5db2c95311ebafc02d6a921
 				 */
 				Exception ex = null;
 				int i = 8;	// Max wait: 1 second
 				while (i-- > 0) try
 				{
 					using (SHA256 sha = SHA256.Create())
-						using (FileStream fs = File.Open(filename, FileMode.Open, FileAccess.Read))
+						using (FileStream fs = File.Open(filename, FileMode.Open, FileAccess.Read, FileShare.Read))
 							data = sha.ComputeHash(fs);
 					break;
 				}
