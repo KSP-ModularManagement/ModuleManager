@@ -2,6 +2,10 @@
 *Lasciate ogne speranza, voi ch'intrate*
 - - -
 
+* 2023-0521: 4.2.2.6 (Lisias) for KSP >= 1.2
+	+ (Hopefully) mitigates a pretty weird problem happening on some new Intel CPU's with asymmetric cores (and on a less extent, faster Intel and probably AMD with symmetric ones).
+		- Initially discovered by [LinuxGuruGamer](https://github.com/sarbian/ModuleManager/pull/180), then (pretty badly) misdiagnosed by me until I got in my senses and did some testings.
+	+ Removes some deprecated calls from `KSPe`.
 * 2023-0316: 4.2.2.5 (Lisias) for KSP >= 1.2
 	+ Drops the Experimental status
 	+ Relicense the whole shebang to GPL-3.0
