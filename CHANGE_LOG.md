@@ -2,6 +2,9 @@
 *Lasciate ogne speranza, voi ch'intrate*
 - - -
 
+* 2023-0716: 4.2.3.1 (Lisias) for KSP >= 1.2
+	+ Bumps versioning, catching up with upstream and formalising the fixes already implemented - some for ages... :)
+	+ Removes yet some more deprecated calls from `KSPe`.
 * 2023-0703: 4.2.3.0 (Sarbian) for KSP >= 1.9
 	+ Fix the dll hashing when the dll is already opened. by @linuxgurugamer
 	+ Fix for MM loading the wrong physics file when when when using the faulty PDLauncher workaround
