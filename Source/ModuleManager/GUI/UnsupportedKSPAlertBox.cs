@@ -26,7 +26,7 @@ This release of Module Manager runs only on KSP {0}, but you are using {1}!";
 
 		internal static void Show(string intendedKSP, string currentKSP)
 		{
-			KSPe.Common.Dialogs.ShowStopperAlertBox.Show(
+			KSPe.Common.Dialogs.ShowStopperErrorBox.Show(
 				string.Format(MSG, intendedKSP, currentKSP),
 				AMSG,
 				() => { Application.OpenURL("https://github.com/net-lisias-ksp/ModuleManager/releases"); Application.Quit(); }

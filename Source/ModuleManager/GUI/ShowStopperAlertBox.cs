@@ -26,7 +26,7 @@ namespace ModuleManager.GUI
 
 		internal static void Show(string message)
 		{
-			KSPe.Common.Dialogs.ShowStopperAlertBox.Show(
+			KSPe.Common.Dialogs.ShowStopperErrorBox.Show(
 				string.Format(MSG, message),
 				AMSG,
 				() => { Application.OpenURL("https://github.com/net-lisias-ksp/ModuleManager/issues/2"); Application.Quit(); }
