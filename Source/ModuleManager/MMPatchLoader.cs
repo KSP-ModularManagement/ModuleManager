@@ -618,14 +618,10 @@ namespace ModuleManager
 
             #region Values
 
-            #if LOGSPAM
             string vals = "modding values";
-            #endif
             foreach (ConfigNode.Value modVal in mod.values)
             {
-                #if LOGSPAM
                 vals += "\n   " + modVal.name + "= " + modVal.value;
-                #endif
 
                 Command cmd = CommandParser.Parse(modVal.name, out string valName);
 
@@ -805,10 +801,8 @@ namespace ModuleManager
 
                                 if (value != null)
                                 {
-                                    #if LOGSPAM
                                     if (origVal.value != value)
                                         vals += ": " + origVal.value + " -> " + value;
-                                    #endif
 
                                     if (cmd != Command.Copy)
                                         origVal.value = value;
@@ -900,9 +894,7 @@ namespace ModuleManager
                         break;
                 }
             }
-            #if LOGSPAM
-            context.logger.Info(vals);
-            #endif
+            ModLogger.LOG.detail(vals);
 
             #endregion Values
 
@@ -977,9 +969,7 @@ namespace ModuleManager
                     string tag = "";
                     string nodeType, nodeName;
                     int index = 0;
-                    #if LOGSPAM
-                    string msg = "";
-                    #endif
+                    string logspam_msg = "";
                     List<ConfigNode> subNodes = new List<ConfigNode>();
 
                     // three ways to specify:
@@ -1029,10 +1019,8 @@ namespace ModuleManager
                                 last = n;
                             }
                         }
-#if LOGSPAM
                         else
-                            msg += "  cannot wildcard a % node: " + subMod.name + "\n";
-#endif
+                            logspam_msg += "  cannot wildcard a % node: " + subMod.name + "\n";
                     }
                     else
                     {
@@ -1047,9 +1035,7 @@ namespace ModuleManager
                         // if the original exists modify it
                         if (subNodes.Count > 0)
                         {
-                            #if LOGSPAM
-                            msg += "  Applying subnode " + subMod.name + "\n";
-                            #endif
+                            logspam_msg += "  Applying subnode " + subMod.name + "\n";
                             ConfigNode newSubNode = ModifyNode(nodeStack.Push(subNodes[0]), subMod, context);
                             subNodes[0].ShallowCopyFrom(newSubNode);
                             subNodes[0].name = newSubNode.name;
@@ -1057,9 +1043,7 @@ namespace ModuleManager
                         else
                         {
                             // if not add the mod node without the % in its name
-                            #if LOGSPAM
-                            msg += "  Adding subnode " + subMod.name + "\n";
-                            #endif
+                            logspam_msg += "  Adding subnode " + subMod.name + "\n";
 
                             ConfigNode copy = new ConfigNode(nodeType);
 
@@ -1074,9 +1058,7 @@ namespace ModuleManager
                     {
                         if (subNodes.Count == 0)
                         {
-                            #if LOGSPAM
-                            msg += "  Adding subnode " + subMod.name + "\n";
-                            #endif
+                            logspam_msg += "  Adding subnode " + subMod.name + "\n";
 
                             ConfigNode copy = new ConfigNode(nodeType);
 
@@ -1090,16 +1072,12 @@ namespace ModuleManager
                     else
                     {
                         // find each original subnode to modify, modify it and add the modified.
-                        #if LOGSPAM
                         if (subNodes.Count == 0) // no nodes to modify!
-                            msg += "  Could not find node(s) to modify: " + subMod.name + "\n";
-                        #endif
+                            logspam_msg += "  Could not find node(s) to modify: " + subMod.name + "\n";
 
                         foreach (ConfigNode subNode in subNodes)
                         {
-                            #if LOGSPAM
-                            msg += "  Applying subnode " + subMod.name + "\n";
-                            #endif
+                            logspam_msg += "  Applying subnode " + subMod.name + "\n";
                             ConfigNode newSubNode;
                             switch (command)
                             {
@@ -1126,9 +1104,7 @@ namespace ModuleManager
                             }
                         }
                     }
-                    #if LOGSPAM
-                    context.logger.Info(msg);
-                    #endif
+                    ModLogger.LOG.detail(logspam_msg);
                 }
             }
 
@@ -1191,9 +1167,7 @@ namespace ModuleManager
                 return RecurseNodeSearch(path.Substring(3), nodeStack.Pop(), context);
             }
 
-            #if LOGSPAM
-            context.logger.Info(string.Format("nextSep : \"{0}\" root : \"{1}\" nodeType : \"{2}\" nodeName : \"{3}\"", nextSep, root, nodeType, nodeName));
-            #endif
+            ModLogger.LOG.detail("nextSep : \"{0}\" root : \"{1}\" nodeType : \"{2}\" nodeName : \"{3}\"", nextSep, root, nodeType, nodeName);
 
             // @XXXXX
             if (root)
@@ -1525,14 +1499,10 @@ namespace ModuleManager
                         }
                         if (last != null)
                         {
-                            #if LOGSPAM
                             print(string.Format("CheckConstraints: {0} {1}", constraints, (not ^ any)));
-                            #endif
                             return not ^ any;
                         }
-                        #if LOGSPAM
-                        print(string.Format("CheckConstraints: {0} {1}", constraints, (not ^ false)));
-                        #endif
+                        ModLogger.LOG.detail("CheckConstraints: {0} {1}", constraints, (not ^ false));
                         return not ^ false;
 
                     case '#':
@@ -1541,14 +1511,10 @@ namespace ModuleManager
                         if (node.HasValue(type) && WildcardMatchValues(node, type, name))
                         {
                             bool ret2 = CheckConstraints(node, remainingConstraints);
-                            #if LOGSPAM
-                            print(string.Format("CheckConstraints: {0} {1}", constraints, ret2));
-                            #endif
+                            ModLogger.LOG.detail("CheckConstraints: {0} {1}", constraints, ret2);
                             return ret2;
                         }
-                        #if LOGSPAM
-                        print(string.Format("CheckConstraints: {0} false", constraints));
-                        #endif
+                        ModLogger.LOG.detail("CheckConstraints: {0} false", constraints);
                         return false;
 
                     case '~':
@@ -1557,28 +1523,20 @@ namespace ModuleManager
                         // or: ~breakingForce[100]  will be true if it's present but not 100, too.
                         if (name == "" && node.HasValue(type))
                         {
-                            #if LOGSPAM
-                            print(string.Format("CheckConstraints: {0} false", constraints));
-                            #endif
+                            ModLogger.LOG.detail("CheckConstraints: {0} false", constraints);
                             return false;
                         }
                         if (name != "" && WildcardMatchValues(node, type, name))
                         {
-                            #if LOGSPAM
-                            print(string.Format("CheckConstraints: {0} false", constraints));
-                            #endif
+                            ModLogger.LOG.detail("CheckConstraints: {0} false", constraints);
                             return false;
                         }
                         bool ret = CheckConstraints(node, remainingConstraints);
-                        #if LOGSPAM
-                        print(string.Format("CheckConstraints: {0} {1}", constraints, ret));
-                        #endif
+                        ModLogger.LOG.detail("CheckConstraints: {0} {1}", constraints, ret);
                         return ret;
 
                     default:
-                        #if LOGSPAM
-                        print(string.Format("CheckConstraints: {0} false", constraints));
-                        #endif
+                        ModLogger.LOG.detail("CheckConstraints: {0} false", constraints);
                         return false;
                 }
             }
@@ -1588,9 +1546,7 @@ namespace ModuleManager
             {
                 ret3 = ret3 && CheckConstraints(node, constraint);
             }
-            #if LOGSPAM
-            print(string.Format("CheckConstraints: {0} {1}", constraints, ret3));
-            #endif
+            ModLogger.LOG.detail("CheckConstraints: {0} {1}", constraints, ret3);
             return ret3;
         }
 
