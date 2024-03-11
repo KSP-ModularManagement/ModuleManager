@@ -26,13 +26,15 @@ namespace ModuleManager.Patches
 {
     public class CopyPatch : IPatch
     {
+        private readonly IBasicLogger log;
         public UrlDir.UrlConfig UrlConfig { get; }
         public INodeMatcher NodeMatcher { get; }
         public IPassSpecifier PassSpecifier { get; }
         public bool CountsAsPatch => true;
 
-        public CopyPatch(UrlDir.UrlConfig urlConfig, INodeMatcher nodeMatcher, IPassSpecifier passSpecifier)
+        public CopyPatch(IBasicLogger log, UrlDir.UrlConfig urlConfig, INodeMatcher nodeMatcher, IPassSpecifier passSpecifier)
         {
+            this.log = log;
             UrlConfig = urlConfig ?? throw new ArgumentNullException(nameof(urlConfig));
             NodeMatcher = nodeMatcher ?? throw new ArgumentNullException(nameof(nodeMatcher));
             PassSpecifier = passSpecifier ?? throw new ArgumentNullException(nameof(passSpecifier));
@@ -53,7 +55,7 @@ namespace ModuleManager.Patches
                 {
                     if (!NodeMatcher.IsMatch(protoConfig.Node)) continue;
 
-                    ConfigNode clone = MMPatchLoader.ModifyNode(new NodeStack(protoConfig.Node), UrlConfig.config, context);
+                    ConfigNode clone = MMPatchLoader.ModifyNode(this.log, new NodeStack(protoConfig.Node), UrlConfig.config, context);
                     if (protoConfig.Node.GetValue("name") is string name && name == clone.GetValue("name"))
                     {
                         progress.Error(UrlConfig, $"Error - when applying copy {UrlConfig.SafeUrl()} to {protoConfig.FullUrl} - the copy needs to have a different name than the parent (use @name = xxx)");

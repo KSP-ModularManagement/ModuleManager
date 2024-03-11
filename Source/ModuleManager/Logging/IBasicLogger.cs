@@ -15,14 +15,15 @@
 	along with Module Manager /L. If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
-using UnityEngine;
+
+using K = KSPe.Util.Log;
 
 namespace ModuleManager.Logging
 {
     // Stripped down version of UnityEngine.ILogger
     public interface IBasicLogger
     {
-        void Log(LogType logType, string message);
+        void Log(K.Level logType, string message, params object[] @params);
         void Exception(string message, Exception exception);
         void Finish();
     }

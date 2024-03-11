@@ -36,7 +36,7 @@ namespace ModuleManager
 			if (start_techtree_loaded)
 			{
 				if (HighLogic.CurrentGame.Parameters.Career.TechTreeUrl != TECHTREE_CONFIG.KspPath)
-					Log(string.Format("Tech tree was changed by third party to [{0}].", HighLogic.CurrentGame.Parameters.Career.TechTreeUrl));
+					Log("Tech tree was changed by third party to [{0}].", HighLogic.CurrentGame.Parameters.Career.TechTreeUrl);
 			}
 			else if (TECHTREE_CONFIG.IsLoadable)
 			{
@@ -47,9 +47,9 @@ namespace ModuleManager
 		}
 
 		private static readonly KSPe.Util.Log.Logger log = KSPe.Util.Log.Logger.CreateThreadUnsafeForType<CustomConfigsManager>(); // No need to use thread safe logging. Yet.
-		private static void Log(String s)
+		private static void Log(String s, params object[] @params)
 		{
-			log.info(s);
+			log.info(s, @params);
 		}
 
 	}

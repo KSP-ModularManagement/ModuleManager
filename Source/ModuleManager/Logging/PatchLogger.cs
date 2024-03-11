@@ -22,6 +22,7 @@ namespace ModuleManager.Logging
     public class PatchLogger : IBasicLogger
     {
         internal readonly K.Logger log;
+        internal static bool DebugMode => KSPe.Globals<ModuleManager>.DebugMode;
 
         private delegate void LogMethod(string message, params object[] @parms);
         private readonly LogMethod[] methods;
@@ -36,16 +37,11 @@ namespace ModuleManager.Logging
             this.methods[i++] = new LogMethod(this.log.warn);
             this.methods[i++] = new LogMethod(this.log.info);
             this.methods[i++] = new LogMethod(this.log.detail);
-            this.methods[i++] = new LogMethod(this.log.error);
+            this.methods[i++] = new LogMethod(this.log.trace);
             this.log.level = K.Level.TRACE;
         }
 
-        // Gambiarra porque eu não previ essa possibilidade no KSPe.Util.Log!
-        private static readonly object[] NONE = new object[0];
-        public void Log(LogType logType, string message)
-        {
-            this.methods[(int)logType](message, NONE);
-        }
+        public void Log(K.Level logType, string message, object[] @params) => this.methods[(int)logType](message, @params);
 
         public void Exception(string message, Exception exception)
         {

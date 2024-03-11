@@ -39,12 +39,7 @@ namespace ModuleManager.Logging
             this.methods[i++] = new LogMethod(LOG.error);
         }
 
-        // Gambiarra porque eu não previ essa possibilidade no KSPe.Util.Log!
-        private static readonly object[] NONE = new object[0];
-        public void Log(LogType logType, string message)
-        {
-            this.methods[(int)logType](message, NONE);
-        }
+        public void Log(K.Level logType, string message, params object[] @params) => this.methods[(int)logType](message, @params);
 
         public void Exception(string message, Exception exception)
         {

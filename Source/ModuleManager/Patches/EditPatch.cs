@@ -26,6 +26,7 @@ namespace ModuleManager.Patches
 {
     public class EditPatch : IPatch
     {
+        private readonly IBasicLogger log;
         private readonly bool loop;
 
         public UrlDir.UrlConfig UrlConfig { get; }
@@ -33,8 +34,9 @@ namespace ModuleManager.Patches
         public IPassSpecifier PassSpecifier { get; }
         public bool CountsAsPatch => true;
 
-        public EditPatch(UrlDir.UrlConfig urlConfig, INodeMatcher nodeMatcher, IPassSpecifier passSpecifier)
+        public EditPatch(IBasicLogger log, UrlDir.UrlConfig urlConfig, INodeMatcher nodeMatcher, IPassSpecifier passSpecifier)
         {
+            this.log = log;
             UrlConfig = urlConfig ?? throw new ArgumentNullException(nameof(urlConfig));
             NodeMatcher = nodeMatcher ?? throw new ArgumentNullException(nameof(nodeMatcher));
             PassSpecifier = passSpecifier ?? throw new ArgumentNullException(nameof(passSpecifier));
@@ -60,7 +62,7 @@ namespace ModuleManager.Patches
                     do
                     {
                         progress.ApplyingUpdate(protoConfig, UrlConfig);
-                        listNode.Value = protoConfig = new ProtoUrlConfig(protoConfig.UrlFile, MMPatchLoader.ModifyNode(new NodeStack(protoConfig.Node), UrlConfig.config, context));
+                        listNode.Value = protoConfig = new ProtoUrlConfig(protoConfig.UrlFile, MMPatchLoader.ModifyNode(this.log, new NodeStack(protoConfig.Node), UrlConfig.config, context));
                     } while (loop && NodeMatcher.IsMatch(protoConfig.Node));
 
                     if (loop) protoConfig.Node.RemoveNodes("MM_PATCH_LOOP");

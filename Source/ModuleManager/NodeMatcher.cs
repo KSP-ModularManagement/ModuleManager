@@ -16,6 +16,7 @@
 */
 using System;
 using ModuleManager.Extensions;
+using ModuleManager.Logging;
 using ModuleManager.Utils;
 
 namespace ModuleManager
@@ -27,12 +28,15 @@ namespace ModuleManager
 
     public class NodeMatcher : INodeMatcher
     {
+        private readonly IBasicLogger log;
         private readonly string type;
         private readonly string[] namePatterns = null;
         private readonly string constraints = "";
 
-        public NodeMatcher(string type, string name, string constraints)
+        public NodeMatcher(IBasicLogger log, string type, string name, string constraints)
         {
+            this.log = log;
+
             if (type == string.Empty) throw new ArgumentException("can't be empty", nameof(type));
             this.type = type ?? throw new ArgumentNullException(nameof(type));
 
@@ -69,7 +73,7 @@ namespace ModuleManager
                 if (!match) return false;
             }
 
-            return MMPatchLoader.CheckConstraints(node, constraints);
+            return MMPatchLoader.CheckConstraints(this.log, node, constraints);
         }
     }
 }

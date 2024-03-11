@@ -25,13 +25,15 @@ namespace ModuleManager.Patches
 {
     public class InsertPatch : IPatch
     {
+        private readonly IBasicLogger log;
         public UrlDir.UrlConfig UrlConfig { get; }
         public string NodeType { get; }
         public IPassSpecifier PassSpecifier { get; }
         public bool CountsAsPatch => false;
 
-        public InsertPatch(UrlDir.UrlConfig urlConfig, string nodeType, IPassSpecifier passSpecifier)
+        public InsertPatch(IBasicLogger log, UrlDir.UrlConfig urlConfig, string nodeType, IPassSpecifier passSpecifier)
         {
+            this.log = log;
             UrlConfig = urlConfig ?? throw new ArgumentNullException(nameof(urlConfig));
             NodeType = nodeType ?? throw new ArgumentNullException(nameof(nodeType));
             PassSpecifier = passSpecifier ?? throw new ArgumentNullException(nameof(passSpecifier));

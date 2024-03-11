@@ -25,13 +25,15 @@ namespace ModuleManager.Patches
 {
     public class DeletePatch : IPatch
     {
+        private readonly IBasicLogger log;
         public UrlDir.UrlConfig UrlConfig { get; }
         public INodeMatcher NodeMatcher { get; }
         public IPassSpecifier PassSpecifier { get; }
         public bool CountsAsPatch => true;
 
-        public DeletePatch(UrlDir.UrlConfig urlConfig, INodeMatcher nodeMatcher, IPassSpecifier passSpecifier)
+        public DeletePatch(IBasicLogger log, UrlDir.UrlConfig urlConfig, INodeMatcher nodeMatcher, IPassSpecifier passSpecifier)
         {
+            this.log = log;
             UrlConfig = urlConfig ?? throw new ArgumentNullException(nameof(urlConfig));
             NodeMatcher = nodeMatcher ?? throw new ArgumentNullException(nameof(nodeMatcher));
             PassSpecifier = passSpecifier ?? throw new ArgumentNullException(nameof(passSpecifier));

@@ -120,7 +120,7 @@ namespace ModuleManager
                 INeedsChecker needsChecker = new NeedsChecker(mods, gameData, progress, patchLogger);
                 ITagListParser tagListParser = new TagListParser(progress);
                 IProtoPatchBuilder protoPatchBuilder = new ProtoPatchBuilder(progress);
-                IPatchCompiler patchCompiler = new PatchCompiler();
+                IPatchCompiler patchCompiler = new PatchCompiler(patchLogger);
                 PatchExtractor extractor = new PatchExtractor(progress, patchLogger, needsChecker, tagListParser, protoPatchBuilder, patchCompiler);
 
                 // Have to convert to an array because we will be removing patches
@@ -611,7 +611,7 @@ namespace ModuleManager
 
         // ModifyNode applies the ConfigNode mod as a 'patch' to ConfigNode original, then returns the patched ConfigNode.
         // it uses FindConfigNodeIn(src, nodeType, nodeName, nodeTag) to recurse.
-        public static ConfigNode ModifyNode(NodeStack original, ConfigNode mod, PatchContext context)
+        public static ConfigNode ModifyNode(IBasicLogger log, NodeStack original, ConfigNode mod, PatchContext context)
         {
             ConfigNode newNode = original.value.DeepCopy();
             NodeStack nodeStack = original.ReplaceValue(newNode);
@@ -633,7 +633,7 @@ namespace ModuleManager
 
                 if (cmd == Command.Special)
                 {
-                    ConfigNode.Value val = RecurseVariableSearch(valName, nodeStack.Push(mod), context);
+                    ConfigNode.Value val = RecurseVariableSearch(log, valName, nodeStack.Push(mod), context);
 
                     if (val == null)
                     {
@@ -737,7 +737,7 @@ namespace ModuleManager
                         else
                         {
                             // Insert at the end by default
-                            varValue = ProcessVariableSearch(modVal.value, nodeStack, context);
+                            varValue = ProcessVariableSearch(log, modVal.value, nodeStack, context);
                             if (varValue != null)
                                 InsertValue(newNode, match.Groups[2].Success ? index : int.MaxValue, valName, varValue);
                             else
@@ -759,7 +759,7 @@ namespace ModuleManager
                         }
                         else
                         {
-                            varValue = ProcessVariableSearch(modVal.value, nodeStack, context);
+                            varValue = ProcessVariableSearch(log, modVal.value, nodeStack, context);
                             if (varValue != null)
                             {
                                 newNode.RemoveValues(valName);
@@ -781,7 +781,7 @@ namespace ModuleManager
 
                         while (index < valCount)
                         {
-                            varValue = ProcessVariableSearch(modVal.value, nodeStack, context);
+                            varValue = ProcessVariableSearch(log, modVal.value, nodeStack, context);
 
                             if (varValue != null)
                             {
@@ -879,7 +879,7 @@ namespace ModuleManager
                         }
                         else
                         {
-                            varValue = ProcessVariableSearch(modVal.value, nodeStack, context);
+                            varValue = ProcessVariableSearch(log, modVal.value, nodeStack, context);
                             if (varValue != null)
                             {
                                 if (!newNode.HasValue(valName))
@@ -894,7 +894,7 @@ namespace ModuleManager
                         break;
                 }
             }
-            ModLogger.LOG.detail(vals);
+            log.Trace(vals);
 
             #endregion Values
 
@@ -918,7 +918,7 @@ namespace ModuleManager
                 if (command == Command.Insert)
                 {
                     ConfigNode newSubMod = new ConfigNode(subMod.name);
-                    newSubMod = ModifyNode(nodeStack.Push(newSubMod), subMod, context);
+                    newSubMod = ModifyNode(log, nodeStack.Push(newSubMod), subMod, context);
                     subName = newSubMod.name;
                     if (subName.Contains(",") && int.TryParse(subName.Split(',')[1], out int index))
                     {
@@ -945,7 +945,7 @@ namespace ModuleManager
                     //string newName = subName.Substring(0, start);
                     //string path = subName.Substring(start + 1, end - start - 1);
 
-                    ConfigNode toPaste = RecurseNodeSearch(subName.Substring(1), nodeStack, context);
+                    ConfigNode toPaste = RecurseNodeSearch(log, subName.Substring(1), nodeStack, context);
 
                     if (toPaste == null)
                     {
@@ -954,7 +954,7 @@ namespace ModuleManager
                     }
 
                     ConfigNode newSubMod = new ConfigNode(toPaste.name);
-                    newSubMod = ModifyNode(nodeStack.Push(newSubMod), toPaste, context);
+                    newSubMod = ModifyNode(log, nodeStack.Push(newSubMod), toPaste, context);
                     if (subName.LastIndexOf(',') > 0 && int.TryParse(subName.Substring(subName.LastIndexOf(',') + 1), out int index))
                     {
                         // In this case insert the node at position index
@@ -1014,7 +1014,7 @@ namespace ModuleManager
                                 n = FindConfigNodeIn(newNode, nodeType, nodeName, index++);
                                 if (n == last || n == null)
                                     break;
-                                if (CheckConstraints(n, constraints))
+                                if (CheckConstraints(log, n, constraints))
                                     subNodes.Add(n);
                                 last = n;
                             }
@@ -1036,7 +1036,7 @@ namespace ModuleManager
                         if (subNodes.Count > 0)
                         {
                             logspam_msg += "  Applying subnode " + subMod.name + "\n";
-                            ConfigNode newSubNode = ModifyNode(nodeStack.Push(subNodes[0]), subMod, context);
+                            ConfigNode newSubNode = ModifyNode(log, nodeStack.Push(subNodes[0]), subMod, context);
                             subNodes[0].ShallowCopyFrom(newSubNode);
                             subNodes[0].name = newSubNode.name;
                         }
@@ -1050,7 +1050,7 @@ namespace ModuleManager
                             if (nodeName != null)
                                 copy.AddValueSafe("name", nodeName);
 
-                            ConfigNode newSubNode = ModifyNode(nodeStack.Push(copy), subMod, context);
+                            ConfigNode newSubNode = ModifyNode(log, nodeStack.Push(copy), subMod, context);
                             newNode.nodes.Add(newSubNode);
                         }
                     }
@@ -1065,7 +1065,7 @@ namespace ModuleManager
                             if (nodeName != null)
                                 copy.AddValueSafe("name", nodeName);
 
-                            ConfigNode newSubNode = ModifyNode(nodeStack.Push(copy), subMod, context);
+                            ConfigNode newSubNode = ModifyNode(log, nodeStack.Push(copy), subMod, context);
                             newNode.nodes.Add(newSubNode);
                         }
                     }
@@ -1084,7 +1084,7 @@ namespace ModuleManager
                                 case Command.Edit:
 
                                     // Edit in place
-                                    newSubNode = ModifyNode(nodeStack.Push(subNode), subMod, context);
+                                    newSubNode = ModifyNode(log, nodeStack.Push(subNode), subMod, context);
                                     subNode.ShallowCopyFrom(newSubNode);
                                     subNode.name = newSubNode.name;
                                     break;
@@ -1098,13 +1098,13 @@ namespace ModuleManager
                                 case Command.Copy:
 
                                     // Copy the node
-                                    newSubNode = ModifyNode(nodeStack.Push(subNode), subMod, context);
+                                    newSubNode = ModifyNode(log, nodeStack.Push(subNode), subMod, context);
                                     newNode.nodes.Add(newSubNode);
                                     break;
                             }
                         }
                     }
-                    ModLogger.LOG.detail(logspam_msg);
+                    log.Trace(logspam_msg);
                 }
             }
 
@@ -1115,13 +1115,13 @@ namespace ModuleManager
 
 
         // Search for a ConfigNode by a path alike string
-        private static ConfigNode RecurseNodeSearch(string path, NodeStack nodeStack, PatchContext context)
+        private static ConfigNode RecurseNodeSearch(IBasicLogger log, string path, NodeStack nodeStack, PatchContext context)
         {
             //log("Path : \"" + path + "\"");
 
             if (path[0] == '/')
             {
-                return RecurseNodeSearch(path.Substring(1), nodeStack.Root, context);
+                return RecurseNodeSearch(log, path.Substring(1), nodeStack.Root, context);
             }
 
             int nextSep = path.IndexOf('/');
@@ -1164,10 +1164,10 @@ namespace ModuleManager
                 if (nodeStack.IsRoot)
                     return null;
 
-                return RecurseNodeSearch(path.Substring(3), nodeStack.Pop(), context);
+                return RecurseNodeSearch(log, path.Substring(3), nodeStack.Pop(), context);
             }
 
-            ModLogger.LOG.detail("nextSep : \"{0}\" root : \"{1}\" nodeType : \"{2}\" nodeName : \"{3}\"", nextSep, root, nodeType, nodeName);
+            log.Trace("nextSep : \"{0}\" root : \"{1}\" nodeType : \"{2}\" nodeName : \"{3}\"", nextSep, root, nodeType, nodeName);
 
             // @XXXXX
             if (root)
@@ -1188,7 +1188,7 @@ namespace ModuleManager
                     }
                 }
 
-                if (!foundNodeType) context.logger.Warning("Can't find nodeType:" + nodeType);
+                if (!foundNodeType) log.Warning("Can't find nodeType:" + nodeType);
                 if (nodeStack == null) return null;
             }
             else
@@ -1205,7 +1205,7 @@ namespace ModuleManager
                             nodeStack = null;
                             break;
                         }
-                        if (CheckConstraints(n, constraint))
+                        if (CheckConstraints(log, n, constraint))
                         {
                             nodeStack = nodeStack.Push(n);
                             break;
@@ -1225,7 +1225,7 @@ namespace ModuleManager
             {
                 path = path.Substring(nextSep + 1);
                 //log("NewPath : \"" + path + "\"");
-                return RecurseNodeSearch(path, nodeStack, context);
+                return RecurseNodeSearch(log, path, nodeStack, context);
             }
 
             return nodeStack.value;
@@ -1235,11 +1235,11 @@ namespace ModuleManager
         private static readonly Regex parseVarKey = new Regex(@"([\w\&\-\.]+)(?:,((?:[0-9]+)+))?(?:\[((?:[0-9]+)+)(?:,(.))?\])?");
 
         // Search for a value by a path alike string
-        private static ConfigNode.Value RecurseVariableSearch(string path, NodeStack nodeStack, PatchContext context)
+        private static ConfigNode.Value RecurseVariableSearch(IBasicLogger log, string path, NodeStack nodeStack, PatchContext context)
         {
             //log("path:" + path);
             if (path[0] == '/')
-                return RecurseVariableSearch(path.Substring(1), nodeStack.Root, context);
+                return RecurseVariableSearch(log, path.Substring(1), nodeStack.Root, context);
             int nextSep = path.IndexOf('/');
 
             // make sure we don't stop on a ",/" which would be a value separator
@@ -1279,11 +1279,11 @@ namespace ModuleManager
 
                     if (nodeName == null || (node.GetValue("name") is string testNodeName && ConfigNodeEditUtils.Instance.WildcardMatch(testNodeName, nodeName)))
                     {
-                        return RecurseVariableSearch(path.Substring(nextSep + 1), new NodeStack(node), context);
+                        return RecurseVariableSearch(log, path.Substring(nextSep + 1), new NodeStack(node), context);
                     }
                 }
 
-                if (!foundNodeType) context.logger.Warning("Can't find nodeType:" + nodeType);
+                if (!foundNodeType) log.Warning("Can't find nodeType:" + nodeType);
 
                 return null;
             }
@@ -1292,7 +1292,7 @@ namespace ModuleManager
                 if (nodeStack.IsRoot)
                     return null;
 
-                return RecurseVariableSearch(path.Substring(3), nodeStack.Pop(), context);
+                return RecurseVariableSearch(log, path.Substring(3), nodeStack.Pop(), context);
             }
 
             // Node search
@@ -1340,8 +1340,8 @@ namespace ModuleManager
                         ConfigNode n = FindConfigNodeIn(nodeStack.value, nodeType, nodeName, index++);
                         if (n == last || n == null)
                             break;
-                        if (CheckConstraints(n, constraint))
-                            return RecurseVariableSearch(path.Substring(nextSep + 1), nodeStack.Push(n), context);
+                        if (CheckConstraints(log, n, constraint))
+                            return RecurseVariableSearch(log, path.Substring(nextSep + 1), nodeStack.Push(n), context);
                         last = n;
                     }
                     return null;
@@ -1351,7 +1351,7 @@ namespace ModuleManager
                     // just get one node
                     ConfigNode n = FindConfigNodeIn(nodeStack.value, nodeType, nodeName, index);
                     if (n != null)
-                        return RecurseVariableSearch(path.Substring(nextSep + 1), nodeStack.Push(n), context);
+                        return RecurseVariableSearch(log, path.Substring(nextSep + 1), nodeStack.Push(n), context);
                     return null;
                 }
             }
@@ -1361,7 +1361,7 @@ namespace ModuleManager
             Match match = parseVarKey.Match(path);
             if (!match.Success)
             {
-                context.logger.Warning("Cannot parse variable search command: " + path);
+                log.Warning("Cannot parse variable search command: " + path);
                 return null;
             }
 
@@ -1374,7 +1374,7 @@ namespace ModuleManager
             ConfigNode.Value cVal = ConfigNodeEditUtils.Instance.FindValueIn(nodeStack.value, valName, idx);
             if (cVal == null)
             {
-                context.logger.Warning("Cannot find key " + valName + " in " + nodeStack.value.name);
+                log.Warning("Cannot find key " + valName + " in " + nodeStack.value.name);
                 return null;
             }
 
@@ -1396,7 +1396,7 @@ namespace ModuleManager
             return cVal;
         }
 
-        private static string ProcessVariableSearch(string value, NodeStack nodeStack, PatchContext context)
+        private static string ProcessVariableSearch(IBasicLogger log, string value, NodeStack nodeStack, PatchContext context)
         {
             // value = #xxxx$yyyyy$zzzzz$aaaa$bbbb
             // There is 2 or more '$'
@@ -1413,14 +1413,14 @@ namespace ModuleManager
 
                 for (int i = 1; i < split.Length - 1; i += 2)
                 {
-                    ConfigNode.Value result = RecurseVariableSearch(split[i], nodeStack, context);
+                    ConfigNode.Value result = RecurseVariableSearch(log, split[i], nodeStack, context);
                     if (result == null || result.value == null)
                         return null;
                     builder.Append(result.value);
                     builder.Append(split[i + 1]);
                 }
                 value = builder.ToString();
-                context.logger.Info(string.Format("variable search output : =\"{0}\"", value));
+                log.Info("variable search output : =\"{0}\"", value);
             }
             return value;
         }
@@ -1453,7 +1453,7 @@ namespace ModuleManager
 
         static readonly char[] contraintSeparators = { '[', ']' };
 
-        public static bool CheckConstraints(ConfigNode node, string constraints)
+        public static bool CheckConstraints(IBasicLogger log, ConfigNode node, string constraints)
         {
             constraints = constraints.RemoveWS();
 
@@ -1494,15 +1494,15 @@ namespace ModuleManager
                             ConfigNode subNode = FindConfigNodeIn(node, type, name, index++);
                             if (subNode == last || subNode == null)
                                 break;
-                            any = any || CheckConstraints(subNode, remainingConstraints);
+                            any = any || CheckConstraints(log, subNode, remainingConstraints);
                             last = subNode;
                         }
                         if (last != null)
                         {
-                            print(string.Format("CheckConstraints: {0} {1}", constraints, (not ^ any)));
+                            log.Trace("CheckConstraints: {0} {1}", constraints, (not ^ any));
                             return not ^ any;
                         }
-                        ModLogger.LOG.detail("CheckConstraints: {0} {1}", constraints, (not ^ false));
+                        log.Trace("CheckConstraints: {0} {1}", constraints, (not ^ false));
                         return not ^ false;
 
                     case '#':
@@ -1510,11 +1510,11 @@ namespace ModuleManager
                         // #module[Winglet]
                         if (node.HasValue(type) && WildcardMatchValues(node, type, name))
                         {
-                            bool ret2 = CheckConstraints(node, remainingConstraints);
-                            ModLogger.LOG.detail("CheckConstraints: {0} {1}", constraints, ret2);
+                            bool ret2 = CheckConstraints(log, node, remainingConstraints);
+                            log.Trace("CheckConstraints: {0} {1}", constraints, ret2);
                             return ret2;
                         }
-                        ModLogger.LOG.detail("CheckConstraints: {0} false", constraints);
+                        log.Trace("CheckConstraints: {0} false", constraints);
                         return false;
 
                     case '~':
@@ -1523,20 +1523,20 @@ namespace ModuleManager
                         // or: ~breakingForce[100]  will be true if it's present but not 100, too.
                         if (name == "" && node.HasValue(type))
                         {
-                            ModLogger.LOG.detail("CheckConstraints: {0} false", constraints);
+                            log.Trace("CheckConstraints: {0} false", constraints);
                             return false;
                         }
                         if (name != "" && WildcardMatchValues(node, type, name))
                         {
-                            ModLogger.LOG.detail("CheckConstraints: {0} false", constraints);
+                            log.Trace("CheckConstraints: {0} false", constraints);
                             return false;
                         }
-                        bool ret = CheckConstraints(node, remainingConstraints);
-                        ModLogger.LOG.detail("CheckConstraints: {0} {1}", constraints, ret);
+                        bool ret = CheckConstraints(log, node, remainingConstraints);
+                        log.Trace("CheckConstraints: {0} {1}", constraints, ret);
                         return ret;
 
                     default:
-                        ModLogger.LOG.detail("CheckConstraints: {0} false", constraints);
+                        log.Trace("CheckConstraints: {0} false", constraints);
                         return false;
                 }
             }
@@ -1544,9 +1544,9 @@ namespace ModuleManager
             bool ret3 = true;
             foreach (string constraint in constraintList)
             {
-                ret3 = ret3 && CheckConstraints(node, constraint);
+                ret3 = ret3 && CheckConstraints(log, node, constraint);
             }
-            ModLogger.LOG.detail("CheckConstraints: {0} {1}", constraints, ret3);
+            log.Trace("CheckConstraints: {0} {1}", constraints, ret3);
             return ret3;
         }
 
