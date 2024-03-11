@@ -59,7 +59,7 @@ namespace ModuleManager
             {
                 if (!urlConfig.type.IsBracketBalanced())
                 {
-                    progress.Error(urlConfig, "Error - node name does not have balanced brackets (or a space - if so replace with ?):\n" + urlConfig.SafeUrl());
+                    progress.Error(urlConfig, "Error - node name does not have balanced brackets (or a space - if so replace with ?):\n{0}", urlConfig.SafeUrl());
                     return null;
                 }
 
@@ -67,27 +67,27 @@ namespace ModuleManager
                 
                 if (command == Command.Replace)
                 {
-                    progress.Error(urlConfig, $"Error - replace command (%) is not valid on a root node: {urlConfig.SafeUrl()}");
+                    progress.Error(urlConfig, "Error - replace command (%) is not valid on a root node: {0}", urlConfig.SafeUrl());
                     return null;
                 }
                 else if (command == Command.Create)
                 {
-                    progress.Error(urlConfig, $"Error - create command (&) is not valid on a root node: {urlConfig.SafeUrl()}");
+                    progress.Error(urlConfig, "Error - create command (&) is not valid on a root node: {0}", urlConfig.SafeUrl());
                     return null;
                 }
                 else if (command == Command.Rename)
                 {
-                    progress.Error(urlConfig, $"Error - rename command (|) is not valid on a root node: {urlConfig.SafeUrl()}");
+                    progress.Error(urlConfig, "Error - rename command (|) is not valid on a root node: {0}", urlConfig.SafeUrl());
                     return null;
                 }
                 else if (command == Command.Paste)
                 {
-                    progress.Error(urlConfig, $"Error - paste command (#) is not valid on a root node: {urlConfig.SafeUrl()}");
+                    progress.Error(urlConfig, "Error - paste command (#) is not valid on a root node: {0}", urlConfig.SafeUrl());
                     return null;
                 }
                 else if (command == Command.Special)
                 {
-                    progress.Error(urlConfig, $"Error - special command (*) is not valid on a root node: {urlConfig.SafeUrl()}");
+                    progress.Error(urlConfig, "Error - special command (*) is not valid on a root node: {0}", urlConfig.SafeUrl());
                     return null;
                 }
 
@@ -98,7 +98,10 @@ namespace ModuleManager
                 }
                 catch (FormatException ex)
                 {
-                    progress.Error(urlConfig, $"Cannot parse node name as tag list: {ex.Message}\non: {urlConfig.SafeUrl()}");
+                    progress.Error(urlConfig,
+                        "Cannot parse node name as tag list: {0}\non: {1}",
+                        ex.Message, urlConfig.SafeUrl()
+                        );
                     return null;
                 }
 
@@ -124,7 +127,7 @@ namespace ModuleManager
             }
             catch(Exception e)
             {
-                progress.Exception(e, urlConfig, $"Exception while attempting to create patch from config: {urlConfig.SafeUrl()}");
+                progress.Exception(e, urlConfig, "Exception while attempting to create patch from config: {0}", urlConfig.SafeUrl());
                 return null;
             }
         }

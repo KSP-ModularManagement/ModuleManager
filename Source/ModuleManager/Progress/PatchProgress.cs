@@ -53,25 +53,25 @@ namespace ModuleManager.Progress
         public void PassStarted(IPass pass)
         {
             if (pass == null) throw new ArgumentNullException(nameof(pass));
-            logger.Info(pass.Name + " pass");
+            logger.Info("{0} pass", pass.Name);
             OnPassStarted.Fire(pass);
         }
 
         public void ApplyingUpdate(IUrlConfigIdentifier original, UrlDir.UrlConfig patch)
         {
-            logger.Info($"Applying update {patch.SafeUrl()} to {original.FullUrl}");
+            logger.Info("Applying update {0} to {1}", patch.SafeUrl(), original.FullUrl);
             Counter.patchedNodes.Increment();
         }
 
         public void ApplyingCopy(IUrlConfigIdentifier original, UrlDir.UrlConfig patch)
         {
-            logger.Info($"Applying copy {patch.SafeUrl()} to {original.FullUrl}");
+            logger.Info("Applying copy {0} to {1}", patch.SafeUrl(), original.FullUrl);
             Counter.patchedNodes.Increment();
         }
 
         public void ApplyingDelete(IUrlConfigIdentifier original, UrlDir.UrlConfig patch)
         {
-            logger.Info($"Applying delete {patch.SafeUrl()} to {original.FullUrl}");
+            logger.Info("Applying delete {0} to {1}", patch.SafeUrl(), original.FullUrl);
             Counter.patchedNodes.Increment();
         }
 
@@ -83,35 +83,35 @@ namespace ModuleManager.Progress
 
         public void NeedsUnsatisfiedRoot(UrlDir.UrlConfig url)
         {
-            logger.Info($"Deleting root node in file {url.parent.url} node: {url.type} as it can't satisfy its NEEDS");
+            logger.Info("Deleting root node in file {0} node: {1} as it can't satisfy its NEEDS", url.parent.url, url.type);
             Counter.needsUnsatisfied.Increment();
         }
 
         public void NeedsUnsatisfiedNode(UrlDir.UrlConfig url, string path)
         {
-            logger.Info($"Deleting node in file {url.parent.url} subnode: {path} as it can't satisfy its NEEDS");
+            logger.Info("Deleting node in file {0} subnode: {0} as it can't satisfy its NEEDS", url.parent.url, path);
         }
 
         public void NeedsUnsatisfiedValue(UrlDir.UrlConfig url, string path)
         {
-            logger.Info($"Deleting value in file {url.parent.url} value: {path} as it can't satisfy its NEEDS");
+            logger.Info("Deleting value in file {0} value: {1} as it can't satisfy its NEEDS", url.parent.url, path);
         }
 
         public void NeedsUnsatisfiedBefore(UrlDir.UrlConfig url)
         {
-            logger.Info($"Deleting root node in file {url.parent.url} node: {url.type} as it can't satisfy its BEFORE");
+            logger.Info("Deleting root node in file {0} node: {1} as it can't satisfy its BEFORE", url.parent.url, url.type);
             Counter.needsUnsatisfied.Increment();
         }
 
         public void NeedsUnsatisfiedFor(UrlDir.UrlConfig url)
         {
-            logger.Warning($"Deleting root node in file {url.parent.url} node: {url.type} as it can't satisfy its FOR (this shouldn't happen)");
+            logger.Warning("Deleting root node in file {0} node: {1} as it can't satisfy its FOR (this shouldn't happen)", url.parent.url, url.type);
             Counter.needsUnsatisfied.Increment();
         }
 
         public void NeedsUnsatisfiedAfter(UrlDir.UrlConfig url)
         {
-            logger.Info($"Deleting root node in file {url.parent.url} node: {url.type} as it can't satisfy its AFTER");
+            logger.Info("Deleting root node in file {0} node: {1} as it can't satisfy its AFTER", url.parent.url, url.type);
             Counter.needsUnsatisfied.Increment();
         }
 

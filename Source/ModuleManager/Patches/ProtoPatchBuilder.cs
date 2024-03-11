@@ -49,18 +49,18 @@ namespace ModuleManager.Patches
 
             if (command == Command.Insert && nodeName != null)
             {
-                progress.Error(urlConfig, "name specifier detected on insert node (not a patch): " + urlConfig.SafeUrl());
+                progress.Error(urlConfig, "name specifier detected on insert node (not a patch): {0}", urlConfig.SafeUrl());
                 error = true;
             }
 
             if (nodeName == string.Empty)
             {
-                progress.Warning(urlConfig, "empty brackets detected on patch name: " + urlConfig.SafeUrl());
+                progress.Warning(urlConfig, "empty brackets detected on patch name: {0}", urlConfig.SafeUrl());
                 nodeName = null;
             }
 
             if (tagList.PrimaryTag.trailer != null)
-                progress.Warning(urlConfig, "unrecognized trailer: '" + tagList.PrimaryTag.trailer + "' on: " + urlConfig.SafeUrl());
+                progress.Warning(urlConfig, "unrecognized trailer: '{0}' on: {1}", tagList.PrimaryTag.trailer, urlConfig.SafeUrl());
 
             string needs = null;
             string has = null;
@@ -69,18 +69,18 @@ namespace ModuleManager.Patches
             foreach (Tag tag in tagList)
             {
                 if (tag.trailer != null)
-                    progress.Warning(urlConfig, "unrecognized trailer: '" + tag.trailer + "' on: " + urlConfig.SafeUrl());
+                    progress.Warning(urlConfig, "unrecognized trailer: '{0}' on: {1}", tag.trailer, urlConfig.SafeUrl());
 
                 if (tag.key.Equals("NEEDS", StringComparison.CurrentCultureIgnoreCase))
                 {
                     if (needs != null)
                     {
-                        progress.Warning(urlConfig, "more than one :NEEDS tag detected, ignoring all but the first: " + urlConfig.SafeUrl());
+                        progress.Warning(urlConfig, "more than one :NEEDS tag detected, ignoring all but the first: {0}", urlConfig.SafeUrl());
                         continue;
                     }
                     if (string.IsNullOrEmpty(tag.value))
                     {
-                        progress.Error(urlConfig, "empty :NEEDS tag detected: " + urlConfig.SafeUrl());
+                        progress.Error(urlConfig, "empty :NEEDS tag detected: {0}", urlConfig.SafeUrl());
                         error = true;
                         continue;
                     }
@@ -91,18 +91,18 @@ namespace ModuleManager.Patches
                 {
                     if (command == Command.Insert)
                     {
-                        progress.Error(urlConfig, ":HAS detected on insert node (not a patch): " + urlConfig.SafeUrl());
+                        progress.Error(urlConfig, ":HAS detected on insert node (not a patch): {0}", urlConfig.SafeUrl());
                         error = true;
                         continue;
                     }
                     if (has != null)
                     {
-                        progress.Warning(urlConfig, "more than one :HAS tag detected, ignoring all but the first: " + urlConfig.SafeUrl());
+                        progress.Warning(urlConfig, "more than one :HAS tag detected, ignoring all but the first: {0}", urlConfig.SafeUrl());
                         continue;
                     }
                     if (string.IsNullOrEmpty(tag.value))
                     {
-                        progress.Error(urlConfig, "empty :HAS tag detected: " + urlConfig.SafeUrl());
+                        progress.Error(urlConfig, "empty :HAS tag detected: {0}", urlConfig.SafeUrl());
                         error = true;
                         continue;
                     }
@@ -113,18 +113,18 @@ namespace ModuleManager.Patches
                 {
                     if (tag.value != null)
                     {
-                        progress.Warning(urlConfig, "value detected on :FIRST tag: " + urlConfig.SafeUrl());
+                        progress.Warning(urlConfig, "value detected on :FIRST tag: {0}", urlConfig.SafeUrl());
                     }
 
                     if (command == Command.Insert)
                     {
-                        progress.Error(urlConfig, "pass specifier detected on insert node (not a patch): " + urlConfig.SafeUrl());
+                        progress.Error(urlConfig, "pass specifier detected on insert node (not a patch): {0}", urlConfig.SafeUrl());
                         error = true;
                         continue;
                     }
                     if (passSpecifier != null)
                     {
-                        progress.Warning(urlConfig, "more than one pass specifier detected, ignoring all but the first: " + urlConfig.SafeUrl());
+                        progress.Warning(urlConfig, "more than one pass specifier detected, ignoring all but the first: {0}", urlConfig.SafeUrl());
                         continue;
                     }
 
@@ -134,14 +134,14 @@ namespace ModuleManager.Patches
                 {
                     if (string.IsNullOrEmpty(tag.value))
                     {
-                        progress.Error(urlConfig, "empty :BEFORE tag detected: " + urlConfig.SafeUrl());
+                        progress.Error(urlConfig, "empty :BEFORE tag detected: {0}", urlConfig.SafeUrl());
                         error = true;
                         continue;
                     }
 
                     if (command == Command.Insert)
                     {
-                        progress.Error(urlConfig, "pass specifier detected on insert node (not a patch): " + urlConfig.SafeUrl());
+                        progress.Error(urlConfig, "pass specifier detected on insert node (not a patch): {0}", urlConfig.SafeUrl());
                         error = true;
                         continue;
                     }
@@ -157,20 +157,20 @@ namespace ModuleManager.Patches
                 {
                     if (string.IsNullOrEmpty(tag.value))
                     {
-                        progress.Error(urlConfig, "empty :FOR tag detected: " + urlConfig.SafeUrl());
+                        progress.Error(urlConfig, "empty :FOR tag detected: {0}", urlConfig.SafeUrl());
                         error = true;
                         continue;
                     }
 
                     if (command == Command.Insert)
                     {
-                        progress.Error(urlConfig, "pass specifier detected on insert node (not a patch): " + urlConfig.SafeUrl());
+                        progress.Error(urlConfig, "pass specifier detected on insert node (not a patch): {0}", urlConfig.SafeUrl());
                         error = true;
                         continue;
                     }
                     if (passSpecifier != null)
                     {
-                        progress.Warning(urlConfig, "more than one pass specifier detected, ignoring all but the first: " + urlConfig.SafeUrl());
+                        progress.Warning(urlConfig, "more than one pass specifier detected, ignoring all but the first: {0}", urlConfig.SafeUrl());
                         continue;
                     }
 
@@ -180,20 +180,20 @@ namespace ModuleManager.Patches
                 {
                     if (string.IsNullOrEmpty(tag.value))
                     {
-                        progress.Error(urlConfig, "empty :AFTER tag detected: " + urlConfig.SafeUrl());
+                        progress.Error(urlConfig, "empty :AFTER tag detected: {0}", urlConfig.SafeUrl());
                         error = true;
                         continue;
                     }
 
                     if (command == Command.Insert)
                     {
-                        progress.Error(urlConfig, "pass specifier detected on insert node (not a patch): " + urlConfig.SafeUrl());
+                        progress.Error(urlConfig, "pass specifier detected on insert node (not a patch): {0}", urlConfig.SafeUrl());
                         error = true;
                         continue;
                     }
                     if (passSpecifier != null)
                     {
-                        progress.Warning(urlConfig, "more than one pass specifier detected, ignoring all but the first: " + urlConfig.SafeUrl());
+                        progress.Warning(urlConfig, "more than one pass specifier detected, ignoring all but the first: {0}", urlConfig.SafeUrl());
                         continue;
                     }
 
@@ -203,20 +203,20 @@ namespace ModuleManager.Patches
                 {
                     if (string.IsNullOrEmpty(tag.value))
                     {
-                        progress.Error(urlConfig, "empty :LAST tag detected: " + urlConfig.SafeUrl());
+                        progress.Error(urlConfig, "empty :LAST tag detected: {0}", urlConfig.SafeUrl());
                         error = true;
                         continue;
                     }
 
                     if (command == Command.Insert)
                     {
-                        progress.Error(urlConfig, "pass specifier detected on insert node (not a patch): " + urlConfig.SafeUrl());
+                        progress.Error(urlConfig, "pass specifier detected on insert node (not a patch): {0}", urlConfig.SafeUrl());
                         error = true;
                         continue;
                     }
                     if (passSpecifier != null)
                     {
-                        progress.Warning(urlConfig, "more than one pass specifier detected, ignoring all but the first: " + urlConfig.SafeUrl());
+                        progress.Warning(urlConfig, "more than one pass specifier detected, ignoring all but the first: {0}", urlConfig.SafeUrl());
                         continue;
                     }
 
@@ -226,18 +226,18 @@ namespace ModuleManager.Patches
                 {
                     if (tag.value != null)
                     {
-                        progress.Warning(urlConfig, "value detected on :FINAL tag: " + urlConfig.SafeUrl());
+                        progress.Warning(urlConfig, "value detected on :FINAL tag: {0}", urlConfig.SafeUrl());
                     }
 
                     if (command == Command.Insert)
                     {
-                        progress.Error(urlConfig, "pass specifier detected on insert node (not a patch): " + urlConfig.SafeUrl());
+                        progress.Error(urlConfig, "pass specifier detected on insert node (not a patch): {0}", urlConfig.SafeUrl());
                         error = true;
                         continue;
                     }
                     if (passSpecifier != null)
                     {
-                        progress.Warning(urlConfig, "more than one pass specifier detected, ignoring all but the first: " + urlConfig.SafeUrl());
+                        progress.Warning(urlConfig, "more than one pass specifier detected, ignoring all but the first: {0}", urlConfig.SafeUrl());
                         continue;
                     }
 
@@ -245,7 +245,7 @@ namespace ModuleManager.Patches
                 }
                 else
                 {
-                    progress.Warning(urlConfig, "unrecognized tag: '" + tag.key + "' on: " + urlConfig.SafeUrl());
+                    progress.Warning(urlConfig, "unrecognized tag: '{0}' on: {1}", tag.key, urlConfig.SafeUrl());
                 }
             }
 

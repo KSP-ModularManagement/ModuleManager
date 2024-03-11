@@ -69,7 +69,10 @@ namespace ModuleManager.Patches
                 }
                 catch (Exception ex)
                 {
-                    progress.Exception(ex, UrlConfig, $"Exception while applying update {UrlConfig.SafeUrl()} to {protoConfig.FullUrl}");
+                    progress.Exception(ex, UrlConfig,
+                        "Exception while applying update {0} to {1}",
+                        UrlConfig.SafeUrl(), protoConfig.FullUrl
+                        );
                 }
             }
         }

@@ -43,10 +43,12 @@ namespace ModuleManager
                 UrlDir.UrlFile parent = expect.parent;
                 if (parent.configs.Count != expect.config.CountNodes + 1)
                 {
-                    logger.Error("Test " + parent.name + " failed as expected number of nodes differs expected: " +
-                        expect.config.CountNodes + " found: " + (parent.configs.Count - 1));
+                    logger.Error(
+                        "Test {0} failed as expected number of nodes differs expected: {1} found: {2}",
+                        parent.name, expect.config.CountNodes, (parent.configs.Count - 1)
+                        );
                     for (int i = 0; i < parent.configs.Count; ++i)
-                        logger.Info(parent.configs[i].config.ToString());
+                        logger.Detail("{0}", parent.configs[i].config);
                     continue;
                 }
                 for (int i = 0; i < expect.config.CountNodes; ++i)
@@ -55,9 +57,10 @@ namespace ModuleManager
                     ConfigNode expectNode = expect.config.nodes[i];
                     if (!CompareRecursive(expectNode, gotNode))
                     {
-                        logger.Error("Test " + parent.name + "[" + i +
-                            "] failed as expected output and actual output differ.\nexpected:\n" + expectNode +
-                            "\nActually got:\n" + gotNode);
+                        logger.Error(
+                            "Test {0}[{1}] failed as expected output and actual output differ.\nexpected:\n{2}\nActually got:\n{3}",
+                            parent.name, i, expectNode, gotNode
+                            );
                     }
                 }
 

@@ -85,7 +85,7 @@ namespace ModuleManager
                 }
                 catch (Exception e)
                 {
-                    progress.Exception(e, "Exception while generating SHA for assembly " + assemblyName.Name);
+                    progress.Exception(e, "Exception while generating SHA for assembly {0}", assemblyName.Name);
                 }
 
                 modListInfo.AppendFormat(
@@ -126,8 +126,10 @@ namespace ModuleManager
                         }
                         catch (ArgumentOutOfRangeException)
                         {
-                            progress.Error(cfgmod, "Skipping :FOR init for line " + name +
-                                ". The line most likely contains a space that should be removed");
+                            progress.Error(cfgmod,
+                                "Skipping :FOR init for line {0}. The line most likely contains a space that should be removed",
+                                name
+                                );
                         }
                     }
                 }
@@ -154,7 +156,7 @@ namespace ModuleManager
                 }
             }
 
-            logger.Info(modListInfo.ToString());
+            logger.Info("{0}", modListInfo);
 
             mods.Sort();
 
@@ -196,12 +198,12 @@ namespace ModuleManager
                             string methodName = $"{ass.GetName().Name}.{type.Name}.{method.Name}()";
                             try
                             {
-                                logger.Info("Calling " + methodName);
+                                logger.Info("Calling {0}", methodName);
                                 IEnumerable<string> modsToAdd = (IEnumerable<string>)method.Invoke(null, null);
 
                                 if (modsToAdd == null)
                                 {
-                                    logger.Error("ModuleManagerAddToModList returned null: " + methodName);
+                                    logger.Error("ModuleManagerAddToModList returned null: {0}", methodName);
                                     continue;
                                 }
 
@@ -212,14 +214,14 @@ namespace ModuleManager
                             }
                             catch (Exception e)
                             {
-                                logger.Exception(e, "Exception while calling " + methodName);
+                                logger.Exception(e, "Exception while calling {0}", methodName);
                             }
                         }
                     }
                 }
                 catch (Exception e)
                 {
-                    logger.Exception(e, "Add to mod list threw an exception in loading " + ass.FullName);
+                    logger.Exception(e, "Add to mod list threw an exception in loading {0}", ass.FullName);
                 }
             }
 
@@ -232,12 +234,12 @@ namespace ModuleManager
                     string methodName = $"{obj.GetType().Name}.{method.Name}()";
                     try
                     {
-                        logger.Info("Calling " + methodName);
+                        logger.Info("Calling {0}", methodName);
                         IEnumerable<string> modsToAdd = (IEnumerable<string>)method.Invoke(obj, null);
 
                         if (modsToAdd == null)
                         {
-                            logger.Error("ModuleManagerAddToModList returned null: " + methodName);
+                            logger.Error("ModuleManagerAddToModList returned null: {0}", methodName);
                             continue;
                         }
 
@@ -248,7 +250,7 @@ namespace ModuleManager
                     }
                     catch (Exception e)
                     {
-                        logger.Exception(e, "Exception while calling " + methodName);
+                        logger.Exception(e, "Exception while calling {0}", methodName);
                     }
                 }
             }

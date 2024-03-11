@@ -171,15 +171,17 @@ namespace ModuleManager
 
                 foreach (KeyValuePair<string, int> item in this.counter.warningFiles)
                 {
-                    patchLogger.Warning(item.Value + " warning" + (item.Value > 1 ? "s" : "") + " related to GameData/" + item.Key);
+                    patchLogger.Warning(
+                        "{0} warning{1} related to GameData/{2}",
+                        item.Value, (item.Value > 1 ? "s" : ""), item.Key
+                        );
                 }
 
                 if (this.counter.errors > 0 || this.counter.exceptions > 0)
                 {
                     foreach (KeyValuePair<string, int> item in this.counter.errorFiles)
                     {
-                        errors += item.Value + " error" + (item.Value > 1 ? "s" : "") + " related to GameData/" + item.Key
-                                  + "\n";
+                        errors += item.Value + " error" + (item.Value > 1 ? "s" : "") + " related to GameData/" + item.Key + "\n";
                     }
 
                     patchLogger.Warning("Errors in patch prevents the creation of the cache");
@@ -229,14 +231,14 @@ namespace ModuleManager
 #pragma warning restore CS0618 // Type or member is obsolete
                 {
                     logger.Info("Dumping patch log");
-                    logger.Info("\n#### BEGIN PATCH LOG ####\n\n\n" + File.ReadAllText(patchLogPath) + "\n\n\n#### END PATCH LOG ####");
+                    logger.Info("\n#### BEGIN PATCH LOG ####\n\n\n{0}\n\n\n#### END PATCH LOG ####", File.ReadAllText(patchLogPath));
                 }
                 else
-                    logger.Info("The Patch log can be found on " + patchLogPath);
+                    logger.Info("The Patch log can be found on {0}", patchLogPath);
             }
             else
             {
-                logger.Error("Patch log does not exist: " + patchLogPath);
+                logger.Error("Patch log does not exist: {0}", patchLogPath);
             }
 
 #if !KSP12
@@ -244,14 +246,14 @@ namespace ModuleManager
                 KSP.Localization.Localizer.SwitchToLanguage(KSP.Localization.Localizer.CurrentLanguage);
 #endif
 
-            logger.Info(status + "\n" + errors);
+            logger.Info("{0}\n{1}", status, errors);
 
             // Cleaning some memory
             ConfigNodeEditUtils.Instance.Destroy();
             this.CleanUpCaches();
 
             this.timings.Patching.Stop();
-            logger.Info("Ran in " + this.timings.Patching);
+            logger.Info("Ran in {0}", this.timings.Patching);
 
             return databaseConfigs;
         }
@@ -278,13 +280,13 @@ namespace ModuleManager
 
             if (count == 0)
             {
-                logger.Info($"No {PHYSICS_NODE_NAME} node found. No custom Physics config will be saved");
+                logger.Info("No {0} node found. No custom Physics config will be saved", PHYSICS_NODE_NAME);
                 return;
             }
 
             if (count > 1)
             {
-                logger.Info($"{count} {PHYSICS_NODE_NAME} nodes found. A patch may be wrong. Using the first one");
+                logger.Info("{0} {1} nodes found. A patch may be wrong. Using the first one", count, PHYSICS_NODE_NAME);
             }
 
             PHYSICS_CONFIG.Save(configs.First().Node);
@@ -361,9 +363,9 @@ namespace ModuleManager
 
             this.timings.ShaCalc.Stop();
 
-            logger.Info("SHA generated in " + this.timings.ShaCalc);
-            logger.Info("      SHA = " + configSha);
-            logger.Info("     SIZE = " + this.totalConfigFilesSize);
+            logger.Info("SHA generated in {0}", this.timings.ShaCalc);
+            logger.Info("      SHA = {0}", configSha);
+            logger.Info("     SIZE = {0}", this.totalConfigFilesSize);
 
             bool useCache = false;
             if (SHA_CONFIG.IsLoadable)
@@ -386,12 +388,12 @@ namespace ModuleManager
                     useCache = useCache && PHYSICS_CONFIG.IsLoadable;
                     useCache = useCache && TECHTREE_CONFIG.IsLoadable;
                     useCache = useCache && CheckFilesChange(files, filesShaNode);
-                    logger.Info("Cache SHA, SIZE = " + storedSHA + ", " + storedTotalSize);
-                    logger.Info("useCache = " + useCache);
+                    logger.Info("Cache SHA, SIZE = {0}, {1}", storedSHA, storedTotalSize);
+                    logger.Info("useCache = {0}", useCache);
                 }
                 catch (Exception e)
                 {
-                    logger.Error("Error while reading SHA values from cache: " + e.ToString());
+                    logger.Error("Error while reading SHA values from cache: {0}", e);
                     useCache = false;
                 }
             }
@@ -414,7 +416,7 @@ namespace ModuleManager
 
                 if (-1 == fileSize || String.IsNullOrEmpty(fileSha) || filesShaMap[url] != fileSha)
                 {
-                    logger.Info("Changed : " + fileNode.GetValue("filename") + ".cfg");
+                    logger.Info("Changed : {0}.cfg", fileNode.GetValue("filename"));
                     noChange = false;
                 }
             }
@@ -425,7 +427,7 @@ namespace ModuleManager
 
                 if (fileNode == null)
                 {
-                    logger.Info("Added   : " + files[i].url + ".cfg");
+                    logger.Info("Added   : {}.cfg", files[i].url);
                     noChange = false;
                 }
                 shaConfigNode.RemoveNode(fileNode);
@@ -433,7 +435,7 @@ namespace ModuleManager
             
             foreach (ConfigNode fileNode in shaConfigNode.GetNodes())
             {
-                logger.Info("Deleted : " + fileNode.GetValue("filename") + ".cfg");
+                logger.Info("Deleted : {0}.cfg", fileNode.GetValue("filename"));
                 noChange = false;
             }
             
@@ -533,13 +535,13 @@ namespace ModuleManager
 
             if (count == 0)
             {
-                logger.Info($"No {TECHTREE_CONFIG.Node.name} node found. No custom {TECHTREE_CONFIG.Node.name} will be saved");
+                logger.Info("No {0} node found. No custom {1} will be saved", TECHTREE_CONFIG.Node.name, TECHTREE_CONFIG.Node.name);
                 return;
             }
 
             if (count > 1)
             {
-                logger.Info($"{count} {TECHTREE_CONFIG.Node.name} nodes found. A patch may be wrong. Using the first one");
+                logger.Info("{0} {1} nodes found. A patch may be wrong. Using the first one", count, TECHTREE_CONFIG.Node.name);
             }
 
             TECHTREE_CONFIG.Clear();
@@ -577,7 +579,7 @@ namespace ModuleManager
                 }
                 else
                 {
-                    logger.Warning("Parent null for " + parentUrl);
+                    logger.Warning("Parent null for {0}", parentUrl);
                 }
             }
             logger.Info("Cache Loaded");
@@ -637,7 +639,7 @@ namespace ModuleManager
 
                     if (val == null)
                     {
-                        context.progress.Error(context.patchUrl, "Error - Cannot find value assigning command: " + valName);
+                        context.progress.Error(context.patchUrl, "Error - Cannot find value assigning command: {0}", valName);
                         continue;
                     }
 
@@ -680,7 +682,7 @@ namespace ModuleManager
                 Match match = parseValue.Match(valName);
                 if (!match.Success)
                 {
-                    context.progress.Error(context.patchUrl, "Error - Cannot parse value modifying command: " + valName);
+                    context.progress.Error(context.patchUrl, "Error - Cannot parse value modifying command: {0}", valName);
                     continue;
                 }
 
@@ -732,7 +734,7 @@ namespace ModuleManager
                     case Command.Insert:
                         if (match.Groups[5].Success)
                         {
-                            context.progress.Error(context.patchUrl, "Error - Cannot use operators with insert value: " + mod.name);
+                            context.progress.Error(context.patchUrl, "Error - Cannot use operators with insert value: {0}", mod.name);
                         }
                         else
                         {
@@ -741,8 +743,10 @@ namespace ModuleManager
                             if (varValue != null)
                                 InsertValue(newNode, match.Groups[2].Success ? index : int.MaxValue, valName, varValue);
                             else
-                                context.progress.Error(context.patchUrl, "Error - Cannot parse variable search when inserting new key " + valName + " = " +
-                                    modVal.value);
+                                context.progress.Error(context.patchUrl,
+                                    "Error - Cannot parse variable search when inserting new key {0} = {1}",
+                                    valName, modVal.value
+                                    );
                         }
                         break;
 
@@ -751,11 +755,11 @@ namespace ModuleManager
                             || valName.Contains('?'))
                         {
                             if (match.Groups[2].Success)
-                                context.progress.Error(context.patchUrl, "Error - Cannot use index with replace (%) value: " + mod.name);
+                                context.progress.Error(context.patchUrl, "Error - Cannot use index with replace (%) value: {0}", mod.name);
                             if (match.Groups[5].Success)
-                                context.progress.Error(context.patchUrl, "Error - Cannot use operators with replace (%) value: " + mod.name);
+                                context.progress.Error(context.patchUrl, "Error - Cannot use operators with replace (%) value: {0}", mod.name);
                             if (valName.Contains('*') || valName.Contains('?'))
-                                context.progress.Error(context.patchUrl, "Error - Cannot use wildcards (* or ?) with replace (%) value: " + mod.name);
+                                context.progress.Error(context.patchUrl, "Error - Cannot use wildcards (* or ?) with replace (%) value: {0}", mod.name);
                         }
                         else
                         {
@@ -767,8 +771,10 @@ namespace ModuleManager
                             }
                             else
                             {
-                                context.progress.Error(context.patchUrl, "Error - Cannot parse variable search when replacing (%) key " + valName + " = " +
-                                    modVal.value);
+                                context.progress.Error(context.patchUrl,
+                                    "Error - Cannot parse variable search when replacing (%) key {0} = {1}",
+                                    valName, modVal.value
+                                    );
                             }
                         }
                         break;
@@ -812,7 +818,10 @@ namespace ModuleManager
                             }
                             else
                             {
-                                context.progress.Error(context.patchUrl, "Error - Cannot parse variable search when editing key " + valName + " = " + modVal.value);
+                                context.progress.Error(context.patchUrl,
+                                    "Error - Cannot parse variable search when editing key {0} = {1}",
+                                    valName, modVal.value
+                                    );
                             }
 
                             if (isStar) index++;
@@ -823,7 +832,7 @@ namespace ModuleManager
                     case Command.Delete:
                         if (match.Groups[5].Success)
                         {
-                            context.progress.Error(context.patchUrl, "Error - Cannot use operators with delete (- or !) value: " + mod.name);
+                            context.progress.Error(context.patchUrl, "Error - Cannot use operators with delete (- or !) value: {0}", mod.name);
                         }
                         else if (match.Groups[2].Success)
                         {
@@ -871,11 +880,11 @@ namespace ModuleManager
                             || valName.Contains('?'))
                         {
                             if (match.Groups[2].Success)
-                                context.progress.Error(context.patchUrl, "Error - Cannot use index with create (&) value: " + mod.name);
+                                context.progress.Error(context.patchUrl, "Error - Cannot use index with create (&) value: {0}", mod.name);
                             if (match.Groups[5].Success)
-                                context.progress.Error(context.patchUrl, "Error - Cannot use operators with create (&) value: " + mod.name);
+                                context.progress.Error(context.patchUrl, "Error - Cannot use operators with create (&) value: {0}", mod.name);
                             if (valName.Contains('*') || valName.Contains('?'))
-                                context.progress.Error(context.patchUrl, "Error - Cannot use wildcards (* or ?) with create (&) value: " + mod.name);
+                                context.progress.Error(context.patchUrl, "Error - Cannot use wildcards (* or ?) with create (&) value: {0}", mod.name);
                         }
                         else
                         {
@@ -887,8 +896,10 @@ namespace ModuleManager
                             }
                             else
                             {
-                                context.progress.Error(context.patchUrl, "Error - Cannot parse variable search when replacing (&) key " + valName + " = " +
-                                    modVal.value);
+                                context.progress.Error(context.patchUrl,
+                                    "Error - Cannot parse variable search when replacing (&) key {0} = {1}",
+                                    valName, modVal.value
+                                    );
                             }
                         }
                         break;
@@ -949,7 +960,10 @@ namespace ModuleManager
 
                     if (toPaste == null)
                     {
-                        context.progress.Error(context.patchUrl, "Error - Can not find the node to paste in " + mod.name + " : " + subMod.name + "\n");
+                        context.progress.Error(context.patchUrl,
+                            "Error - Can not find the node to paste in {0} : {1}\n", // FIXME: Why this \n here?
+                            mod.name, subMod.name
+                            );
                         continue;
                     }
 
@@ -1188,7 +1202,7 @@ namespace ModuleManager
                     }
                 }
 
-                if (!foundNodeType) log.Warning("Can't find nodeType:" + nodeType);
+                if (!foundNodeType) log.Warning("Can't find nodeType: {0}", nodeType);
                 if (nodeStack == null) return null;
             }
             else
@@ -1283,7 +1297,7 @@ namespace ModuleManager
                     }
                 }
 
-                if (!foundNodeType) log.Warning("Can't find nodeType:" + nodeType);
+                if (!foundNodeType) log.Warning("Can't find nodeType: {0}", nodeType);
 
                 return null;
             }
@@ -1361,7 +1375,7 @@ namespace ModuleManager
             Match match = parseVarKey.Match(path);
             if (!match.Success)
             {
-                log.Warning("Cannot parse variable search command: " + path);
+                log.Warning("Cannot parse variable search command: {0}", path);
                 return null;
             }
 
@@ -1374,7 +1388,7 @@ namespace ModuleManager
             ConfigNode.Value cVal = ConfigNodeEditUtils.Instance.FindValueIn(nodeStack.value, valName, idx);
             if (cVal == null)
             {
-                log.Warning("Cannot find key " + valName + " in " + nodeStack.value.name);
+                log.Warning("Cannot find key {0} in {1}", valName, nodeStack.value.name);
                 return null;
             }
 

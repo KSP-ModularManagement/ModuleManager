@@ -61,7 +61,10 @@ namespace ModuleManager.Patches
                 }
                 catch (Exception ex)
                 {
-                    progress.Exception(ex, UrlConfig, $"Exception while applying delete {UrlConfig.SafeUrl()} to {protoConfig.FullUrl}");
+                    progress.Exception(ex, UrlConfig,
+                        "Exception while applying delete {0} to {1}",
+                        UrlConfig.SafeUrl(), protoConfig.FullUrl
+                        );
                 }
             }
         }

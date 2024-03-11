@@ -58,7 +58,10 @@ namespace ModuleManager.Patches
                     ConfigNode clone = MMPatchLoader.ModifyNode(this.log, new NodeStack(protoConfig.Node), UrlConfig.config, context);
                     if (protoConfig.Node.GetValue("name") is string name && name == clone.GetValue("name"))
                     {
-                        progress.Error(UrlConfig, $"Error - when applying copy {UrlConfig.SafeUrl()} to {protoConfig.FullUrl} - the copy needs to have a different name than the parent (use @name = xxx)");
+                        progress.Error(UrlConfig,
+                            "Error - when applying copy {0} to {1} - the copy needs to have a different name than the parent (use @name = xxx)",
+                            UrlConfig.SafeUrl(), protoConfig.FullUrl
+                            );
                     }
                     else
                     {
@@ -68,7 +71,10 @@ namespace ModuleManager.Patches
                 }
                 catch (Exception ex)
                 {
-                    progress.Exception(ex, UrlConfig, $"Exception while applying copy {UrlConfig.SafeUrl()} to {protoConfig.FullUrl}");
+                    progress.Exception(ex, UrlConfig,
+                        "Exception while applying copy {0} to {1}",
+                        UrlConfig.SafeUrl(), protoConfig.FullUrl
+                        );
                 }
             }
         }

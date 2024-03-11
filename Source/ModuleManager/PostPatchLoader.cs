@@ -93,7 +93,7 @@ namespace ModuleManager
             while (databaseConfigs == null) yield return null;
 
             this.timings.Wait.Stop();
-            logger.Info("Waited " + this.timings.Wait + " for patching to finish");
+            logger.Info("Waited {0} for patching to finish", this.timings.Wait);
 
             this.timings.PostPatching.Start();
 
@@ -181,19 +181,19 @@ namespace ModuleManager
                         {
                             try
                             {
-                                logger.Info("Calling " + ass.GetName().Name + "." + type.Name + "." + method.Name + "()");
+                                logger.Info("Calling {0}.{1}.{2}()", ass.GetName().Name, type.Name, method.Name);
                                 method.Invoke(null, null);
                             }
                             catch (Exception e)
                             {
-                                logger.Exception(e, "Exception while calling " + ass.GetName().Name + "." + type.Name + "." + method.Name + "()");
+                                logger.Exception(e, "Exception while calling {0}.{1}.{3}()", ass.GetName().Name, type.Name, method.Name);
                             }
                         }
                     }
                 }
                 catch (Exception e)
                 {
-                    logger.Exception(e, "Post run call threw an exception in loading " + ass.FullName);
+                    logger.Exception(e, "Post run call threw an exception in loading {0}", ass.FullName);
                 }
             }
 
@@ -208,12 +208,18 @@ namespace ModuleManager
                 {
                     try
                     {
-                        logger.Info("Calling " + obj.GetType().Name + "." + method.Name + "()");
+                        logger.Info(
+                            "Calling {0}.{1}()",
+                            obj.GetType().Name, method.Name
+                            );
                         method.Invoke(obj, null);
                     }
                     catch (Exception e)
                     {
-                        logger.Exception(e, "Exception while calling " + obj.GetType().Name + "." + method.Name + "() :");
+                        logger.Exception(e,
+                            "Exception while calling {0}.{1}() :",
+                            obj.GetType().Name, method.Name
+                            );
                     }
                 }
             }
@@ -224,7 +230,7 @@ namespace ModuleManager
                 ModuleManager.OutputAllConfigs();
 
             this.timings.PostPatching.Stop();
-            logger.Info("Post patch ran in " + this.timings.PostPatching);
+            logger.Info("Post patch ran in {0}", this.timings.PostPatching);
 
             ready = true;
         }

@@ -84,9 +84,10 @@ namespace ModuleManager.Utils
 						}
 						catch (Exception ex)
 						{
-							context.progress.Exception(ex, context.patchUrl, "Error - Failed to do a regexp replacement: " + mod.name + " : original value=\"" + oValue +
-								"\" regexp=\"" + value +
-								"\" \nNote - to use regexp, the first char is used to subdivide the string (much like sed)");
+							context.progress.Exception(ex, context.patchUrl,
+								"Error - Failed to do a regexp replacement: {0} : original value=\"{1}\" regexp=\"{2}\" \nNote - to use regexp, the first char is used to subdivide the string (much like sed)",
+								mod.name, oValue, value
+								);
 							return null;
 						}
 					}
@@ -118,8 +119,10 @@ namespace ModuleManager.Utils
 					}
 					else
 					{
-						context.progress.Error(context.patchUrl, "Error - Failed to do a maths replacement: " + mod.name + " : original value=\"" + oValue +
-							"\" operator=" + op + " mod value=\"" + value + "\"");
+						context.progress.Error(context.patchUrl,
+							"Error - Failed to do a maths replacement: {0} : original value=\"{1}\" operator={3} mod value=\"{4}\"",
+							mod.name, oValue, op, value
+							);
 						return null;
 					}
 				}

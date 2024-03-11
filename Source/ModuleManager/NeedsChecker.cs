@@ -154,12 +154,12 @@ namespace ModuleManager
                 }
                 catch (ArgumentOutOfRangeException e)
                 {
-                    progress.Exception(e, "ArgumentOutOfRangeException in CheckNeeds for value \"" + val.name + "\"");
+                    progress.Exception(e, "ArgumentOutOfRangeException in CheckNeeds for value \"{0}\"", val.name);
                     throw;
                 }
                 catch (Exception e)
                 {
-                    progress.Exception(e, "General Exception in CheckNeeds for value \"" + val.name + "\"");
+                    progress.Exception(e, "General Exception in CheckNeeds for value \"{0}\"", val.name);
                     throw;
                 }
             }
@@ -171,7 +171,10 @@ namespace ModuleManager
 
                 if (nodeName == null)
                 {
-                    progress.Error(urlConfig, "Error - Node in file " + urlConfig.SafeUrl() + " subnode: " + nodeStack.GetPath() + " has config.name == null");
+                    progress.Error(urlConfig,
+                        "Error - Node in file {0} subnode: {1} has config.name == null",
+                        urlConfig.SafeUrl(), nodeStack.GetPath()
+                        );
                 }
 
                 try
@@ -190,12 +193,12 @@ namespace ModuleManager
                 }
                 catch (ArgumentOutOfRangeException e)
                 {
-                    progress.Exception(e, "ArgumentOutOfRangeException in CheckNeeds for node \"" + node.name + "\"");
+                    progress.Exception(e, "ArgumentOutOfRangeException in CheckNeeds for node \"{0}\"", node.name);
                     throw;
                 }
                 catch (Exception e)
                 {
-                    progress.Exception(e, "General Exception " + e.GetType().Name + " for node \"" + node.name + "\"");
+                    progress.Exception(e, "General Exception {0} for node \"{1}\"", e.GetType().Name, node.name);
                     throw;
                 }
             }
