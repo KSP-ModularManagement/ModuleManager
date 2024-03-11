@@ -61,7 +61,7 @@ namespace ModuleManager
                 }
                 catch (Exception e)
                 {
-                    progress.Exception(patch.UrlConfig, "Exception while processing node : " + patch.UrlConfig.SafeUrl(), e);
+                    progress.Exception(e, patch.UrlConfig, "Exception while processing node : " + patch.UrlConfig.SafeUrl());
                     logger.Error("Processed node was\n" + patch.UrlConfig.PrettyPrint());
                 }
             }

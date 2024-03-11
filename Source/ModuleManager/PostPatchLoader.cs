@@ -162,7 +162,7 @@ namespace ModuleManager
                 }
                 catch (Exception e)
                 {
-                    logger.Exception("Exception while running a post patch callback", e);
+                    logger.Exception(e, "Exception while running a post patch callback");
                 }
                 yield return null;
             }
@@ -186,14 +186,14 @@ namespace ModuleManager
                             }
                             catch (Exception e)
                             {
-                                logger.Exception("Exception while calling " + ass.GetName().Name + "." + type.Name + "." + method.Name + "()", e);
+                                logger.Exception(e, "Exception while calling " + ass.GetName().Name + "." + type.Name + "." + method.Name + "()");
                             }
                         }
                     }
                 }
                 catch (Exception e)
                 {
-                    logger.Exception("Post run call threw an exception in loading " + ass.FullName, e);
+                    logger.Exception(e, "Post run call threw an exception in loading " + ass.FullName);
                 }
             }
 
@@ -213,7 +213,7 @@ namespace ModuleManager
                     }
                     catch (Exception e)
                     {
-                        logger.Exception("Exception while calling " + obj.GetType().Name + "." + method.Name + "() :", e);
+                        logger.Exception(e, "Exception while calling " + obj.GetType().Name + "." + method.Name + "() :");
                     }
                 }
             }

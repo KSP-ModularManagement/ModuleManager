@@ -154,12 +154,12 @@ namespace ModuleManager
                 }
                 catch (ArgumentOutOfRangeException e)
                 {
-                    progress.Exception("ArgumentOutOfRangeException in CheckNeeds for value \"" + val.name + "\"", e);
+                    progress.Exception(e, "ArgumentOutOfRangeException in CheckNeeds for value \"" + val.name + "\"");
                     throw;
                 }
                 catch (Exception e)
                 {
-                    progress.Exception("General Exception in CheckNeeds for value \"" + val.name + "\"", e);
+                    progress.Exception(e, "General Exception in CheckNeeds for value \"" + val.name + "\"");
                     throw;
                 }
             }
@@ -190,12 +190,12 @@ namespace ModuleManager
                 }
                 catch (ArgumentOutOfRangeException e)
                 {
-                    progress.Exception("ArgumentOutOfRangeException in CheckNeeds for node \"" + node.name + "\"", e);
+                    progress.Exception(e, "ArgumentOutOfRangeException in CheckNeeds for node \"" + node.name + "\"");
                     throw;
                 }
                 catch (Exception e)
                 {
-                    progress.Exception("General Exception " + e.GetType().Name + " for node \"" + node.name + "\"", e);
+                    progress.Exception(e, "General Exception " + e.GetType().Name + " for node \"" + node.name + "\"");
                     throw;
                 }
             }

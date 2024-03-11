@@ -90,7 +90,7 @@ namespace ModuleManager
             }
             catch (Exception ex)
             {
-                logger.Exception("Exception in IsCacheUpToDate", ex);
+                logger.Exception(ex, "Exception in IsCacheUpToDate");
             }
 
             IEnumerable<IProtoUrlConfig> databaseConfigs = null;
@@ -190,7 +190,7 @@ namespace ModuleManager
                     }
                     catch (Exception e)
                     {
-                        patchLogger.Exception("Exception while deleting stale cache ", e);
+                        patchLogger.Exception(e, "Exception while deleting stale cache ");
                     }
                 }
                 else
@@ -498,7 +498,7 @@ namespace ModuleManager
             }
             catch (Exception e)
             {
-                logger.Exception("Exception while saving the sha", e);
+                logger.Exception(e, "Exception while saving the sha");
             }
             try
             {
@@ -507,11 +507,11 @@ namespace ModuleManager
             }
             catch (NullReferenceException e)
             {
-                logger.Exception("NullReferenceException while saving the cache", e);
+                logger.Exception(e, "NullReferenceException while saving the cache");
             }
             catch (Exception e)
             {
-                logger.Exception("Exception while saving the cache", e);
+                logger.Exception(e, "Exception while saving the cache");
             }
 
             try
@@ -522,7 +522,7 @@ namespace ModuleManager
             }
             catch (Exception e)
             {
-                logger.Exception("Exception while deleting the cache", e);
+                logger.Exception(e, "Exception while deleting the cache");
             }
         }
 

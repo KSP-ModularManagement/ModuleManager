@@ -135,15 +135,15 @@ namespace ModuleManager.Progress
             logger.Error(message);
         }
 
-        public void Exception(string message, Exception exception)
+        public void Exception(Exception exception, string message)
         {
             Counter.exceptions.Increment();
-            logger.Exception(message, exception);
+            logger.Exception(exception, message);
         }
 
-        public void Exception(UrlDir.UrlConfig url, string message, Exception exception)
+        public void Exception(Exception exception, UrlDir.UrlConfig url, string message)
         {
-            Exception(message, exception);
+            Exception(exception, message);
             RecordErrorFile(url);
         }
 

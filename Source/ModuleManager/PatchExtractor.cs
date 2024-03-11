@@ -124,7 +124,7 @@ namespace ModuleManager
             }
             catch(Exception e)
             {
-                progress.Exception(urlConfig, $"Exception while attempting to create patch from config: {urlConfig.SafeUrl()}", e);
+                progress.Exception(e, urlConfig, $"Exception while attempting to create patch from config: {urlConfig.SafeUrl()}");
                 return null;
             }
         }

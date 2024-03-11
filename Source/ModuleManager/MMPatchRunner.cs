@@ -73,7 +73,7 @@ namespace ModuleManager
 
             if (patchingThreadStatus.IsExitedWithError)
             {
-                kspLogger.Exception("The patching thread threw an exception", patchingThreadStatus.Exception);
+                kspLogger.Exception(patchingThreadStatus.Exception, "The patching thread threw an exception");
                 FatalErrorHandler.HandleFatalError("The patching thread threw an exception");
                 yield break;
             }

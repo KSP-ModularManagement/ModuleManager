@@ -68,7 +68,7 @@ namespace ModuleManager.Patches
                 }
                 catch (Exception ex)
                 {
-                    progress.Exception(UrlConfig, $"Exception while applying copy {UrlConfig.SafeUrl()} to {protoConfig.FullUrl}", ex);
+                    progress.Exception(ex, UrlConfig, $"Exception while applying copy {UrlConfig.SafeUrl()} to {protoConfig.FullUrl}");
                 }
             }
         }

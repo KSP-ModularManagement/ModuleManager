@@ -84,9 +84,9 @@ namespace ModuleManager.Utils
 						}
 						catch (Exception ex)
 						{
-							context.progress.Exception(context.patchUrl, "Error - Failed to do a regexp replacement: " + mod.name + " : original value=\"" + oValue +
+							context.progress.Exception(ex, context.patchUrl, "Error - Failed to do a regexp replacement: " + mod.name + " : original value=\"" + oValue +
 								"\" regexp=\"" + value +
-								"\" \nNote - to use regexp, the first char is used to subdivide the string (much like sed)", ex);
+								"\" \nNote - to use regexp, the first char is used to subdivide the string (much like sed)");
 							return null;
 						}
 					}

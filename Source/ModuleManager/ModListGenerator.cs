@@ -85,7 +85,7 @@ namespace ModuleManager
                 }
                 catch (Exception e)
                 {
-                    progress.Exception("Exception while generating SHA for assembly " + assemblyName.Name, e);
+                    progress.Exception(e, "Exception while generating SHA for assembly " + assemblyName.Name);
                 }
 
                 modListInfo.AppendFormat(
@@ -212,14 +212,14 @@ namespace ModuleManager
                             }
                             catch (Exception e)
                             {
-                                logger.Exception("Exception while calling " + methodName, e);
+                                logger.Exception(e, "Exception while calling " + methodName);
                             }
                         }
                     }
                 }
                 catch (Exception e)
                 {
-                    logger.Exception("Add to mod list threw an exception in loading " + ass.FullName, e);
+                    logger.Exception(e, "Add to mod list threw an exception in loading " + ass.FullName);
                 }
             }
 
@@ -248,7 +248,7 @@ namespace ModuleManager
                     }
                     catch (Exception e)
                     {
-                        logger.Exception("Exception while calling " + methodName, e);
+                        logger.Exception(e, "Exception while calling " + methodName);
                     }
                 }
             }

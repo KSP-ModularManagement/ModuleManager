@@ -43,7 +43,7 @@ namespace ModuleManager.Logging
 
         public void Log(K.Level logType, string message, object[] @params) => this.methods[(int)logType](message, @params);
 
-        public void Exception(string message, Exception exception)
+        public void Exception(Exception exception, string message)
         {
             this.log.error(exception, message);
         }
