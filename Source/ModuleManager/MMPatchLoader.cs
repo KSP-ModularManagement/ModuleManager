@@ -983,7 +983,7 @@ namespace ModuleManager
                     string tag = "";
                     string nodeType, nodeName;
                     int index = 0;
-                    string logspam_msg = "";
+                    List<string> logspam_msg = new List<string>();
                     List<ConfigNode> subNodes = new List<ConfigNode>();
 
                     // three ways to specify:
@@ -1034,7 +1034,7 @@ namespace ModuleManager
                             }
                         }
                         else
-                            logspam_msg += "  cannot wildcard a % node: " + subMod.name + "\n";
+                            logspam_msg.Add("  cannot wildcard a % node: " + subMod.name);
                     }
                     else
                     {
@@ -1049,7 +1049,7 @@ namespace ModuleManager
                         // if the original exists modify it
                         if (subNodes.Count > 0)
                         {
-                            logspam_msg += "  Applying subnode " + subMod.name + "\n";
+                            logspam_msg.Add("  Applying subnode " + subMod.name);
                             ConfigNode newSubNode = ModifyNode(log, nodeStack.Push(subNodes[0]), subMod, context);
                             subNodes[0].ShallowCopyFrom(newSubNode);
                             subNodes[0].name = newSubNode.name;
@@ -1057,7 +1057,7 @@ namespace ModuleManager
                         else
                         {
                             // if not add the mod node without the % in its name
-                            logspam_msg += "  Adding subnode " + subMod.name + "\n";
+                            logspam_msg.Add("  Adding subnode " + subMod.name);
 
                             ConfigNode copy = new ConfigNode(nodeType);
 
@@ -1072,7 +1072,7 @@ namespace ModuleManager
                     {
                         if (subNodes.Count == 0)
                         {
-                            logspam_msg += "  Adding subnode " + subMod.name + "\n";
+                            logspam_msg.Add("  Adding subnode " + subMod.name);
 
                             ConfigNode copy = new ConfigNode(nodeType);
 
@@ -1087,11 +1087,11 @@ namespace ModuleManager
                     {
                         // find each original subnode to modify, modify it and add the modified.
                         if (subNodes.Count == 0) // no nodes to modify!
-                            logspam_msg += "  Could not find node(s) to modify: " + subMod.name + "\n";
+                            logspam_msg.Add("  Could not find node(s) to modify: " + subMod.name);
 
                         foreach (ConfigNode subNode in subNodes)
                         {
-                            logspam_msg += "  Applying subnode " + subMod.name + "\n";
+                            logspam_msg.Add("  Applying subnode " + subMod.name);
                             ConfigNode newSubNode;
                             switch (command)
                             {
@@ -1118,7 +1118,7 @@ namespace ModuleManager
                             }
                         }
                     }
-                    log.Trace(logspam_msg);
+                    log.Trace(String.Join("\n", logspam_msg.ToArray())); //FIXME: This is wasting a lot of CPU when Trace is deactivated!
                 }
             }
 
