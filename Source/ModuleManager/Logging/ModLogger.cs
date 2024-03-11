@@ -25,7 +25,7 @@ namespace ModuleManager.Logging
         internal static readonly ModLogger Instance = new ModLogger(); // For legacy code
         internal static bool DebugMode => KSPe.Globals<ModuleManager>.DebugMode;
 
-        private delegate void LogMethod(string message, params object[] @parms);
+        private delegate void LogMethod(string message, params object[] @params);
         private readonly LogMethod[] methods;
         private ModLogger()
         {
@@ -41,9 +41,9 @@ namespace ModuleManager.Logging
 
         public void Log(K.Level logType, string message, params object[] @params) => this.methods[(int)logType](message, @params);
 
-        public void Exception(Exception exception, string message)
+        public void Exception(Exception exception, string message, params object[] @params)
         {
-            LOG.error(exception, message);
+            LOG.error(exception, message, @params);
         }
 
         public void Finish() { }

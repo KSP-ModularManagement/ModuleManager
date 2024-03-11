@@ -25,11 +25,11 @@ namespace ModuleManager.Progress
         EventVoid OnPatchApplied { get; }
         EventData<IPass> OnPassStarted { get; }
 
-        void Warning(UrlDir.UrlConfig url, string message);
-        void Error(UrlDir.UrlConfig url, string message);
-        void Error(string message);
-        void Exception(Exception exception, string message);
-        void Exception(Exception exception, UrlDir.UrlConfig url, string message);
+        void Warning(UrlDir.UrlConfig url, string message, params object[] @params);
+        void Error(UrlDir.UrlConfig url, string message, params object[] @params);
+        void Error(string message, params object[] @params);
+        void Exception(Exception exception, string message, params object[] @params);
+        void Exception(Exception exception, UrlDir.UrlConfig url, string message, params object[] @params);
         void NeedsUnsatisfiedRoot(UrlDir.UrlConfig url);
         void NeedsUnsatisfiedNode(UrlDir.UrlConfig url, string path);
         void NeedsUnsatisfiedValue(UrlDir.UrlConfig url, string path);

@@ -24,7 +24,7 @@ namespace ModuleManager.Logging
         internal readonly K.Logger log;
         internal static bool DebugMode => KSPe.Globals<ModuleManager>.DebugMode;
 
-        private delegate void LogMethod(string message, params object[] @parms);
+        private delegate void LogMethod(string message, params object[] @params);
         private readonly LogMethod[] methods;
         internal PatchLogger(string filename)
         {
@@ -43,9 +43,9 @@ namespace ModuleManager.Logging
 
         public void Log(K.Level logType, string message, object[] @params) => this.methods[(int)logType](message, @params);
 
-        public void Exception(Exception exception, string message)
+        public void Exception(Exception exception, string message, params object[] @params)
         {
-            this.log.error(exception, message);
+            this.log.error(exception, message, @params);
         }
 
         public void Finish()

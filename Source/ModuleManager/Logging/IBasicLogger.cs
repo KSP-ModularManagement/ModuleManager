@@ -24,7 +24,7 @@ namespace ModuleManager.Logging
     public interface IBasicLogger
     {
         void Log(K.Level logType, string message, params object[] @params);
-        void Exception(Exception exception, string message);
+        void Exception(Exception exception, string message, params object[] @params);
         void Finish();
     }
 }

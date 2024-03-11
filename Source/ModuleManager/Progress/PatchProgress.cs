@@ -115,35 +115,35 @@ namespace ModuleManager.Progress
             Counter.needsUnsatisfied.Increment();
         }
 
-        public void Warning(UrlDir.UrlConfig url, string message)
+        public void Warning(UrlDir.UrlConfig url, string message, params object[] @params)
         {
             Counter.warnings.Increment();
-            logger.Warning(message);
+            logger.Warning(message, @params);
             RecordWarningFile(url);
         }
 
-        public void Error(UrlDir.UrlConfig url, string message)
+        public void Error(UrlDir.UrlConfig url, string message, params object[] @params)
         {
             Counter.errors.Increment();
-            logger.Error(message);
+            logger.Error(message, @params);
             RecordErrorFile(url);
         }
 
-        public void Error(string message)
+        public void Error(string message, params object[] @params)
         {
             Counter.errors.Increment();
-            logger.Error(message);
+            logger.Error(message, @params);
         }
 
-        public void Exception(Exception exception, string message)
+        public void Exception(Exception exception, string message, params object[] @params)
         {
             Counter.exceptions.Increment();
-            logger.Exception(exception, message);
+            logger.Exception(exception, message, @params);
         }
 
-        public void Exception(Exception exception, UrlDir.UrlConfig url, string message)
+        public void Exception(Exception exception, UrlDir.UrlConfig url, string message, params object[] @params)
         {
-            Exception(exception, message);
+            Exception(exception, message, @params);
             RecordErrorFile(url);
         }
 
