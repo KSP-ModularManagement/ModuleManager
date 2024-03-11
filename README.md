@@ -14,7 +14,7 @@ Please, **DO NOT** submit bug reports/issues to the [References](#references) (s
 
 Necessarily, `MM/L` will receive **no support** from the maintainers of `ModuleManger - Forum`, as well from some 3rd parties that may choose to support `ModuleManger - Forum` only. Some others (and myself), on the other hand, **will** actively support `MM/L`. Check your add'ons documentation (or politely ask us directly) for more information.
 
-Please, **DO** submit bug reports/issues to the links depicted on the next section of this document.
+Please, **DO** submit bug reports/issues to the links depicted on the next section of this document disregarding if you think it's a problem on this fork or not. If the bug is on the upstream's releases, the report will be applied to it as well with any fixes - but I can't guarantee the pull requests will be accepted!
 
 
 ## In a Hurry
@@ -67,7 +67,7 @@ This work is licensed as follows:
 			- Please note that upgrading the license to any posterior GPL **IS NOT ALLOWED** for this work, as the author **DID NOT** added the "or (at your option) any later version" on the license. 	
 		- You don't mix your work with GPL incompatible works.
 
-[Previous releases](https://github.com/sarbian/ModuleManager) remains licensed under the [CC-BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/). Additionally, [check this statement](https://creativecommons.org/2015/10/08/cc-by-sa-4-0-now-one-way-compatible-with-gplv3/) from CC.
+[Previous releases](https://github.com/net-lisias-ksp/ModuleManager/tree/upstream/master) remain licensed under the [CC-BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/). Additionally, [check this statement](https://creativecommons.org/2015/10/08/cc-by-sa-4-0-now-one-way-compatible-with-gplv3/) from CC.
 
 Please note the copyrights and trademarks in [NOTICE](./NOTICE)
 
