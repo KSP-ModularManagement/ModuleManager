@@ -2,6 +2,12 @@
 *Lasciate ogne speranza, voi ch'intrate*
 - - -
 
+* 2023-0716: 4.2.3.2 (Lisias) for KSP >= 1.2
+	+ Logging revamp/refactoring
+		- Saner code
+		- MOAR LOGS
+		- Previous `LOGSPAM` conditional compiling is now pushed into the mainstream as TRACE messages.
+			- Edit the relevant ModuleManager section on `<KSP>/PluginData/KSPe.cfg` file to set the desired log level.
 * 2023-0716: 4.2.3.1 (Lisias) for KSP >= 1.2
 	+ Bumps versioning, catching up with upstream and formalising he fixes already implemented - ome for ages... :)
 	+ Removes yet some more deprecated calls from `KSPe`.
