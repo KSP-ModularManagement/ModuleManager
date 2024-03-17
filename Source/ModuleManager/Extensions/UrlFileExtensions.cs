@@ -1,6 +1,6 @@
 ﻿/*
 	This file is part of Module Manager /L
-		© 2018-2023 LisiasT
+		© 2018-2024 LisiasT
 		© 2013-2018 Sarbian; Blowfish
 		© 2013 ialdabaoth
 

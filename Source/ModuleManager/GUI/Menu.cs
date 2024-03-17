@@ -1,6 +1,6 @@
 ﻿/*
 	This file is part of Module Manager /L
-		© 2018-2023 LisiasT
+		© 2018-2024 LisiasT
 
 	Module Manager /L is licensed as follows:
 		* GPL 3.0 : https://www.gnu.org/licenses/gpl-3.0.txt
