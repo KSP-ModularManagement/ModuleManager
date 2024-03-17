@@ -63,6 +63,7 @@ namespace ModuleManager.Patches
                     {
                         progress.ApplyingUpdate(protoConfig, UrlConfig);
                         listNode.Value = protoConfig = new ProtoUrlConfig(protoConfig.UrlFile, MMPatchLoader.ModifyNode(this.log, new NodeStack(protoConfig.Node), UrlConfig.config, context));
+                        if (loop) logger.Trace("Loop!");
                     } while (loop && NodeMatcher.IsMatch(protoConfig.Node));
 
                     if (loop) protoConfig.Node.RemoveNodes("MM_PATCH_LOOP");

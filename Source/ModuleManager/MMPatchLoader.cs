@@ -620,10 +620,10 @@ namespace ModuleManager
 
             #region Values
 
-            string vals = "modding values";
+            List<string> logModdingValues = new List<string>();
             foreach (ConfigNode.Value modVal in mod.values)
             {
-                vals += "\n   " + modVal.name + "= " + modVal.value;
+                string logModdingValue = modVal.name + " = " + modVal.value;
 
                 Command cmd = CommandParser.Parse(modVal.name, out string valName);
 
@@ -808,7 +808,7 @@ namespace ModuleManager
                                 if (value != null)
                                 {
                                     if (origVal.value != value)
-                                        vals += ": " + origVal.value + " -> " + value;
+                                        logModdingValue += " ( was " + origVal.value + ")";
 
                                     if (cmd != Command.Copy)
                                         origVal.value = value;
@@ -904,8 +904,10 @@ namespace ModuleManager
                         }
                         break;
                 }
+                logModdingValues.Add(logModdingValue);
             }
-            log.Trace(vals);
+            if (0 != logModdingValues.Count)
+                log.Trace("\tmodding values: {0}", string.Join(" ; ", logModdingValues.ToArray()));
 
             #endregion Values
 
@@ -983,7 +985,7 @@ namespace ModuleManager
                     string tag = "";
                     string nodeType, nodeName;
                     int index = 0;
-                    List<string> logspam_msg = new List<string>();
+                    List<string> logspam_msg = new List<string>(); logspam_msg.Add("");
                     List<ConfigNode> subNodes = new List<ConfigNode>();
 
                     // three ways to specify:
@@ -1034,7 +1036,7 @@ namespace ModuleManager
                             }
                         }
                         else
-                            logspam_msg.Add("  cannot wildcard a % node: " + subMod.name);
+                            logspam_msg.Add("Cannot wildcard a % node: " + subMod.name);
                     }
                     else
                     {
@@ -1049,7 +1051,7 @@ namespace ModuleManager
                         // if the original exists modify it
                         if (subNodes.Count > 0)
                         {
-                            logspam_msg.Add("  Applying subnode " + subMod.name);
+                            logspam_msg.Add("Applying subnode " + subMod.name);
                             ConfigNode newSubNode = ModifyNode(log, nodeStack.Push(subNodes[0]), subMod, context);
                             subNodes[0].ShallowCopyFrom(newSubNode);
                             subNodes[0].name = newSubNode.name;
@@ -1057,7 +1059,7 @@ namespace ModuleManager
                         else
                         {
                             // if not add the mod node without the % in its name
-                            logspam_msg.Add("  Adding subnode " + subMod.name);
+                            logspam_msg.Add("Adding subnode " + subMod.name);
 
                             ConfigNode copy = new ConfigNode(nodeType);
 
@@ -1072,7 +1074,7 @@ namespace ModuleManager
                     {
                         if (subNodes.Count == 0)
                         {
-                            logspam_msg.Add("  Adding subnode " + subMod.name);
+                            logspam_msg.Add("Adding subnode " + subMod.name);
 
                             ConfigNode copy = new ConfigNode(nodeType);
 
@@ -1087,11 +1089,11 @@ namespace ModuleManager
                     {
                         // find each original subnode to modify, modify it and add the modified.
                         if (subNodes.Count == 0) // no nodes to modify!
-                            logspam_msg.Add("  Could not find node(s) to modify: " + subMod.name);
+                            logspam_msg.Add("Could not find node(s) to modify: " + subMod.name);
 
                         foreach (ConfigNode subNode in subNodes)
                         {
-                            logspam_msg.Add("  Applying subnode " + subMod.name);
+                            logspam_msg.Add("Applying subnode " + subMod.name);
                             ConfigNode newSubNode;
                             switch (command)
                             {
@@ -1118,7 +1120,8 @@ namespace ModuleManager
                             }
                         }
                     }
-                    log.Trace(String.Join("\n", logspam_msg.ToArray())); //FIXME: This is wasting a lot of CPU when Trace is deactivated!
+                    if (logspam_msg.Count > 1) // Remember we added an empty line on initialization
+                        log.Trace(String.Join("\n\t", logspam_msg.ToArray()));
                 }
             }
 
@@ -1412,6 +1415,7 @@ namespace ModuleManager
 
         private static string ProcessVariableSearch(IBasicLogger log, string value, NodeStack nodeStack, PatchContext context)
         {
+            string r = value;
             // value = #xxxx$yyyyy$zzzzz$aaaa$bbbb
             // There is 2 or more '$'
             if (value.Length > 0 && value[0] == '#' && value.IndexOf('$') != -1 && value.IndexOf('$') != value.LastIndexOf('$'))
@@ -1433,10 +1437,10 @@ namespace ModuleManager
                     builder.Append(result.value);
                     builder.Append(split[i + 1]);
                 }
-                value = builder.ToString();
-                log.Info("variable search output : =\"{0}\"", value);
+                r = builder.ToString();
+                log.Detail("variable search output : {0} = \"{1}\"", value, r);
             }
-            return value;
+            return r;
         }
 
         #endregion Applying Patches
@@ -1513,10 +1517,10 @@ namespace ModuleManager
                         }
                         if (last != null)
                         {
-                            log.Trace("CheckConstraints: {0} {1}", constraints, (not ^ any));
+                            log.Trace("\tCheckConstraints: {0} {1}", constraints, (not ^ any));
                             return not ^ any;
                         }
-                        log.Trace("CheckConstraints: {0} {1}", constraints, (not ^ false));
+                        log.Trace("\tCheckConstraints: {0} {1}", constraints, (not ^ false));
                         return not ^ false;
 
                     case '#':
@@ -1525,10 +1529,10 @@ namespace ModuleManager
                         if (node.HasValue(type) && WildcardMatchValues(node, type, name))
                         {
                             bool ret2 = CheckConstraints(log, node, remainingConstraints);
-                            log.Trace("CheckConstraints: {0} {1}", constraints, ret2);
+                            log.Trace("\tCheckConstraints: {0} {1}", constraints, ret2);
                             return ret2;
                         }
-                        log.Trace("CheckConstraints: {0} false", constraints);
+                        log.Trace("\tCheckConstraints: {0} false", constraints);
                         return false;
 
                     case '~':
@@ -1537,20 +1541,20 @@ namespace ModuleManager
                         // or: ~breakingForce[100]  will be true if it's present but not 100, too.
                         if (name == "" && node.HasValue(type))
                         {
-                            log.Trace("CheckConstraints: {0} false", constraints);
+                            log.Trace("\tCheckConstraints: {0} false", constraints);
                             return false;
                         }
                         if (name != "" && WildcardMatchValues(node, type, name))
                         {
-                            log.Trace("CheckConstraints: {0} false", constraints);
+                            log.Trace("\tCheckConstraints: {0} false", constraints);
                             return false;
                         }
                         bool ret = CheckConstraints(log, node, remainingConstraints);
-                        log.Trace("CheckConstraints: {0} {1}", constraints, ret);
+                        log.Trace("\tCheckConstraints: {0} {1}", constraints, ret);
                         return ret;
 
                     default:
-                        log.Trace("CheckConstraints: {0} false", constraints);
+                        log.Trace("\tCheckConstraints: {0} false", constraints);
                         return false;
                 }
             }
@@ -1560,7 +1564,7 @@ namespace ModuleManager
             {
                 ret3 = ret3 && CheckConstraints(log, node, constraint);
             }
-            log.Trace("CheckConstraints: {0} {1}", constraints, ret3);
+            log.Trace("\tCheckConstraints: {0} {1}", constraints, ret3);
             return ret3;
         }
 
