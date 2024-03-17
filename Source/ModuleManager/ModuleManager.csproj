@@ -121,8 +121,10 @@
     <Compile Include="Utils\ConfigNodeEditUtils.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Drawing" />
+    <Reference Include="System">
+    </Reference>
+    <Reference Include="System.Drawing">
+    </Reference>
     <Reference Include="KSPe">
       <HintPath>..\..\..\..\..\..\LIB\plugins\KSPe.dll</HintPath>
       <Private>False</Private>
