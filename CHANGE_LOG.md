@@ -2,7 +2,7 @@
 *Lasciate ogne speranza, voi ch'intrate*
 - - -
 
-* 2023-0716: 4.2.3.2 (Lisias) for KSP >= 1.2
+* 2024-0311: 4.2.3.2 (Lisias) for KSP >= 1.2
 	+ Logging revamp/refactoring
 		- Saner code
 		- MOAR LOGS
