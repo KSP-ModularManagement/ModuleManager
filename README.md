@@ -19,19 +19,19 @@ Please, **DO** submit bug reports/issues to the links depicted on the next secti
 
 ## In a Hurry
 
-* [Releases](https://github.com/net-lisias-ksp/ModuleManager/Archive)
-* [Latest Release](https://github.com/net-lisias-ksp/ModuleManager/releases)
-* [Source](https://github.com/net-lisias-ksp/ModuleManager)
-* [Issue Tracker](https://github.com/net-lisias-ksp/ModuleManager/issues)
+* [Releases](https://github.com/KSP-ModularManagement/ModuleManager/Archive)
+* [Latest Release](https://github.com/KSP-ModularManagement/ModuleManager/releases)
+* [Source](https://github.com/KSP-ModularManagement/ModuleManager)
+* [Issue Tracker](https://github.com/KSP-ModularManagement/ModuleManager/issues)
 * Documentation	
 	+ [Homepage](http://ksp.lisias.net/add-ons/ModuleManager) on L Aerospace KSP Division
-	+ [Project's README](https://github.com/net-lisias-ksp/ModuleManager/blob/master/README.md)
-	+ [Install Instructions](https://github.com/net-lisias-ksp/ModuleManager/blob/master/INSTALL.md)
+	+ [Project's README](https://github.com/KSP-ModularManagement/ModuleManager/blob/master/README.md)
+	+ [Install Instructions](https://github.com/KSP-ModularManagement/ModuleManager/blob/master/INSTALL.md)
 	+ [Change Log](./CHANGE_LOG.md)
 	+ [TODO](./TODO.md) list
 * Official Distribution Sites:
 	+ [Homepage](http://ksp.lisias.net/add-ons/ModuleManager) on L Aerospace
-	+ [Source and Binaries](https://github.com/net-lisias-ksp/ModuleManager) on GitHub.
+	+ [Source and Binaries](https://github.com/KSP-ModularManagement/ModuleManager) on GitHub.
 
 
 ## Description
@@ -47,7 +47,7 @@ To install, place the GameData folder inside your Kerbal Space Program folder. I
 ### Dependencies
 
 * Hard Depencies:
-	* [KSP API Extensions/L](https://github.com/net-lisias-ksp/KSPAPIExtensions) V 2.0 or above.
+	* [KSP API Extensions/L](https://github.com/KSP-ModularManagement/KSPAPIExtensions) V 2.0 or above.
 
 ### Licensing
 
@@ -67,7 +67,7 @@ This work is licensed as follows:
 			- Please note that upgrading the license to any posterior GPL **IS NOT ALLOWED** for this work, as the author **DID NOT** added the "or (at your option) any later version" on the license. 	
 		- You don't mix your work with GPL incompatible works.
 
-[Previous releases](https://github.com/net-lisias-ksp/ModuleManager/tree/upstream/master) remain licensed under the [CC-BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/). Additionally, [check this statement](https://creativecommons.org/2015/10/08/cc-by-sa-4-0-now-one-way-compatible-with-gplv3/) from CC.
+[Previous releases](https://github.com/KSP-ModularManagement/ModuleManager/tree/upstream/master) remain licensed under the [CC-BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/). Additionally, [check this statement](https://creativecommons.org/2015/10/08/cc-by-sa-4-0-now-one-way-compatible-with-gplv3/) from CC.
 
 Please note the copyrights and trademarks in [NOTICE](./NOTICE)
 

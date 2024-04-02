@@ -23,7 +23,7 @@
 	+ Make the thing properly distributable.
 	+ **Needs** KSPe 2.5 or higher.
 * 2022-0918: 4.2.2.4b (Lisias) for KSP >= 1.2
-	+ Updates the [`INSTALL.md`](https://github.com/net-lisias-ksp/ModuleManager/blob/master/INSTALL.md) file to reflect the new deployment model.
+	+ Updates the [`INSTALL.md`](https://github.com/KSP-ModularManagement/ModuleManager/blob/master/INSTALL.md) file to reflect the new deployment model.
 		- A new `MM/L` release wasn't really **needed**, but since I failed to update the install instructions and there're people using this, I choose to be conservative on the matter.
 		- There're no changes on the DLL, so I choose to shove a "b" on the same release number.
 * 2022-0809: 4.2.2.4 (Lisias) for KSP >= 1.2

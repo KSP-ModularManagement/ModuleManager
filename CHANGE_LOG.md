@@ -2,6 +2,9 @@
 *Lasciate ogne speranza, voi ch'intrate*
 - - -
 
+* 202?-????: 4.2.?.? (Lisias) for KSP >= 1.2.2
+	+ We had moved!
+		- The Official Repository is now on https://github.com/KSP-ModularManagement/ModuleManager
 * 2024-0330: 4.2.3.3 (Lisias) for KSP >= 1.2
 	+ Slightly less spammy on spamming logs.
 * 2024-0311: 4.2.3.2 (Lisias) for KSP >= 1.2
@@ -26,7 +29,7 @@
 	+ Make the thing properly distributable.
 	+ **Needs** KSPe 2.5 or higher.
 * 2022-0918: 4.2.2.4b (Lisias) for KSP >= 1.2
-	+ Updates the [`INSTALL.md`](https://github.com/net-lisias-ksp/ModuleManager/blob/master/INSTALL.md) file to reflect the new deployment model.
+	+ Updates the [`INSTALL.md`](https://github.com/KSP-ModularManagement/ModuleManager/blob/master/INSTALL.md) file to reflect the new deployment model.
 		- A new `MM/L` release wasn't really **needed**, but since I failed to update the install instructions and there're people using this, I choose to be conservative on the matter.
 		- There're no changes on the DLL, so I choose to shove a "b" on the same release number.
 * 2022-0809: 4.2.2.4 (Lisias) for KSP >= 1.2
@@ -122,7 +125,7 @@
 	+ some code cleanups
 * 2020-0616: 4.1.3.2 (Lisias) for KSP >= 1.3.1
 	+ A nasty mishap from an old merge (dated 2018-11) was detected and fixed.
-		- See Issue [#4](https://github.com/net-lisias-ksp/ModuleManager/issues/4). 
+		- See Issue [#4](https://github.com/KSP-ModularManagement/ModuleManager/issues/4). 
 * 2020-0526: 4.1.3.1 (Lisias) for KSP >= 1.3.1
 	+ Adding a nice 'Houston' GUI message
 	+ Merging upstream updates:
