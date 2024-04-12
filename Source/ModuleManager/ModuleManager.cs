@@ -324,7 +324,7 @@ namespace ModuleManager
         }
         */
 
-		internal IEnumerator DataBaseReloadWithMM(bool dump = false)
+		internal IEnumerator DataBaseReloadWithMM()
 		{
 			GUI.ReloadingDatabaseDialog reloadingDialog = GUI.ReloadingDatabaseDialog.Show(this);
 			try
@@ -347,9 +347,6 @@ namespace ModuleManager
 
 				while (!PostPatchLoader.Instance.IsReady())
 					yield return null;
-
-				if (dump)
-					OutputAllConfigs();
 
 				PartLoader.Instance.StartLoad();
 
@@ -374,6 +371,12 @@ namespace ModuleManager
 			{
 				reloadingDialog = reloadingDialog.Dismiss();
 			}
+		}
+
+		internal IEnumerator DumpDataBaseToFiles()
+		{
+			OutputAllConfigs();
+			yield return null;
 		}
 
         public static void OutputAllConfigs()

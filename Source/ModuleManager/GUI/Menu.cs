@@ -77,7 +77,7 @@ namespace ModuleManager.GUI
 						new DialogGUIButton("Dump Database to Files",
 							delegate
 							{
-								this.parent.StartCoroutine(this.parent.DataBaseReloadWithMM(true));
+								this.parent.StartCoroutine(this.parent.DumpDataBaseToFiles());
 								this.Dismiss();
 							}, 140.0f, 30.0f, false),
 						new DialogGUIButton("Close", () => { this.Dismiss(); } , 140.0f, 30.0f, false)
