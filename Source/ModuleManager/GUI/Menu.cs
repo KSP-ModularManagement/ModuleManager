@@ -63,15 +63,13 @@ namespace ModuleManager.GUI
 						new DialogGUIButton("Reload Database",
 							delegate
 							{
-								MMPatchLoader.keepPartDB = false;
-								this.parent.StartCoroutine(this.parent.DataBaseReloadWithMM());
+								this.parent.StartCoroutine(this.parent.DataBaseReloadWithMM(false));
 								this.Dismiss();
 							}, 140.0f, 30.0f, false),
 						new DialogGUIButton("Quick Reload Database",
 							delegate
 							{
-								MMPatchLoader.keepPartDB = true;
-								this.parent.StartCoroutine(this.parent.DataBaseReloadWithMM());
+								this.parent.StartCoroutine(this.parent.DataBaseReloadWithMM(true));
 								this.Dismiss();
 							}, 140.0f, 30.0f, false),
 						new DialogGUIButton("Dump Database to Files",

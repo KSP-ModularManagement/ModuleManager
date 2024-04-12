@@ -324,8 +324,10 @@ namespace ModuleManager
         }
         */
 
-		internal IEnumerator DataBaseReloadWithMM()
+		internal IEnumerator DataBaseReloadWithMM(bool keepPartDB)
 		{
+			MMPatchLoader.keepPartDB = keepPartDB;
+
 			GUI.ReloadingDatabaseDialog reloadingDialog = GUI.ReloadingDatabaseDialog.Show(this);
 			try
 			{
