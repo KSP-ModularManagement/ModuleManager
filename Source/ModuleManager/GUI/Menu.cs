@@ -56,7 +56,7 @@ namespace ModuleManager.GUI
 					"",
 					"ModuleManager",
 					HighLogic.UISkin,
-					new Rect(0.5f, 0.5f, 150f, 60f),
+					new Rect(0.5f, 0.5f, 220f, 60f),
 					new DialogGUIFlexibleSpace(),
 					new DialogGUIVerticalLayout(
 						new DialogGUIFlexibleSpace(),
@@ -66,21 +66,21 @@ namespace ModuleManager.GUI
 							{
 								this.parent.StartCoroutine(this.parent.DataBaseReloadWithMM(false));
 								this.Dismiss();
-							}, 140.0f, 30.0f, false),
+							}, 200.0f, 30.0f, false),
 #endif
 						new DialogGUIButton("Quick Reload Database",
 							delegate
 							{
 								this.parent.StartCoroutine(this.parent.QuickDataBaseReloadWithMM());
 								this.Dismiss();
-							}, 140.0f, 30.0f, false),
+							}, 200.0f, 30.0f, false),
 						new DialogGUIButton("Dump Database to Files",
 							delegate
 							{
 								this.parent.StartCoroutine(this.parent.DumpDataBaseToFiles());
 								this.Dismiss();
-							}, 140.0f, 30.0f, false),
-						new DialogGUIButton("Close", () => { this.Dismiss(); } , 140.0f, 30.0f, false)
+							}, 200.0f, 30.0f, false),
+						new DialogGUIButton("Close", () => { this.Dismiss(); } , 200.0f, 30.0f, false)
 						)),
 				false,
 				HighLogic.UISkin);
