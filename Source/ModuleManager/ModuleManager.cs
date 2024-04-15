@@ -377,7 +377,9 @@ namespace ModuleManager
 
 		internal IEnumerator DumpDataBaseToFiles()
 		{
+			ModLogger.LOG.info("Dumping DataBase to files.");
 			OutputAllConfigs();
+			ModLogger.LOG.info("DataBase dump finished.");
 			yield return null;
 		}
 
