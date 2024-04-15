@@ -60,12 +60,14 @@ namespace ModuleManager.GUI
 					new DialogGUIFlexibleSpace(),
 					new DialogGUIVerticalLayout(
 						new DialogGUIFlexibleSpace(),
+#if false
 						new DialogGUIButton("Reload Database",
 							delegate
 							{
 								this.parent.StartCoroutine(this.parent.DataBaseReloadWithMM(false));
 								this.Dismiss();
 							}, 140.0f, 30.0f, false),
+#endif
 						new DialogGUIButton("Quick Reload Database",
 							delegate
 							{
