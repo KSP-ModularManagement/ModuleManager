@@ -71,7 +71,7 @@ namespace ModuleManager.GUI
 						new DialogGUIButton("Quick Reload Database",
 							delegate
 							{
-								this.parent.StartCoroutine(this.parent.DataBaseReloadWithMM(true));
+								this.parent.StartCoroutine(this.parent.QuickDataBaseReloadWithMM());
 								this.Dismiss();
 							}, 140.0f, 30.0f, false),
 						new DialogGUIButton("Dump Database to Files",

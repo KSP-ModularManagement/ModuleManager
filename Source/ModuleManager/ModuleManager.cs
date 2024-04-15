@@ -375,6 +375,45 @@ namespace ModuleManager
 			}
 		}
 
+		internal IEnumerator QuickDataBaseReloadWithMM()
+		{
+			ModLogger.LOG.info("Quick loading DataBase from Config Cache...");
+			if (!FilePathRepository.CACHE_CONFIG.IsLoadable)
+			{
+				ModLogger.LOG.warn("Config Cache file not found. Aborting Quick Reload.");
+				yield break;
+			}
+
+			ConfigNode cache = FilePathRepository.CACHE_CONFIG.Load().Node;
+
+			UrlDir gameDataDir = GameDatabase.Instance.root.AllDirectories.First(d => d.path.EndsWith("GameData") && d.name == "" && d.url == "");
+			UrlDir.UrlFile physicsUrlFile = new UrlDir.UrlFile(gameDataDir, new FileInfo(FilePathRepository.PHYSICS_CONFIG.KspPath));
+			gameDataDir.files.Add(physicsUrlFile);
+
+			List<IProtoUrlConfig> databaseConfigs = new List<IProtoUrlConfig>(cache.nodes.Count);
+
+			foreach (ConfigNode node in cache.nodes)
+			{
+				string parentUrl = node.GetValue("parentUrl");
+
+				UrlDir.UrlFile parent = gameDataDir.Find(parentUrl);
+				if (parent != null)
+				{
+					node.nodes[0].UnescapeValuesRecursive();
+					databaseConfigs.Add(new ProtoUrlConfig(parent, node.nodes[0]));
+				}
+			}
+
+			foreach (UrlDir.UrlFile file in GameDatabase.Instance.root.AllConfigFiles)
+				file.configs.Clear();
+
+			foreach (IProtoUrlConfig protoConfig in databaseConfigs)
+				protoConfig.UrlFile.AddConfig(protoConfig.Node);
+
+			ModLogger.LOG.info("Quick loading DataBase finished.");
+			yield return null;
+		}
+
 		internal IEnumerator DumpDataBaseToFiles()
 		{
 			ModLogger.LOG.info("Dumping DataBase to files.");
