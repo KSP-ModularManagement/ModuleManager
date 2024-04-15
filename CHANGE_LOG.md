@@ -2,7 +2,9 @@
 *Lasciate ogne speranza, voi ch'intrate*
 - - -
 
-* 202?-????: 4.2.?.? (Lisias) for KSP >= 1.2.2
+* 2024-0415: 4.2.3.4 (Lisias) for KSP >= 1.2.2
+	+ Fix some long due "Reload Database" on the Module Manager Menu (Alt-F11)
+		- Nope, the Full Reload is still broken, and it was hidden. Sorry!
 	+ We had moved!
 		- The Official Repository is now on https://github.com/KSP-ModularManagement/ModuleManager
 * 2024-0330: 4.2.3.3 (Lisias) for KSP >= 1.2
