@@ -81,6 +81,12 @@ namespace ModuleManager.Progress
             OnPatchApplied.Fire();
         }
 
+        public void ProcessingTagList(UrlDir.UrlConfig url)
+        {
+            logger.Info("Procesing Tag List (modname) in file {0} node: {1}", url.parent.url, url.type);
+            Counter.tagLists.Increment();
+        }
+
         public void NeedsUnsatisfiedRoot(UrlDir.UrlConfig url)
         {
             logger.Info("Deleting root node in file {0} node: {1} as it can't satisfy its NEEDS", url.parent.url, url.type);

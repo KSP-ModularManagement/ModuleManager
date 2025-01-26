@@ -30,6 +30,7 @@ namespace ModuleManager.Progress
         void Error(string message, params object[] @params);
         void Exception(Exception exception, string message, params object[] @params);
         void Exception(Exception exception, UrlDir.UrlConfig url, string message, params object[] @params);
+        void ProcessingTagList(UrlDir.UrlConfig urlConfig);
         void NeedsUnsatisfiedRoot(UrlDir.UrlConfig url);
         void NeedsUnsatisfiedNode(UrlDir.UrlConfig url, string path);
         void NeedsUnsatisfiedValue(UrlDir.UrlConfig url, string path);

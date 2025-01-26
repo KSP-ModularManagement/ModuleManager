@@ -274,6 +274,10 @@ namespace ModuleManager
                             , this.counter.errors.Value
                             , this.counter.patchedNodes.Value
                         );
+                    Log("{0} were removed by unsatisfied :NEEDS and {1} tags (modnames) were harvested from :FOR ."
+                            , this.counter.needsUnsatisfied.Value
+                            , this.counter.tagLists.Value
+                        );
                     Log("Total loading Time = {0:0.000}s, with {1} on patching and {2} on post patching (both parallel to loading)."
                             , PerformanceMetrics.Instance.ElapsedTimeInSecs
                             , (string)this.timings.Patching

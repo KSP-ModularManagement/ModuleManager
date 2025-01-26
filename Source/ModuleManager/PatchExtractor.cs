@@ -94,6 +94,7 @@ namespace ModuleManager
                 ITagList tagList;
                 try
                 {
+                    progress.ProcessingTagList(urlConfig);
                     tagList = tagListParser.Parse(name, urlConfig);
                 }
                 catch (FormatException ex)
