@@ -96,11 +96,13 @@ namespace ModuleManager.Progress
         public void NeedsUnsatisfiedNode(UrlDir.UrlConfig url, string path)
         {
             logger.Info("Deleting node in file {0} subnode: {0} as it can't satisfy its NEEDS", url.parent.url, path);
+            Counter.needsUnsatisfied.Increment();
         }
 
         public void NeedsUnsatisfiedValue(UrlDir.UrlConfig url, string path)
         {
             logger.Info("Deleting value in file {0} value: {1} as it can't satisfy its NEEDS", url.parent.url, path);
+            Counter.needsUnsatisfied.Increment();
         }
 
         public void NeedsUnsatisfiedBefore(UrlDir.UrlConfig url)
