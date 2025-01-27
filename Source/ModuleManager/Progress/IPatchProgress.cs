@@ -26,6 +26,7 @@ namespace ModuleManager.Progress
         EventData<IPass> OnPassStarted { get; }
 
         void Warning(UrlDir.UrlConfig url, string message, params object[] @params);
+		void ForWithInvalidNeedsWarning(string modName, UrlDir.UrlConfig cfgmod);
         void Error(UrlDir.UrlConfig url, string message, params object[] @params);
         void Error(string message, params object[] @params);
         void Exception(Exception exception, string message, params object[] @params);
