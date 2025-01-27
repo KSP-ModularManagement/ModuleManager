@@ -81,9 +81,9 @@ namespace ModuleManager.Progress
             OnPatchApplied.Fire();
         }
 
-        public void ProcessingTagList(UrlDir.UrlConfig url)
+        public void ProcessingTagList(Tags.ITagList tagList, UrlDir.UrlConfig url)
         {
-            logger.Info("Procesing Tag List (modname) in file {0} node: {1}", url.parent.url, url.type);
+            logger.Detail("Procesing Tag (modname) {0} in file {1} node: {2}", tagList.PrimaryTag, url.parent.url, url.type);
             Counter.tagLists.Increment();
         }
 
