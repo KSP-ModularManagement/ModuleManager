@@ -38,7 +38,7 @@ namespace ModuleManager.Logging
             this.methods[i++] = new LogMethod(this.log.info);
             this.methods[i++] = new LogMethod(this.log.detail);
             this.methods[i++] = new LogMethod(this.log.trace);
-            this.log.level = K.Level.TRACE;
+			this.log.level = KSPe.Globals<ModuleManager>.Log.Level;
         }
 
         public void Log(K.Level logType, string message, object[] @params) => this.methods[(int)logType](message, @params);
