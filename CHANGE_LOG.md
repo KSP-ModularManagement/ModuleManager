@@ -2,6 +2,9 @@
 *Lasciate ogne speranza, voi ch'intrate*
 - - -
 
+* 2025-0207: 4.2.3.5 (Lisias) for KSP >= 1.2.2
+	+ Fixes a pretty nasty Log Spam I let pass trough
+	+ Log a warning when `:FOR` and `:NEEDS` on the same patch uses the same identifier, as this will not work exactly as one would expect.
 * 2024-0415: 4.2.3.4 (Lisias) for KSP >= 1.2.2
 	+ Fix some long due "Reload Database" on the Module Manager Menu (Alt-F11)
 		- Nope, the Full Reload is still broken, and it was hidden. Sorry!
