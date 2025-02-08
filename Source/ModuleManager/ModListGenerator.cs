@@ -103,6 +103,7 @@ namespace ModuleManager
                     mods.Add(assemblyName.Name);
             }
 
+            Dictionary<string, List<UrlDir.UrlConfig>> forneedsConflict = new Dictionary<string, List<UrlDir.UrlConfig>>();
             modListInfo.Append("Non-DLL mods added (:FOR[xxx]):\n");
             foreach (UrlDir.UrlConfig cfgmod in GameDatabase.Instance.root.AllConfigs)
             {
@@ -117,21 +118,34 @@ namespace ModuleManager
                         {
                             string dependency = name.Substring(name.IndexOf(":FOR[") + 5);
                             dependency = dependency.Substring(0, dependency.IndexOf(']'));
+
+							if (name.Contains(":NEEDS["))
+							{
+								// If an assembly was already declared a modname with this tag, there's no possible harm on
+								// using :NEEDS[foo] on :FOR[foo] and so it would be wiser to prevent flagging a non problem just
+								// because it looked like one. So we only consider a conflict when there's no Assembly declaring
+								// such tag as a modName.
+								string needs = (name.Substring(name.IndexOf(":NEEDS[") + 7));
+								needs = needs.Substring(0, needs.IndexOf(']'));
+								needs = needs.Replace("!", "").Replace('&', ',').Replace('|', ',');
+
+								// That's the deal - once the dependency is flagged as a conflict, every single :FOR mentining it
+								// (as long there's a :NEEDS) should be flagged too.
+								if (!mods.Contains(dependency) || forneedsConflict.ContainsKey(dependency))
+									foreach (string s in needs.Split(',')) if (string.Equals(dependency, s, StringComparison.OrdinalIgnoreCase))
+									{
+										if (!forneedsConflict.ContainsKey(dependency))
+											forneedsConflict.Add(dependency, new List<UrlDir.UrlConfig>());
+										forneedsConflict[dependency].Add(cfgmod);
+									}
+							}
+
                             if (!mods.Contains(dependency, StringComparer.OrdinalIgnoreCase))
                             {
                                 // found one, now add it to the list.
                                 mods.Add(dependency);
                                 modListInfo.AppendFormat("  {0}\n", dependency);
                             }
-
-							if (name.Contains(":NEEDS["))
-							{
-								string needs = (name.Substring(name.IndexOf(":NEEDS[") + 7));
-								needs = needs.Substring(0, needs.IndexOf(']'));
-								needs = needs.Replace("!", "").Replace('&', ',').Replace('|', ',');
-								foreach (string s in needs.Split(',')) if (dependency.Equals(s))
-										progress.ForWithInvalidNeedsWarning(dependency, cfgmod);
-							}
                         }
                         catch (ArgumentOutOfRangeException)
                         {
@@ -143,17 +157,29 @@ namespace ModuleManager
                     }
                 }
             }
+
             modListInfo.Append("Mods by directory (sub directories of GameData):\n");
             UrlDir gameData = GameDatabase.Instance.root.children.First(dir => dir.type == UrlDir.DirectoryType.GameData);
             foreach (UrlDir subDir in gameData.children)
             {
                 string cleanName = subDir.name.RemoveWS();
+
+				// Since the :FOR[foo]:NEEDS[foo] is only really a problem when nothing else had declared the
+				// name as a modname, if a tag created by a directory is found we remove the conflict from the dictionary
+				// as it's now harmless and it's not the best of ideas to warn users for things that "look" like problems
+				// without really being one - unless we could not tell one from another, what we can do here.
+				if (forneedsConflict.ContainsKey(cleanName))
+					forneedsConflict.Remove(cleanName);
+
                 if (!mods.Contains(cleanName, StringComparer.OrdinalIgnoreCase))
                 {
                     mods.Add(cleanName);
                     modListInfo.AppendFormat("  {0}\n", cleanName);
                 }
             }
+
+			foreach(string dependency in forneedsConflict.Keys) foreach(UrlDir.UrlConfig faultyNode in forneedsConflict[dependency])
+				progress.ForWithInvalidNeedsWarning(dependency,faultyNode);
 
             modListInfo.Append("Mods added by assemblies:\n");
             foreach (ModAddedByAssembly mod in modsAddedByAssemblies)
