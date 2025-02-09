@@ -2,6 +2,10 @@
 *Lasciate ogne speranza, voi ch'intrate*
 - - -
 
+* 2025-0209: 4.2.3.6 (Lisias) for KSP >= 1.2.2
+	+ More sensible warnings about the `:FOR[foo]:NEEDS[foo]` problem, avoiding flagging the occurrences where the problems are not triggered.
+	+ Reworks issues:
+		- [#31](https://github.com/KSP-ModularManagement/ModuleManager/issues/31) Warn when :FOR is used with :NEEDS using the same modName on the patch
 * 2025-0207: 4.2.3.5 (Lisias) for KSP >= 1.2.2
 	+ Fixes a pretty nasty Log Spam I let pass trough
 	+ Log a warning when `:FOR` and `:NEEDS` on the same patch uses the same identifier, as this will not work exactly as one would expect.
