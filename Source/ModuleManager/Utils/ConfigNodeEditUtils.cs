@@ -120,7 +120,7 @@ namespace ModuleManager.Utils
 					else
 					{
 						context.progress.Error(context.patchUrl,
-							"Error - Failed to do a maths replacement: {0} : original value=\"{1}\" operator={3} mod value=\"{4}\"",
+							"Error - Failed to do a maths replacement: {0} : original value=\"{1}\" operator={2} mod value=\"{2}\"",
 							mod.name, oValue, op, value
 							);
 						return null;
