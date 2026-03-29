@@ -2,6 +2,9 @@
 *Lasciate ogne speranza, voi ch'intrate*
 - - -
 
+* 2026-0329: 4.2.3.7 (Lisias) for KSP >= 1.2.2
+	+ Some pretty lame mistake I let pass through when reporting errors.
+		- Yet another one of my not that bright moments...
 * 2025-0209: 4.2.3.6 (Lisias) for KSP >= 1.2.2
 	+ More sensible warnings about the `:FOR[foo]:NEEDS[foo]` problem, avoiding flagging the occurrences where the problems are not triggered.
 	+ Reworks issues:
